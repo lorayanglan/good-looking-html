@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Engineering Fundamentals · Enterprise Dark Aesthetic</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:     #0C0C14;
+      --bg2:    #0F0F1A;
+      --card:   #181826;
+      --orange: #FF6B35;
+      --orange-dim: rgba(255,107,53,0.15);
+      --orange-line: rgba(255,107,53,0.4);
+      --white:  #FFFFFF;
+      --dim:    rgba(255,255,255,0.55);
+      --dimmer: rgba(255,255,255,0.25);
+      --border: rgba(255,255,255,0.08);
+      --border2: rgba(255,255,255,0.13);
+      --grid-line: rgba(255,255,255,0.06);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--white);
+      overflow: hidden;
+    }
+
+    .deck {
+      display: flex;
+      width: 300vw;
+      height: 100vh;
+      transition: transform 0.55s cubic-bezier(0.77, 0, 0.175, 1);
+    }
+
+    .slide {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-shrink: 0;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* ── Navigation ── */
+    .nav-btn {
+      position: fixed; top: 50%; transform: translateY(-50%);
+      z-index: 100;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border2);
+      color: var(--white);
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      cursor: pointer; font-size: 20px;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+    }
+    .nav-btn:hover { background: rgba(255,255,255,0.12); }
+    #prev { left: 20px; }
+    #next { right: 20px; }
+
+    .dots {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      display: flex; gap: 8px; z-index: 100;
+    }
+    .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--dimmer); cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .dot.active { background: var(--orange); transform: scale(1.4); }
+
+    .slide-num {
+      position: fixed; bottom: 24px; right: 28px;
+      font-size: 12px; color: var(--dimmer); z-index: 100;
+      letter-spacing: 0.06em;
+    }
+
+    /* ══════════════════════════════════════════════
+       SLIDE 1 — Cover + Radar Chart
+    ══════════════════════════════════════════════ */
+    #s1 { background: var(--bg); align-items: stretch; }
+    #s1::before {
+      content: ''; position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(255,107,53,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,107,53,0.025) 1px, transparent 1px);
+      background-size: 52px 52px; pointer-events: none;
+    }
+
+    .s1-left {
+      width: 44%; display: flex; flex-direction: column;
+      justify-content: center;
+      padding: 80px 48px 80px 72px;
+      position: relative; z-index: 1;
+    }
+
+    .s1-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      border: 1px solid var(--orange-line); border-radius: 4px;
+      padding: 6px 14px; font-size: 11px; font-weight: 600;
+      color: var(--orange); letter-spacing: 0.1em; text-transform: uppercase;
+      margin-bottom: 32px; width: fit-content;
+    }
+    .s1-badge::before {
+      content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--orange);
+    }
+
+    .s1-title {
+      font-size: clamp(44px, 4.8vw, 72px);
+      font-weight: 900; line-height: 1.08; letter-spacing: -0.03em;
+      color: var(--white); margin-bottom: 24px;
+    }
+    .s1-title em { font-style: normal; color: var(--orange); }
+
+    .s1-sub {
+      font-size: 16px; font-weight: 400; color: var(--dim);
+      line-height: 1.65; max-width: 380px; margin-bottom: 48px;
+    }
+
+    .s1-stats {
+      display: flex; flex-direction: column; gap: 0;
+      border-top: 1px solid var(--border2);
+    }
+    .s1-stat {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 16px 0; border-bottom: 1px solid var(--border);
+    }
+    .s1-stat-label { font-size: 13px; color: var(--dim); }
+    .s1-stat-val { font-size: 14px; font-weight: 700; color: var(--orange); }
+
+    .s1-right {
+      width: 56%; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 60px 64px 60px 20px; position: relative; z-index: 1;
+    }
+
+    .radar-wrap {
+      display: flex; flex-direction: column; align-items: center; gap: 28px;
+      width: 100%; max-width: 440px;
+    }
+
+    .radar-title {
+      font-size: 13px; font-weight: 600; color: var(--dim);
+      letter-spacing: 0.08em; text-transform: uppercase;
+    }
+
+    .radar-svg { width: 100%; max-width: 340px; }
+
+    .radar-legend {
+      display: flex; flex-wrap: wrap; gap: 12px 24px;
+      justify-content: center;
+    }
+    .legend-item {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 12px; color: var(--dim);
+    }
+    .legend-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+    }
+    .legend-dot.orange { background: var(--orange); }
+    .legend-dot.dimmed { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); }
+
+    /* ══════════════════════════════════════════════
+       SLIDE 2 — Scatter Plot
+    ══════════════════════════════════════════════ */
+    #s2 { background: var(--bg2); flex-direction: column; align-items: stretch; }
+
+    .s2-top {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      padding: 48px 72px 0;
+      flex-shrink: 0;
+    }
+    .s2-title-block {}
+    .s2-label {
+      font-size: 11px; font-weight: 600; color: var(--orange);
+      letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 10px;
+    }
+    .s2-title {
+      font-size: clamp(28px, 3vw, 44px);
+      font-weight: 900; letter-spacing: -0.025em;
+    }
+    .s2-axis-hint {
+      font-size: 13px; color: var(--dimmer); text-align: right;
+      line-height: 1.6;
+    }
+
+    .s2-chart-wrap {
+      flex: 1; display: flex; align-items: center; justify-content: center;
+      padding: 20px 60px 48px;
+    }
+    .s2-chart-wrap svg { width: 100%; max-width: 860px; }
+
+    /* ══════════════════════════════════════════════
+       SLIDE 3 — Horizontal Bar Chart
+    ══════════════════════════════════════════════ */
+    #s3 { background: var(--bg); align-items: stretch; }
+    #s3::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 55% 50% at 72% 50%, rgba(255,107,53,0.05) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .s3-left {
+      width: 36%; display: flex; flex-direction: column;
+      justify-content: center;
+      padding: 80px 40px 80px 72px;
+      border-right: 1px solid var(--border);
+      position: relative; z-index: 1;
+    }
+    .s3-label {
+      font-size: 11px; font-weight: 600; color: var(--orange);
+      letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 20px;
+    }
+    .s3-title {
+      font-size: clamp(32px, 3.2vw, 50px);
+      font-weight: 900; letter-spacing: -0.025em;
+      line-height: 1.1; margin-bottom: 28px;
+    }
+    .s3-body {
+      font-size: 17px; color: var(--dim); line-height: 1.7;
+      margin-bottom: 36px;
+    }
+    .s3-body em { font-style: normal; color: var(--white); font-weight: 600; }
+    .s3-source {
+      font-size: 14px; color: var(--dimmer); letter-spacing: 0.04em;
+    }
+
+    .s3-right {
+      width: 64%; display: flex; flex-direction: column;
+      justify-content: center;
+      padding: 60px 72px 60px 52px;
+      position: relative; z-index: 1;
+    }
+    .s3-chart-label {
+      font-size: 14px; font-weight: 600; color: var(--dimmer);
+      letter-spacing: 0.08em; text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .s3-right svg { width: 100%; }
+  </style>
+</head>
+<body>
+
+<div class="deck" id="deck">
+
+  <!-- ══ SLIDE 1: Radar Chart ══ -->
+  <div class="slide" id="s1">
+    <div class="s1-left">
+      <div class="s1-badge">Stanford AI Systems · Engineering Guide</div>
+
+      <div class="s1-title">
+        AI Engineering<br>
+        <em>Is More Than</em><br>
+        Calling an API
+      </div>
+
+      <div class="s1-sub">
+        From Base LLM to multi-agent collaboration, each of the six engineering layers has its own decision logic and maturity curve.
+      </div>
+
+      <div class="s1-stats">
+        <div class="s1-stat">
+          <span class="s1-stat-label">Engineering Layers</span>
+          <span class="s1-stat-val">6 Layers</span>
+        </div>
+        <div class="s1-stat">
+          <span class="s1-stat-label">Core Practices</span>
+          <span class="s1-stat-val">RAG · Eval · Agents</span>
+        </div>
+        <div class="s1-stat">
+          <span class="s1-stat-label">Source</span>
+          <span class="s1-stat-val">Stanford CS Course Notes</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="s1-right">
+      <div class="radar-wrap">
+        <div class="radar-title">6-Layer Engineering Maturity</div>
+
+        <!-- Radar Chart: center (150,150), max-r=110, 6 axes -->
+        <svg class="radar-svg" viewBox="0 0 300 310" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+          <!-- Grid hexagons at 25%, 50%, 75%, 100% of r=110 -->
+          <!-- r=27.5: 150,122.5 173.82,136.25 173.82,163.75 150,177.5 126.18,163.75 126.18,136.25 -->
+          <polygon points="150,122.5 173.82,136.25 173.82,163.75 150,177.5 126.18,163.75 126.18,136.25"
+            fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+          <!-- r=55: 150,95 197.63,122.5 197.63,177.5 150,205 102.37,177.5 102.37,122.5 -->
+          <polygon points="150,95 197.63,122.5 197.63,177.5 150,205 102.37,177.5 102.37,122.5"
+            fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+          <!-- r=82.5: 150,67.5 221.45,108.75 221.45,191.25 150,232.5 78.55,191.25 78.55,108.75 -->
+          <polygon points="150,67.5 221.45,108.75 221.45,191.25 150,232.5 78.55,191.25 78.55,108.75"
+            fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+          <!-- r=110 outer: 150,40 245.26,95 245.26,205 150,260 54.74,205 54.74,95 -->
+          <polygon points="150,40 245.26,95 245.26,205 150,260 54.74,205 54.74,95"
+            fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+
+          <!-- Axis lines from center to each vertex -->
+          <line x1="150" y1="150" x2="150" y2="40"      stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+          <line x1="150" y1="150" x2="245.26" y2="95"   stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+          <line x1="150" y1="150" x2="245.26" y2="205"  stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+          <line x1="150" y1="150" x2="150" y2="260"     stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+          <line x1="150" y1="150" x2="54.74" y2="205"   stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+          <line x1="150" y1="150" x2="54.74" y2="95"    stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+
+          <!-- Data polygon: values 0.95, 0.88, 0.70, 0.48, 0.38, 0.25 -->
+          <!-- i=0 Base LLM (top):      r=104.5 → 150, 150-104.5=45.5 -->
+          <!-- i=1 Prompt (top-right):  r=96.8  → 150+96.8*0.866=233.8, 150-48.4=101.6 -->
+          <!-- i=2 RAG (bot-right):     r=77    → 150+77*0.866=216.7, 150+38.5=188.5 -->
+          <!-- i=3 Fine-tune (bottom):  r=52.8  → 150, 150+52.8=202.8 -->
+          <!-- i=4 Agents (bot-left):   r=41.8  → 150-41.8*0.866=113.8, 150+20.9=170.9 -->
+          <!-- i=5 Multi-Agent (top-left): r=27.5 → 150-27.5*0.866=126.2, 150-13.75=136.25 -->
+          <polygon
+            points="150,45.5 233.8,101.6 216.7,188.5 150,202.8 113.8,170.9 126.2,136.25"
+            fill="rgba(255,107,53,0.18)"
+            stroke="#FF6B35"
+            stroke-width="1.5"
+          />
+
+          <!-- Data vertex dots -->
+          <circle cx="150"   cy="45.5"  r="4" fill="#FF6B35"/>
+          <circle cx="233.8" cy="101.6" r="4" fill="#FF6B35"/>
+          <circle cx="216.7" cy="188.5" r="4" fill="#FF6B35"/>
+          <circle cx="150"   cy="202.8" r="4" fill="#FF6B35"/>
+          <circle cx="113.8" cy="170.9" r="4" fill="#FF6B35"/>
+          <circle cx="126.2" cy="136.25" r="4" fill="#FF6B35"/>
+
+          <!-- Axis labels -->
+          <text x="150" y="24"    text-anchor="middle" font-size="14" font-weight="600" fill="rgba(255,255,255,0.9)" font-family="Inter,sans-serif">Base LLM</text>
+          <text x="256" y="86"    text-anchor="start"  font-size="14" font-weight="600" fill="rgba(255,255,255,0.9)" font-family="Inter,sans-serif">Prompt</text>
+          <text x="256" y="212"   text-anchor="start"  font-size="14" font-weight="600" fill="rgba(255,255,255,0.9)" font-family="Inter,sans-serif">RAG</text>
+          <text x="150" y="278"   text-anchor="middle" font-size="14" font-weight="600" fill="rgba(255,255,255,0.9)" font-family="Inter,sans-serif">Fine-tune</text>
+          <text x="44"  y="212"   text-anchor="end"    font-size="14" font-weight="600" fill="rgba(255,255,255,0.9)" font-family="Inter,sans-serif">Agents</text>
+          <text x="44"  y="86"    text-anchor="end"    font-size="14" font-weight="600" fill="rgba(255,255,255,0.9)" font-family="Inter,sans-serif">Multi-Agent</text>
+
+          <!-- Value labels near dots -->
+          <text x="150"   y="40"    text-anchor="middle" font-size="13" fill="#FF6B35" font-family="Inter,sans-serif" font-weight="700">95%</text>
+          <text x="243"   y="100"   text-anchor="start"  font-size="13" fill="#FF6B35" font-family="Inter,sans-serif" font-weight="700">88%</text>
+          <text x="225"   y="202"   text-anchor="start"  font-size="13" fill="#FF6B35" font-family="Inter,sans-serif" font-weight="700">70%</text>
+          <text x="150"   y="218"   text-anchor="middle" font-size="13" fill="#FF6B35" font-family="Inter,sans-serif" font-weight="700">48%</text>
+          <text x="105"   y="185"   text-anchor="end"    font-size="13" fill="#FF6B35" font-family="Inter,sans-serif" font-weight="700">38%</text>
+          <text x="118"   y="132"   text-anchor="end"    font-size="13" fill="#FF6B35" font-family="Inter,sans-serif" font-weight="700">25%</text>
+
+          <!-- Scale label -->
+          <text x="150" y="305" text-anchor="middle" font-size="10" fill="rgba(255,255,255,0.22)" font-family="Inter,sans-serif">Industry Adoption · Maturity</text>
+        </svg>
+
+        <div class="radar-legend">
+          <div class="legend-item">
+            <div class="legend-dot orange"></div>
+            <span>Current Industry Adoption</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot dimmed"></div>
+            <span>100% Baseline</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 2: Scatter Plot ══ -->
+  <div class="slide" id="s2">
+    <div class="s2-top">
+      <div class="s2-title-block">
+        <div class="s2-label">Engineering Decision Matrix</div>
+        <div class="s2-title">Complexity vs Engineering ROI</div>
+      </div>
+      <div class="s2-axis-hint">
+        X-axis: Implementation Complexity (Low → High)<br>
+        Y-axis: Engineering ROI Index (Low → High)
+      </div>
+    </div>
+
+    <div class="s2-chart-wrap">
+      <!-- Scatter plot: viewBox 860x380, plot area x:90-820, y:30-330 -->
+      <svg viewBox="0 0 860 390" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+        <!-- Chart background -->
+        <rect x="90" y="20" width="730" height="310" fill="rgba(255,255,255,0.025)" rx="6"/>
+
+        <!-- Quadrant backgrounds -->
+        <rect x="91" y="21" width="363" height="154" fill="rgba(255,107,53,0.07)" rx="4"/>
+        <rect x="455" y="21" width="364" height="154" fill="rgba(255,255,255,0.02)" rx="4"/>
+        <rect x="91" y="176" width="363" height="153" fill="rgba(255,255,255,0.015)" rx="4"/>
+        <rect x="455" y="176" width="364" height="153" fill="rgba(220,50,50,0.05)" rx="4"/>
+
+        <!-- Quadrant labels -->
+        <text x="272" y="46" text-anchor="middle" font-size="12" font-weight="700" fill="rgba(255,107,53,0.9)" font-family="Inter,sans-serif">★ Sweet Spot</text>
+        <text x="637" y="46" text-anchor="middle" font-size="12" font-weight="600" fill="rgba(255,255,255,0.45)" font-family="Inter,sans-serif">High Investment, High Return</text>
+        <text x="637" y="316" text-anchor="middle" font-size="12" font-weight="600" fill="rgba(220,80,80,0.7)" font-family="Inter,sans-serif">Invest Carefully</text>
+
+        <!-- Border & axis lines -->
+        <line x1="90"  y1="20"  x2="90"  y2="330" stroke="rgba(255,255,255,0.55)" stroke-width="2.5"/>
+        <line x1="90"  y1="330" x2="820" y2="330" stroke="rgba(255,255,255,0.55)" stroke-width="2.5"/>
+        <!-- Center dividers (dashed) -->
+        <line x1="455" y1="20"  x2="455" y2="330" stroke="rgba(255,255,255,0.28)" stroke-width="1.5" stroke-dasharray="5,4"/>
+        <line x1="90"  y1="175" x2="820" y2="175" stroke="rgba(255,255,255,0.28)" stroke-width="1.5" stroke-dasharray="5,4"/>
+
+        <!-- X axis ticks and labels -->
+        <text x="90"  y="354" text-anchor="middle" font-size="16" font-weight="700" fill="rgba(255,255,255,0.85)" font-family="Inter,sans-serif">Low</text>
+        <text x="455" y="354" text-anchor="middle" font-size="16" font-weight="700" fill="rgba(255,255,255,0.85)" font-family="Inter,sans-serif">Mid</text>
+        <text x="820" y="354" text-anchor="middle" font-size="16" font-weight="700" fill="rgba(255,255,255,0.85)" font-family="Inter,sans-serif">High</text>
+        <text x="455" y="380" text-anchor="middle" font-size="15" font-weight="600" fill="rgba(255,255,255,0.65)" font-family="Inter,sans-serif">Implementation Complexity →</text>
+
+        <!-- Y axis labels -->
+        <text x="70" y="334" text-anchor="middle" font-size="16" font-weight="700" fill="rgba(255,255,255,0.85)" font-family="Inter,sans-serif">Low</text>
+        <text x="70" y="178" text-anchor="middle" font-size="16" font-weight="700" fill="rgba(255,255,255,0.85)" font-family="Inter,sans-serif">Mid</text>
+        <text x="70" y="26"  text-anchor="middle" font-size="16" font-weight="700" fill="rgba(255,255,255,0.85)" font-family="Inter,sans-serif">High</text>
+        <text x="20" y="175" text-anchor="middle" font-size="15" font-weight="600" fill="rgba(255,255,255,0.65)" font-family="Inter,sans-serif" transform="rotate(-90, 20, 175)">Engineering ROI ↑</text>
+
+        <!--
+          X: x = 90 + complexity/100 * 730
+          Y: y = 330 - roi/100 * 310
+
+          Base LLM:    complexity=8,  roi=28  → x=148, y=243
+          Prompt Eng:  complexity=15, roi=90  → x=200, y=51
+          RAG:         complexity=42, roi=82  → x=397, y=76
+          Fine-tuning: complexity=72, roi=55  → x=616, y=160
+          Agentic:     complexity=68, roi=73  → x=586, y=104
+          Multi-Agent: complexity=88, roi=77  → x=732, y=91
+        -->
+
+        <!-- Base LLM: dot bottom-left, labels ABOVE dot -->
+        <circle cx="148" cy="243" r="10" fill="rgba(255,255,255,0.22)" stroke="rgba(255,255,255,0.55)" stroke-width="2"/>
+        <text x="148" y="207" text-anchor="middle" font-size="13" font-weight="700" fill="rgba(255,255,255,0.9)" font-family="Inter,sans-serif">Base LLM</text>
+        <text x="148" y="223" text-anchor="middle" font-size="12" fill="rgba(255,255,255,0.55)" font-family="Inter,sans-serif">Minimal setup, ready to use</text>
+
+        <!-- Prompt Engineering: top-left, labels BELOW dot -->
+        <circle cx="200" cy="51" r="32" fill="rgba(255,107,53,0.15)"/>
+        <circle cx="200" cy="51" r="12" fill="#FF6B35" stroke="rgba(255,140,80,0.8)" stroke-width="3"/>
+        <text x="200" y="96" text-anchor="middle" font-size="14" font-weight="700" fill="#FF6B35" font-family="Inter,sans-serif">Prompt Engineering</text>
+        <text x="200" y="112" text-anchor="middle" font-size="12" font-weight="600" fill="rgba(255,140,80,0.85)" font-family="Inter,sans-serif">★ Highest ROI · Lowest Barrier</text>
+
+        <!-- RAG: top-center, labels to the RIGHT of dot -->
+        <circle cx="397" cy="76" r="11" fill="#FF8A5C" stroke="rgba(255,107,53,0.7)" stroke-width="2"/>
+        <text x="414" y="70" text-anchor="start" font-size="13" font-weight="700" fill="rgba(255,255,255,0.95)" font-family="Inter,sans-serif">RAG</text>
+        <text x="414" y="85" text-anchor="start" font-size="12" fill="rgba(255,255,255,0.65)" font-family="Inter,sans-serif">Knowledge-augmented · Mainstream</text>
+
+        <!-- Agentic Workflow: upper-right, labels BELOW dot (avoids RAG collision) -->
+        <circle cx="586" cy="104" r="10" fill="rgba(255,255,255,0.55)" stroke="rgba(255,255,255,0.8)" stroke-width="2"/>
+        <text x="586" y="131" text-anchor="middle" font-size="13" font-weight="700" fill="rgba(255,255,255,0.95)" font-family="Inter,sans-serif">Agentic Workflow</text>
+        <text x="586" y="147" text-anchor="middle" font-size="12" fill="rgba(255,255,255,0.6)" font-family="Inter,sans-serif">High return · Requires Eval guardrails</text>
+
+        <!-- Fine-tuning: middle-right, labels BELOW dot -->
+        <circle cx="616" cy="160" r="9" fill="rgba(255,255,255,0.4)" stroke="rgba(255,255,255,0.65)" stroke-width="2"/>
+        <text x="616" y="184" text-anchor="middle" font-size="13" font-weight="700" fill="rgba(255,255,255,0.85)" font-family="Inter,sans-serif">Fine-tuning</text>
+        <text x="616" y="200" text-anchor="middle" font-size="12" fill="rgba(255,255,255,0.55)" font-family="Inter,sans-serif">Precise control · Higher cost</text>
+
+        <!-- Multi-Agent: upper-far-right, labels BELOW dot -->
+        <circle cx="732" cy="91" r="9" fill="rgba(255,255,255,0.3)" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>
+        <text x="732" y="116" text-anchor="middle" font-size="13" font-weight="700" fill="rgba(255,255,255,0.8)" font-family="Inter,sans-serif">Multi-Agent</text>
+        <text x="732" y="132" text-anchor="middle" font-size="12" fill="rgba(255,255,255,0.5)" font-family="Inter,sans-serif">Cutting-edge · High uncertainty</text>
+
+      </svg>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 3: Horizontal Bar Chart ══ -->
+  <div class="slide" id="s3">
+    <div class="s3-left">
+      <div class="s3-label">Engineering ROI Ranking</div>
+      <div class="s3-title">Do the<br>Highest-ROI<br>Work First</div>
+      <div class="s3-body">
+        Evaluation is the most underrated skill —
+        <em>no evals, no iteration</em>.
+        But before Eval, nail your Prompt and RAG first.
+      </div>
+      <div class="s3-source">Source: Stanford AI Systems · AI Engineering Fundamentals</div>
+    </div>
+
+    <div class="s3-right">
+      <div class="s3-chart-label">Engineering Layer ROI Index (out of 100)</div>
+
+      <!--
+        Bar chart: 6 items, bar area x=0 to x=380 (max value=100 → 380px)
+        viewBox: 520 x 310
+        Labels: left 0-140, bars: 150-530
+        Bar height: 30, gap: 16, total: 6*30+5*16=260, top/bottom padding: 25
+        Y positions: 25, 71, 117, 163, 209, 255
+
+        Data (sorted desc):
+        Prompt Eng: 92 → w=92/100*360=331.2
+        RAG: 84 → 302.4
+        Agentic Workflow: 73 → 262.8
+        Fine-tuning: 61 → 219.6
+        Multi-Agent: 55 → 198
+        Base LLM: 38 → 136.8
+      -->
+      <!-- viewBox 560×420, label area x:0-160, chart area x:160-540 (w=380), bar-h=38, gap=20 -->
+      <!-- Y: bar1=28, bar2=86, bar3=144, bar4=202, bar5=260, bar6=318. Axis labels at y=400 -->
+      <svg viewBox="0 0 560 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+        <defs>
+          <linearGradient id="bar-grad-1" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%"   stop-color="#FF6B35" stop-opacity="0.55"/>
+            <stop offset="100%" stop-color="#FF6B35" stop-opacity="0.18"/>
+          </linearGradient>
+        </defs>
+
+        <!-- Grid lines -->
+        <line x1="160" y1="16" x2="160" y2="368" stroke="rgba(255,255,255,0.18)" stroke-width="1.5"/>
+        <line x1="350" y1="16" x2="350" y2="368" stroke="rgba(255,255,255,0.08)" stroke-width="1" stroke-dasharray="4,4"/>
+        <line x1="540" y1="16" x2="540" y2="368" stroke="rgba(255,255,255,0.18)" stroke-width="1.5"/>
+
+        <!-- Axis labels -->
+        <text x="160" y="392" text-anchor="middle" font-size="13" font-weight="600" fill="rgba(255,255,255,0.5)" font-family="Inter,sans-serif">0</text>
+        <text x="350" y="392" text-anchor="middle" font-size="13" font-weight="600" fill="rgba(255,255,255,0.5)" font-family="Inter,sans-serif">50</text>
+        <text x="540" y="392" text-anchor="middle" font-size="13" font-weight="600" fill="rgba(255,255,255,0.5)" font-family="Inter,sans-serif">100</text>
+
+        <!-- Row 1: Prompt Engineering (92) -->
+        <!-- bar w = 380*0.92 = 349.6 → end x = 509.6 -->
+        <text x="152" y="53" text-anchor="end" font-size="16" font-weight="700" fill="rgba(255,255,255,0.95)" font-family="Inter,sans-serif">Prompt Eng.</text>
+        <rect x="160" y="28" width="350" height="38" rx="5" fill="rgba(255,107,53,0.22)"/>
+        <rect x="160" y="28" width="350" height="38" rx="5" fill="url(#bar-grad-1)"/>
+        <text x="518" y="53" text-anchor="start" font-size="20" font-weight="900" fill="#FF6B35" font-family="Inter,sans-serif">92</text>
+
+        <!-- Row 2: RAG (84) -->
+        <!-- bar w = 380*0.84 = 319.2 → end x = 479.2 -->
+        <text x="152" y="111" text-anchor="end" font-size="16" font-weight="700" fill="rgba(255,255,255,0.8)" font-family="Inter,sans-serif">RAG</text>
+        <rect x="160" y="86" width="319" height="38" rx="5" fill="rgba(255,107,53,0.13)"/>
+        <text x="487" y="111" text-anchor="start" font-size="20" font-weight="900" fill="rgba(255,107,53,0.9)" font-family="Inter,sans-serif">84</text>
+
+        <!-- Row 3: Agentic (73) -->
+        <!-- bar w = 380*0.73 = 277.4 → end x = 437.4 -->
+        <text x="152" y="169" text-anchor="end" font-size="16" font-weight="700" fill="rgba(255,255,255,0.65)" font-family="Inter,sans-serif">Agentic</text>
+        <rect x="160" y="144" width="277" height="38" rx="5" fill="rgba(255,255,255,0.09)"/>
+        <text x="445" y="169" text-anchor="start" font-size="20" font-weight="900" fill="rgba(255,255,255,0.6)" font-family="Inter,sans-serif">73</text>
+
+        <!-- Row 4: Fine-tuning (61) -->
+        <!-- bar w = 380*0.61 = 231.8 → end x = 391.8 -->
+        <text x="152" y="227" text-anchor="end" font-size="16" font-weight="700" fill="rgba(255,255,255,0.55)" font-family="Inter,sans-serif">Fine-tuning</text>
+        <rect x="160" y="202" width="232" height="38" rx="5" fill="rgba(255,255,255,0.07)"/>
+        <text x="400" y="227" text-anchor="start" font-size="20" font-weight="900" fill="rgba(255,255,255,0.45)" font-family="Inter,sans-serif">61</text>
+
+        <!-- Row 5: Multi-Agent (55) -->
+        <!-- bar w = 380*0.55 = 209 → end x = 369 -->
+        <text x="152" y="285" text-anchor="end" font-size="16" font-weight="700" fill="rgba(255,255,255,0.42)" font-family="Inter,sans-serif">Multi-Agent</text>
+        <rect x="160" y="260" width="209" height="38" rx="5" fill="rgba(255,255,255,0.055)"/>
+        <text x="377" y="285" text-anchor="start" font-size="20" font-weight="900" fill="rgba(255,255,255,0.35)" font-family="Inter,sans-serif">55</text>
+
+        <!-- Row 6: Base LLM (38) -->
+        <!-- bar w = 380*0.38 = 144.4 → end x = 304.4 -->
+        <text x="152" y="343" text-anchor="end" font-size="16" font-weight="700" fill="rgba(255,255,255,0.3)" font-family="Inter,sans-serif">Base LLM</text>
+        <rect x="160" y="318" width="144" height="38" rx="5" fill="rgba(255,255,255,0.04)"/>
+        <text x="312" y="343" text-anchor="start" font-size="20" font-weight="900" fill="rgba(255,255,255,0.25)" font-family="Inter,sans-serif">38</text>
+
+      </svg>
+    </div>
+  </div>
+
+</div>
+
+<!-- Navigation -->
+<button class="nav-btn" id="prev">‹</button>
+<button class="nav-btn" id="next">›</button>
+
+<div class="dots">
+  <div class="dot active" data-i="0"></div>
+  <div class="dot" data-i="1"></div>
+  <div class="dot" data-i="2"></div>
+</div>
+
+<div class="slide-num" id="slide-num">1 / 3</div>
+
+<script>
+  const deck = document.getElementById('deck');
+  const dots = document.querySelectorAll('.dot');
+  const slideNum = document.getElementById('slide-num');
+  let cur = 0;
+  const total = 3;
+
+  function goTo(n) {
+    cur = Math.max(0, Math.min(total - 1, n));
+    deck.style.transform = `translateX(-${cur * 100}vw)`;
+    dots.forEach((d, i) => d.classList.toggle('active', i === cur));
+    slideNum.textContent = `${cur + 1} / ${total}`;
+  }
+
+  document.getElementById('next').addEventListener('click', () => goTo(cur + 1));
+  document.getElementById('prev').addEventListener('click', () => goTo(cur - 1));
+  dots.forEach(d => d.addEventListener('click', () => goTo(+d.dataset.i)));
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goTo(cur + 1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   goTo(cur - 1);
+  });
+</script>
+</body>
+</html>

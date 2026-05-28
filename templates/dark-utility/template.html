@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>How I Use LLMs — Karpathy · Dark Utility</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:        #0A0A0F;
+  --bg2:       #0F0F18;
+  --bg3:       #13131E;
+  --card:      #161624;
+  --card2:     #1C1C2C;
+  --border:    rgba(255,255,255,0.07);
+  --border-hi: rgba(91,184,255,0.30);
+  --white:     #FFFFFF;
+  --gray:      #8888A8;
+  --gray-lt:   #B0B0C8;
+  --gray-dim:  #44445A;
+  --blue:      #5BB8FF;
+  --blue-glow: rgba(91,184,255,0.15);
+  --green:     #4ADE80;
+  --mono:      'Courier New', monospace;
+  --sans:      'Inter', system-ui, sans-serif;
+}
+
+html, body {
+  width: 100%; height: 100%;
+  background: var(--bg);
+  color: var(--white);
+  font-family: var(--sans);
+  overflow: hidden;
+}
+
+/* ── Deck ────────────────────────────────────────────── */
+#deck {
+  display: flex;
+  width: 100%; height: 100vh;
+  overflow-x: scroll;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+#deck::-webkit-scrollbar { display: none; }
+
+.slide {
+  flex: 0 0 100vw;
+  width: 100vw; height: 100vh;
+  scroll-snap-align: start;
+  display: flex; flex-direction: column;
+  position: relative; overflow: hidden;
+  background: var(--bg2);
+}
+
+
+/* ════════════════════════════════════════════
+   SLIDE 1 — Cover: Text left / OSD card right
+════════════════════════════════════════════ */
+#s1 { flex-direction: row; }
+
+/* Left panel */
+.s1-left {
+  width: 46%;
+  display: flex; flex-direction: column;
+  justify-content: center;
+  padding: 64px 52px 64px 72px;
+  border-right: 1px solid var(--border);
+}
+
+.s1-source {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 5px 14px;
+  border: 1px solid var(--border-hi);
+  border-radius: 99px;
+  background: var(--blue-glow);
+  font-family: var(--mono);
+  font-size: 11px; letter-spacing: 0.14em;
+  color: var(--blue); text-transform: uppercase;
+  align-self: flex-start;
+  margin-bottom: 36px;
+}
+.s1-source-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--blue);
+  box-shadow: 0 0 6px var(--blue);
+}
+
+.s1-title {
+  font-size: clamp(64px, 7vw, 96px);
+  font-weight: 900;
+  line-height: 1.0;
+  letter-spacing: -0.04em;
+  color: var(--white);
+  margin-bottom: 28px;
+}
+.s1-title .hl { color: var(--blue); }
+
+.s1-sub {
+  font-size: clamp(17px, 1.7vw, 20px);
+  font-weight: 400; color: var(--gray);
+  line-height: 1.75;
+  margin-bottom: 48px;
+  max-width: 380px;
+}
+
+.s1-btns { display: flex; gap: 12px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 13px 28px; border-radius: 8px;
+  font-size: 15px; font-weight: 600;
+  cursor: pointer; border: none; font-family: var(--sans);
+  transition: opacity .15s, transform .12s;
+}
+.btn:hover { opacity: .85; transform: translateY(-1px); }
+.btn-primary { background: var(--blue); color: var(--bg); }
+.btn-editorial-minimal {
+  background: transparent; color: var(--white);
+  border: 1px solid rgba(255,255,255,0.20);
+}
+
+/* Right panel — atmospheric OSD float */
+.s1-right {
+  flex: 1;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 60px 52px;
+  position: relative; overflow: hidden;
+}
+
+/* Radial glow behind widget */
+.s1-right::before {
+  content: '';
+  position: absolute;
+  width: 420px; height: 420px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(91,184,255,0.10) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* Floating OSD card */
+.osd-card {
+  width: 100%; max-width: 380px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  position: relative; z-index: 1;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.5), 0 0 0 1px rgba(91,184,255,0.06);
+}
+
+.osd-chrome {
+  display: flex; align-items: center; gap: 14px;
+  padding: 12px 18px;
+  background: var(--card2);
+  border-bottom: 1px solid var(--border);
+}
+.osd-traffic { display: flex; gap: 7px; }
+.osd-traffic span {
+  width: 10px; height: 10px; border-radius: 50%; display: block;
+}
+.osd-traffic span:nth-child(1) { background: #FF5F57; }
+.osd-traffic span:nth-child(2) { background: #FEBC2E; }
+.osd-traffic span:nth-child(3) { background: #28C840; }
+.osd-chrome-title {
+  flex: 1; text-align: center;
+  font-family: var(--mono); font-size: 10px;
+  letter-spacing: 0.20em; color: var(--gray-dim);
+  text-transform: uppercase;
+}
+.osd-chrome-live {
+  font-family: var(--mono); font-size: 10px;
+  color: var(--green); letter-spacing: 0.08em;
+}
+
+.osd-body {
+  padding: 20px 22px 22px;
+  display: flex; flex-direction: column; gap: 0;
+}
+
+.osd-row {
+  display: flex; align-items: center; gap: 14px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.osd-row:last-child { border-bottom: none; }
+
+.osd-icon {
+  width: 22px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.osd-label {
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: 0.10em; color: var(--gray);
+  text-transform: uppercase; width: 96px; flex-shrink: 0;
+}
+.osd-bar-wrap {
+  flex: 1; height: 4px;
+  background: rgba(255,255,255,0.06); border-radius: 2px; overflow: hidden;
+}
+.osd-bar-fill {
+  height: 100%; border-radius: 2px;
+  background: linear-gradient(90deg, #3A9AE8, var(--blue));
+}
+.osd-val {
+  font-family: var(--mono); font-size: 11px;
+  color: var(--gray-lt); width: 90px; text-align: right; flex-shrink: 0;
+}
+.osd-status {
+  width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
+}
+.st-on  { background: var(--green); box-shadow: 0 0 5px var(--green); }
+.st-mid { background: var(--blue);  box-shadow: 0 0 5px var(--blue); }
+.st-off { background: var(--gray-dim); }
+
+
+/* ════════════════════════════════════════════
+   SLIDE 2 — Full-width horizontal mode strips
+════════════════════════════════════════════ */
+#s2 { background: var(--bg3); }
+
+/* Slide 2: everything floats centered as one block */
+.s2-center {
+  flex: 1;
+  display: flex; flex-direction: column;
+  justify-content: center;
+  padding: 48px 60px;
+}
+
+.s2-title-row {
+  display: flex; align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+.s2-title-left {}
+.s2-eyebrow {
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: 0.18em; color: var(--blue);
+  text-transform: uppercase; margin-bottom: 10px;
+}
+.s2-title {
+  font-size: clamp(42px, 4.8vw, 60px);
+  font-weight: 800; color: var(--white);
+  letter-spacing: -0.03em; line-height: 1.05;
+}
+.s2-principle {
+  max-width: 280px; text-align: right;
+  font-size: 14px; color: var(--gray);
+  line-height: 1.65; font-style: italic;
+  border-right: 2px solid var(--blue);
+  padding-right: 16px;
+}
+
+/* Strips */
+.s2-strips-inner {
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.mode-strip {
+  height: 72px;
+  display: flex; align-items: center;
+  padding: 0 60px;
+  border-bottom: 1px solid var(--border);
+  gap: 0;
+  transition: background .15s;
+  cursor: default;
+}
+.mode-strip:last-child { border-bottom: none; }
+.mode-strip:hover { background: rgba(91,184,255,0.04); }
+
+.ms-num {
+  font-family: var(--mono); font-size: 12px;
+  color: var(--blue); letter-spacing: 0.10em;
+  width: 60px; flex-shrink: 0;
+}
+.ms-divider {
+  width: 1px; height: 32px;
+  background: var(--border); flex-shrink: 0;
+  margin: 0 28px;
+}
+.ms-name {
+  font-size: clamp(18px, 2vw, 24px);
+  font-weight: 700; color: var(--white);
+  width: 220px; flex-shrink: 0;
+}
+.ms-divider2 {
+  width: 1px; height: 24px;
+  background: var(--border); flex-shrink: 0;
+  margin: 0 28px;
+}
+.ms-when {
+  font-size: 13px; color: var(--blue);
+  width: 180px; flex-shrink: 0;
+  font-weight: 500; letter-spacing: 0.02em;
+}
+.ms-desc {
+  flex: 1; font-size: 15px;
+  color: var(--gray); line-height: 1.5;
+}
+.ms-tag {
+  margin-left: 24px;
+  display: inline-block;
+  padding: 4px 12px;
+  border: 1px solid var(--border);
+  border-radius: 99px;
+  font-size: 11px; font-family: var(--mono);
+  letter-spacing: 0.06em; color: var(--gray-dim);
+  flex-shrink: 0;
+}
+
+
+/* ════════════════════════════════════════════
+   SLIDE 3 — Split: quote left / conclusions right
+════════════════════════════════════════════ */
+#s3 { flex-direction: row; background: var(--bg2); }
+
+/* Left: giant quote */
+.s3-left {
+  width: 52%;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 60px 56px 60px 60px;
+  border-right: 1px solid var(--border);
+  position: relative; overflow: hidden;
+}
+
+.s3-big-q {
+  position: absolute;
+  top: 20px; left: 40px;
+  font-size: 240px; font-weight: 900;
+  color: rgba(91,184,255,0.06);
+  line-height: 1; pointer-events: none;
+  font-family: Georgia, serif;
+  user-select: none;
+}
+
+.s3-eyebrow {
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: 0.18em; color: var(--blue);
+  text-transform: uppercase; margin-bottom: 28px;
+}
+.s3-quote-text {
+  font-size: clamp(22px, 2.5vw, 32px);
+  font-weight: 400; font-style: italic;
+  color: var(--white); line-height: 1.60;
+  margin-bottom: 36px; position: relative; z-index: 1;
+}
+.s3-quote-text .hl { color: var(--blue); font-style: normal; font-weight: 700; }
+
+.s3-author {
+  display: flex; align-items: center; gap: 14px;
+  position: relative; z-index: 1;
+}
+.s3-avatar {
+  width: 42px; height: 42px; border-radius: 50%;
+  background: var(--card2); border: 1px solid var(--border-hi);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; font-weight: 900; color: var(--blue);
+  flex-shrink: 0;
+}
+.s3-author-name {
+  font-size: 16px; font-weight: 700; color: var(--white);
+}
+.s3-author-sub {
+  font-size: 13px; color: var(--gray); margin-top: 3px;
+}
+
+/* Right: conclusions */
+.s3-right {
+  flex: 1;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 48px 56px 48px 52px;
+  gap: 0;
+}
+
+.s3-right-head {
+  font-size: clamp(28px, 2.8vw, 38px);
+  font-weight: 800; color: var(--white);
+  letter-spacing: -0.02em; margin-bottom: 28px; line-height: 1.15;
+}
+
+.concl-item {
+  display: flex; gap: 18px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+  align-items: flex-start;
+}
+.concl-item:last-child { border-bottom: none; }
+
+.concl-num {
+  font-family: var(--mono); font-size: 13px;
+  font-weight: 700; color: var(--blue);
+  letter-spacing: 0.06em; flex-shrink: 0;
+  padding-top: 3px; width: 30px;
+}
+.concl-title {
+  font-size: clamp(16px, 1.5vw, 18px);
+  font-weight: 700; color: var(--white);
+  line-height: 1.3; margin-bottom: 4px;
+}
+.concl-desc {
+  font-size: clamp(13px, 1.2vw, 15px);
+  color: var(--gray); line-height: 1.6;
+}
+
+/* ── Nav ──────────────────────────────────────────────── */
+.nav-btn {
+  position: fixed; top: 50%; transform: translateY(-50%);
+  z-index: 200;
+  width: 38px; height: 38px; border-radius: 50%;
+  background: var(--card2); border: 1px solid var(--border);
+  color: var(--gray);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all .15s; opacity: .65;
+}
+.nav-btn:hover { border-color: var(--border-hi); color: var(--white); opacity: 1; }
+.nav-btn:disabled { opacity: .15; cursor: default; pointer-events: none; }
+#nav-prev { left: 14px; }
+#nav-next { right: 14px; }
+
+#dot-nav {
+  position: fixed; bottom: 22px; left: 50%;
+  transform: translateX(-50%);
+  display: flex; gap: 7px; z-index: 200;
+}
+.dot {
+  width: 6px; height: 6px; border-radius: 3px;
+  background: var(--gray-dim);
+  border: none; cursor: pointer; padding: 0;
+  transition: background .2s, width .2s;
+}
+.dot.active { background: var(--blue); width: 22px; }
+
+#counter {
+  position: fixed; bottom: 20px; right: 24px;
+  z-index: 200;
+  font-family: var(--mono); font-size: 11px;
+  color: var(--gray-dim); letter-spacing: 0.08em;
+}
+
+/* ── Animations ───────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.anim { opacity: 0; animation: fadeUp .5s cubic-bezier(.22,.68,0,1.15) forwards; }
+.d1 { animation-delay: .06s; }
+.d2 { animation-delay: .14s; }
+.d3 { animation-delay: .23s; }
+.d4 { animation-delay: .32s; }
+.d5 { animation-delay: .42s; }
+.d6 { animation-delay: .52s; }
+.d7 { animation-delay: .62s; }
+.d8 { animation-delay: .72s; }
+</style>
+</head>
+<body>
+
+<div id="deck">
+
+<!-- ══════════════════════════════════════════
+     SLIDE 1: Left text  |  Right OSD panel
+══════════════════════════════════════════ -->
+<section class="slide" id="s1">
+
+  <!-- LEFT: text content -->
+  <div class="s1-left">
+
+    <div class="s1-source anim d1">
+      <span class="s1-source-dot"></span>
+      KARPATHY · HOW I USE LLMS · 2025
+    </div>
+
+    <h1 class="s1-title anim d2">
+      Direct Chat Is<br/><span class="hl">Just the Start</span>
+    </h1>
+
+    <p class="s1-sub anim d3">
+      LLM products are more than a model —<br/>
+      real capability comes from connecting<br/>the right tool to the right task.
+    </p>
+
+  </div>
+
+  <!-- RIGHT: floating OSD card, lots of dark air around it -->
+  <div class="s1-right">
+    <div class="osd-card anim d2">
+
+      <div class="osd-chrome">
+        <div class="osd-traffic">
+          <span></span><span></span><span></span>
+        </div>
+        <span class="osd-chrome-title">LLM CAPABILITY MONITOR</span>
+        <span class="osd-chrome-live">● LIVE</span>
+      </div>
+
+      <div class="osd-body">
+
+        <div class="osd-row">
+          <div class="osd-icon">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#5BB8FF" stroke-width="1.4" stroke-linecap="round">
+              <rect x="1" y="1" width="12" height="12" rx="2"/><path d="M3 7h8M3 4.5h8M3 9.5h5"/>
+            </svg>
+          </div>
+          <span class="osd-label">MODEL</span>
+          <div class="osd-bar-wrap"><div class="osd-bar-fill" style="width:100%"></div></div>
+          <span class="osd-val">claude-opus-4</span>
+          <span class="osd-status st-on"></span>
+        </div>
+
+        <div class="osd-row">
+          <div class="osd-icon">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#5BB8FF" stroke-width="1.4" stroke-linecap="round">
+              <rect x="1" y="3" width="12" height="8" rx="1.5"/><path d="M4 3V2a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1"/>
+            </svg>
+          </div>
+          <span class="osd-label">CONTEXT</span>
+          <div class="osd-bar-wrap"><div class="osd-bar-fill" style="width:95%"></div></div>
+          <span class="osd-val">180K tokens</span>
+          <span class="osd-status st-on"></span>
+        </div>
+
+        <div class="osd-row">
+          <div class="osd-icon">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#5BB8FF" stroke-width="1.4" stroke-linecap="round">
+              <circle cx="6" cy="6" r="4"/><path d="M10 10l3 3"/>
+            </svg>
+          </div>
+          <span class="osd-label">SEARCH</span>
+          <div class="osd-bar-wrap"><div class="osd-bar-fill" style="width:82%"></div></div>
+          <span class="osd-val">Perplexity on</span>
+          <span class="osd-status st-on"></span>
+        </div>
+
+        <div class="osd-row">
+          <div class="osd-icon">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#5BB8FF" stroke-width="1.4" stroke-linecap="round">
+              <path d="M11 1H3a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1z"/><path d="M3 5h8M3 8.5h5"/>
+            </svg>
+          </div>
+          <span class="osd-label">FILE UPLOAD</span>
+          <div class="osd-bar-wrap"><div class="osd-bar-fill" style="width:75%"></div></div>
+          <span class="osd-val">PDF / text</span>
+          <span class="osd-status st-mid"></span>
+        </div>
+
+        <div class="osd-row">
+          <div class="osd-icon">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#5BB8FF" stroke-width="1.4" stroke-linecap="round">
+              <polyline points="2,4.5 6,1 10,4.5"/><polyline points="2,9.5 6,13 10,9.5"/><line x1="6" y1="1" x2="6" y2="13"/>
+            </svg>
+          </div>
+          <span class="osd-label">CODE EXEC</span>
+          <div class="osd-bar-wrap"><div class="osd-bar-fill" style="width:68%"></div></div>
+          <span class="osd-val">Python · JS</span>
+          <span class="osd-status st-mid"></span>
+        </div>
+
+        <div class="osd-row">
+          <div class="osd-icon">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#5BB8FF" stroke-width="1.4" stroke-linecap="round">
+              <path d="M7 1a2.5 2.5 0 0 1 2.5 2.5v3A2.5 2.5 0 0 1 4.5 6.5V3.5A2.5 2.5 0 0 1 7 1z"/><path d="M1 8a6 6 0 0 0 12 0M7 13v1"/>
+            </svg>
+          </div>
+          <span class="osd-label">VOICE</span>
+          <div class="osd-bar-wrap"><div class="osd-bar-fill" style="width:55%"></div></div>
+          <span class="osd-val">50% queries</span>
+          <span class="osd-status st-mid"></span>
+        </div>
+
+        <div class="osd-row">
+          <div class="osd-icon">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#5BB8FF" stroke-width="1.4" stroke-linecap="round">
+              <circle cx="7" cy="7" r="5.5"/><path d="M7 4.5v2.5l2 2"/>
+            </svg>
+          </div>
+          <span class="osd-label">MEMORY</span>
+          <div class="osd-bar-wrap"><div class="osd-bar-fill" style="width:70%"></div></div>
+          <span class="osd-val">12 memories</span>
+          <span class="osd-status st-mid"></span>
+        </div>
+
+        <div class="osd-row">
+          <div class="osd-icon">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#5BB8FF" stroke-width="1.4" stroke-linecap="round">
+              <rect x="1" y="3.5" width="8" height="8" rx="1.5"/><path d="M5 1h8v8"/>
+            </svg>
+          </div>
+          <span class="osd-label">ARTIFACTS</span>
+          <div class="osd-bar-wrap"><div class="osd-bar-fill" style="width:88%"></div></div>
+          <span class="osd-val">Apps · Charts</span>
+          <span class="osd-status st-on"></span>
+        </div>
+
+      </div><!-- /osd-body -->
+    </div><!-- /osd-card -->
+  </div><!-- /s1-right -->
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     SLIDE 2: Full-width horizontal mode strips
+══════════════════════════════════════════ -->
+<section class="slide" id="s2">
+
+  <div class="s2-center">
+
+    <div class="s2-title-row">
+      <div class="s2-title-left">
+        <div class="s2-eyebrow">TOOL SELECTION MATRIX</div>
+        <h2 class="s2-title">When to Switch Modes</h2>
+      </div>
+      <p class="s2-principle">
+        The key question: should you ask directly,<br/>or switch to search, files, code,<br/>a reasoning model, or a specialist tool?
+      </p>
+    </div>
+
+  <div class="s2-strips-inner">
+
+    <div class="mode-strip">
+      <span class="ms-num">01</span>
+      <div class="ms-divider"></div>
+      <span class="ms-name">Direct Chat</span>
+      <div class="ms-divider2"></div>
+      <span class="ms-when">Common knowledge · Stable facts</span>
+      <div class="ms-divider2"></div>
+      <span class="ms-desc">Stable, common-knowledge questions. Verify anything high-stakes independently.</span>
+      <span class="ms-tag">DIRECT</span>
+    </div>
+
+    <div class="mode-strip">
+      <span class="ms-num">02</span>
+      <div class="ms-divider"></div>
+      <span class="ms-name">Search-Enhanced</span>
+      <div class="ms-divider2"></div>
+      <span class="ms-when">Recent · Fast-changing</span>
+      <div class="ms-divider2"></div>
+      <span class="ms-desc">For recent or fast-changing topics — the model's knowledge has a cutoff date.</span>
+      <span class="ms-tag">SEARCH</span>
+    </div>
+
+    <div class="mode-strip">
+      <span class="ms-num">03</span>
+      <div class="ms-divider"></div>
+      <span class="ms-name">Deep Research</span>
+      <div class="ms-divider2"></div>
+      <span class="ms-when">In-depth research · With citations</span>
+      <div class="ms-divider2"></div>
+      <span class="ms-desc">Multi-round search with cited reports. Treat output as a first draft, not final truth.</span>
+      <span class="ms-tag">RESEARCH</span>
+    </div>
+
+    <div class="mode-strip">
+      <span class="ms-num">04</span>
+      <div class="ms-divider"></div>
+      <span class="ms-name">File Upload</span>
+      <div class="ms-divider2"></div>
+      <span class="ms-when">Papers · Books · Reports</span>
+      <div class="ms-divider2"></div>
+      <span class="ms-desc">Upload source material so the model reads with you — not from memory.</span>
+      <span class="ms-tag">FILES</span>
+    </div>
+
+    <div class="mode-strip">
+      <span class="ms-num">05</span>
+      <div class="ms-divider"></div>
+      <span class="ms-name">Code Collaboration</span>
+      <div class="ms-divider2"></div>
+      <span class="ms-when">Calculate · Plot · Analyze</span>
+      <div class="ms-divider2"></div>
+      <span class="ms-desc">Offload math and data work to code — always sanity-check the assumptions.</span>
+      <span class="ms-tag">CODE</span>
+    </div>
+
+    <div class="mode-strip">
+      <span class="ms-num">06</span>
+      <div class="ms-divider"></div>
+      <span class="ms-name">Cursor / Vibe Coding</span>
+      <div class="ms-divider2"></div>
+      <span class="ms-when">Professional coding · Codebase</span>
+      <div class="ms-divider2"></div>
+      <span class="ms-desc">Cursor has full codebase context; web chat does not. Use it for real engineering work.</span>
+      <span class="ms-tag">IDE</span>
+    </div>
+
+  </div><!-- /s2-strips-inner -->
+  </div><!-- /s2-center -->
+
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     SLIDE 3: Left giant quote  |  Right conclusions
+══════════════════════════════════════════ -->
+<section class="slide" id="s3">
+
+  <!-- LEFT: big quote -->
+  <div class="s3-left">
+    <div class="s3-big-q">"</div>
+
+    <div class="s3-eyebrow anim d1">ANDREJ KARPATHY · HOW I USE LLMS · 2025</div>
+
+    <p class="s3-quote-text anim d2">
+      "Direct chat is only the <span class="hl">shallowest way</span> to use an LLM.<br/><br/>
+      Real mastery means connecting the <span class="hl">right material</span>, <span class="hl">right tools</span>, and <span class="hl">right interaction mode</span> to the model."
+    </p>
+
+    <div class="s3-author anim d3">
+      <div class="s3-avatar">K</div>
+      <div>
+        <div class="s3-author-name">Andrej Karpathy</div>
+        <div class="s3-author-sub">Former OpenAI / Tesla AI Director · YouTube 2025-02</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: 5 conclusions -->
+  <div class="s3-right">
+
+    <div class="s3-right-head anim d1">
+      5 Key Conclusions
+    </div>
+
+    <div class="concl-item anim d2">
+      <span class="concl-num">01</span>
+      <div>
+        <div class="concl-title">An LLM product is not just a model</div>
+        <div class="concl-desc">Model + tools + context + multimodal + memory + specialized workflows — every piece matters</div>
+      </div>
+    </div>
+
+    <div class="concl-item anim d3">
+      <span class="concl-num">02</span>
+      <div>
+        <div class="concl-title">Capability comes from switching modes</div>
+        <div class="concl-desc">Knowing when to chat directly / search / deep-research / upload files / write code — that is real AI fluency</div>
+      </div>
+    </div>
+
+    <div class="concl-item anim d4">
+      <span class="concl-num">03</span>
+      <div>
+        <div class="concl-title">Context is the core asset</div>
+        <div class="concl-desc">Files, search results, screenshots, memory — all of it is really about putting the right context in front of the model</div>
+      </div>
+    </div>
+
+    <div class="concl-item anim d5">
+      <span class="concl-num">04</span>
+      <div>
+        <div class="concl-title">Tools patch the model's capability limits</div>
+        <div class="concl-desc">Search fills in recent info, code handles precise calculation, files extend memory, cameras add real-world perception</div>
+      </div>
+    </div>
+
+    <div class="concl-item anim d6">
+      <span class="concl-num">05</span>
+      <div>
+        <div class="concl-title">Humans own verification and the final output</div>
+        <div class="concl-desc">Deep Research, Advanced Data Analysis, and Vibe Coding all make silent assumptions — ultimate responsibility stays with the human</div>
+      </div>
+    </div>
+
+  </div>
+
+</section>
+
+</div><!-- /deck -->
+
+<!-- Nav arrows -->
+<button class="nav-btn" id="nav-prev" disabled>
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="10,3 5,8 10,13"/>
+  </svg>
+</button>
+<button class="nav-btn" id="nav-next">
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="6,3 11,8 6,13"/>
+  </svg>
+</button>
+
+<div id="dot-nav">
+  <button class="dot active" data-i="0"></button>
+  <button class="dot" data-i="1"></button>
+  <button class="dot" data-i="2"></button>
+</div>
+
+<div id="counter">1 / 3</div>
+
+<script>
+const deck   = document.getElementById('deck');
+const slides = document.querySelectorAll('.slide');
+const dots   = document.querySelectorAll('.dot');
+const ctr    = document.getElementById('counter');
+const bPrev  = document.getElementById('nav-prev');
+const bNext  = document.getElementById('nav-next');
+const total  = slides.length;
+let cur = 0;
+
+function goTo(i) {
+  i = Math.max(0, Math.min(total - 1, i));
+  slides[i].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+}
+
+function syncUI(i) {
+  cur = i;
+  ctr.textContent = (i + 1) + ' / ' + total;
+  dots.forEach((d, j) => d.classList.toggle('active', j === i));
+  bPrev.disabled = i === 0;
+  bNext.disabled = i === total - 1;
+}
+
+function runAnims(slide) {
+  slide.querySelectorAll('.anim').forEach(el => {
+    el.style.animation = 'none';
+    void el.offsetWidth;
+    el.style.animation = '';
+  });
+}
+
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting && e.intersectionRatio >= 0.5) {
+      const i = Array.from(slides).indexOf(e.target);
+      syncUI(i);
+      runAnims(e.target);
+    }
+  });
+}, { threshold: 0.5 });
+
+slides.forEach(s => io.observe(s));
+bPrev.addEventListener('click', () => goTo(cur - 1));
+bNext.addEventListener('click', () => goTo(cur + 1));
+dots.forEach(d => d.addEventListener('click', () => goTo(+d.dataset.i)));
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goTo(cur + 1);
+  if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   goTo(cur - 1);
+});
+
+syncUI(0);
+runAnims(slides[0]);
+</script>
+</body>
+</html>

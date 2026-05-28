@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agent-Native Economy · Software 3.0</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue:   #1060FF;
+      --navy:   #000040;
+      --pale:   #EEF2FF;
+      --green:  #00FF90;
+      --white:  #FFFFFF;
+      --text:   #0B0B1E;
+      --dim:    #5B6080;
+      --dimmer: #9BA3C4;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--navy);
+      color: var(--text);
+      overflow: hidden;
+    }
+
+    .deck {
+      display: flex;
+      width: 300vw;
+      height: 100vh;
+      transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+    }
+
+    .slide {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-shrink: 0;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* ── Navigation ── */
+    .nav-btn {
+      position: fixed; top: 50%; transform: translateY(-50%);
+      z-index: 100;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: var(--white);
+      width: 44px; height: 44px; border-radius: 50%;
+      cursor: pointer; font-size: 20px;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+    }
+    .nav-btn:hover { background: rgba(255,255,255,0.18); }
+    .nav-btn.on-light {
+      background: rgba(16,96,255,0.07);
+      border-color: rgba(16,96,255,0.18);
+      color: var(--blue);
+    }
+    .nav-btn.on-light:hover { background: rgba(16,96,255,0.14); }
+    #prev { left: 20px; }
+    #next { right: 20px; }
+
+    .dots {
+      position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
+      display: flex; gap: 8px; z-index: 100;
+    }
+    .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: rgba(255,255,255,0.25); cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .dot.active { background: var(--green); transform: scale(1.4); }
+    .slide-num {
+      position: fixed; bottom: 28px; right: 28px;
+      font-size: 12px; color: rgba(255,255,255,0.3); z-index: 100;
+      letter-spacing: 0.08em;
+    }
+
+    /* ══════════════════════════════════════════════
+       SLIDE 1 — Software 3.0 Cover
+    ══════════════════════════════════════════════ */
+    #s1 { background: var(--navy); }
+
+    .s1-left {
+      width: 50%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 80px 56px 80px 80px;
+    }
+
+    .s1-tag {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 13px; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--green);
+      margin-bottom: 32px;
+    }
+    .s1-tag::before {
+      content: '';
+      display: inline-block;
+      width: 28px; height: 2px;
+      background: var(--green);
+    }
+
+    .s1-title {
+      font-size: clamp(72px, 8.5vw, 120px);
+      font-weight: 900;
+      line-height: 0.92;
+      letter-spacing: -0.04em;
+      color: var(--white);
+      margin-bottom: 12px;
+    }
+    .s1-title .sw-num { color: var(--green); }
+
+    .s1-subtitle {
+      font-size: clamp(20px, 2.4vw, 32px);
+      font-weight: 300;
+      color: rgba(255,255,255,0.38);
+      letter-spacing: -0.01em;
+      margin-bottom: 40px;
+    }
+
+    .s1-desc {
+      font-size: 18px; font-weight: 400;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.75;
+      max-width: 420px;
+      margin-bottom: 52px;
+      border-left: 2px solid rgba(0,255,144,0.3);
+      padding-left: 20px;
+    }
+
+    .s1-pills {
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .sw-pill {
+      display: flex; align-items: center; gap: 16px;
+      padding: 15px 22px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+    }
+    .sw-pill-num {
+      font-size: 13px; font-weight: 800; letter-spacing: 0.05em;
+      color: rgba(255,255,255,0.26); min-width: 30px;
+    }
+    .sw-pill-label {
+      font-size: 16px; font-weight: 600;
+      color: rgba(255,255,255,0.65); flex: 1;
+    }
+    .sw-pill-sub {
+      font-size: 13px; color: rgba(255,255,255,0.26);
+    }
+    .sw-pill.active {
+      background: rgba(0,255,144,0.07);
+      border-color: rgba(0,255,144,0.22);
+    }
+    .sw-pill.active .sw-pill-num   { color: var(--green); }
+    .sw-pill.active .sw-pill-label { color: var(--white); font-size: 17px; }
+    .sw-pill.active .sw-pill-sub   { color: rgba(0,255,144,0.5); }
+
+    /* Right panel — clean card column */
+    .s1-right {
+      flex: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 20px;
+      padding: 80px 80px 80px 48px;
+      border-left: 1px solid rgba(255,255,255,0.05);
+      background: rgba(16,96,255,0.03);
+      position: relative;
+    }
+
+    .s1-bg-num {
+      position: absolute;
+      font-size: 380px; font-weight: 900;
+      color: rgba(16,96,255,0.05);
+      letter-spacing: -0.05em;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      user-select: none; pointer-events: none;
+      line-height: 1;
+      z-index: 0;
+    }
+
+    .concept-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 18px;
+      padding: 26px 28px;
+      position: relative; z-index: 1;
+    }
+    .cc-label {
+      font-size: 12px; font-weight: 700; letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      margin-bottom: 8px;
+    }
+    .cc-title {
+      font-size: 20px; font-weight: 800;
+      color: rgba(255,255,255,0.92);
+      line-height: 1.25;
+      margin-bottom: 10px;
+    }
+    .cc-body {
+      font-size: 15px; color: rgba(255,255,255,0.42);
+      line-height: 1.65;
+    }
+    .cc-tag {
+      display: inline-block;
+      margin-top: 14px;
+      font-size: 12px; font-weight: 700;
+      padding: 4px 12px; border-radius: 100px;
+      background: rgba(0,255,144,0.12);
+      color: var(--green);
+      letter-spacing: 0.05em;
+    }
+
+    .s1-source {
+      position: absolute; bottom: 36px; left: 80px;
+      font-size: 12px; color: rgba(255,255,255,0.15);
+      letter-spacing: 0.05em; z-index: 1;
+    }
+
+    /* ══════════════════════════════════════════════
+       SLIDE 2 — Jagged Intelligence + 3 Transforms
+    ══════════════════════════════════════════════ */
+    #s2 { background: var(--pale); }
+
+    .s2-inner {
+      width: 100%; height: 100%;
+      display: flex; flex-direction: column;
+      padding: 56px 80px 52px;
+    }
+
+    .s2-header {
+      display: flex; align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 28px; flex-shrink: 0;
+    }
+
+    .s2-kicker {
+      font-size: 13px; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--blue);
+      margin-bottom: 10px;
+    }
+    .s2-title {
+      font-size: clamp(36px, 4vw, 54px);
+      font-weight: 900; letter-spacing: -0.03em;
+      color: var(--text); line-height: 1.05;
+    }
+    .s2-title em { font-style: italic; color: var(--blue); }
+
+    .s2-right-desc {
+      max-width: 310px;
+      font-size: 16px; color: var(--dim);
+      line-height: 1.7; text-align: right;
+    }
+    .s2-right-desc strong { color: var(--text); }
+
+    .s2-jagged { flex-shrink: 0; margin-bottom: 28px; }
+
+    .s2-cards { display: flex; gap: 20px; flex: 1; }
+
+    .transform-card {
+      flex: 1;
+      background: var(--white);
+      border-radius: 18px;
+      padding: 30px 28px;
+      display: flex; flex-direction: column;
+      border: 1px solid rgba(11,11,30,0.07);
+      position: relative; overflow: hidden;
+    }
+    .transform-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    }
+    .tc-blue::before   { background: var(--blue); }
+    .tc-green::before  { background: #00C46A; }
+    .tc-purple::before { background: #7C3AED; }
+
+    .tc-num {
+      font-size: 12px; font-weight: 800; letter-spacing: 0.08em;
+      text-transform: uppercase; margin-bottom: 14px;
+    }
+    .tc-blue .tc-num   { color: var(--blue); }
+    .tc-green .tc-num  { color: #00C46A; }
+    .tc-purple .tc-num { color: #7C3AED; }
+
+    .tc-title {
+      font-size: 22px; font-weight: 800;
+      color: var(--text); line-height: 1.2;
+      margin-bottom: 18px; letter-spacing: -0.02em;
+    }
+
+    .tc-transform {
+      display: flex; flex-direction: column; gap: 9px;
+      margin-bottom: 20px;
+    }
+    .tc-row { display: flex; align-items: center; gap: 8px; }
+    .tc-from {
+      font-size: 14px; font-weight: 500;
+      color: rgba(11,11,30,0.3);
+      background: rgba(11,11,30,0.04);
+      border-radius: 7px; padding: 7px 13px;
+      text-decoration: line-through; flex: 1;
+    }
+    .tc-arrow { font-size: 15px; color: var(--dimmer); }
+    .tc-to {
+      font-size: 14px; font-weight: 700;
+      border-radius: 7px; padding: 7px 13px; flex: 1;
+    }
+    .tc-blue .tc-to   { color: var(--blue);  background: rgba(16,96,255,0.07); }
+    .tc-green .tc-to  { color: #00834A; background: rgba(0,196,106,0.08); }
+    .tc-purple .tc-to { color: #5B21B6; background: rgba(124,58,237,0.07); }
+
+    .tc-body {
+      font-size: 15px; color: var(--dim);
+      line-height: 1.7; flex: 1; margin-bottom: 20px;
+    }
+
+    .tc-example {
+      background: rgba(11,11,30,0.03);
+      border-radius: 10px; padding: 14px 16px;
+      font-size: 14px; color: var(--dim);
+      line-height: 1.6;
+      border-left: 3px solid transparent;
+    }
+    .tc-blue .tc-example   { border-color: var(--blue); }
+    .tc-green .tc-example  { border-color: #00C46A; }
+    .tc-purple .tc-example { border-color: #7C3AED; }
+    .tc-example strong {
+      font-weight: 700; color: var(--text);
+      display: block; margin-bottom: 5px;
+      font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em;
+    }
+
+    /* ══════════════════════════════════════════════
+       SLIDE 3 — Agent-Native Economy
+    ══════════════════════════════════════════════ */
+    #s3 { background: var(--navy); flex-direction: column; }
+
+    .s3-top { flex: 1; display: flex; align-items: stretch; }
+
+    .s3-left {
+      width: 44%;
+      padding: 52px 52px 44px 80px;
+      display: flex; flex-direction: column; justify-content: center;
+      border-right: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .s3-tag {
+      font-size: 13px; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--green);
+      margin-bottom: 22px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .s3-tag::before {
+      content: '';
+      display: inline-block;
+      width: 24px; height: 2px; background: var(--green);
+    }
+
+    .s3-heading {
+      font-size: clamp(38px, 4.2vw, 58px);
+      font-weight: 900; letter-spacing: -0.03em;
+      color: var(--white); line-height: 1.05;
+      margin-bottom: 28px;
+    }
+    .s3-heading .hi { color: var(--green); }
+
+    .sal-grid { display: flex; flex-direction: column; gap: 11px; }
+    .sal-row {
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 16px 18px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+    }
+    .sal-icon {
+      width: 40px; height: 40px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; flex-shrink: 0;
+    }
+    .sal-sensor   .sal-icon { background: rgba(16,96,255,0.2); }
+    .sal-actuator .sal-icon { background: rgba(0,255,144,0.14); }
+    .sal-logic    .sal-icon { background: rgba(124,58,237,0.2); }
+    .sal-label {
+      font-size: 13px; font-weight: 800; letter-spacing: 0.07em;
+      text-transform: uppercase; margin-bottom: 5px;
+    }
+    .sal-sensor   .sal-label { color: #6B9FFF; }
+    .sal-actuator .sal-label { color: var(--green); }
+    .sal-logic    .sal-label { color: #B08AFF; }
+    .sal-text {
+      font-size: 15px; color: rgba(255,255,255,0.42);
+      line-height: 1.55;
+    }
+
+    .s3-right {
+      flex: 1;
+      padding: 64px 80px 52px 52px;
+      display: flex; flex-direction: column; justify-content: center;
+    }
+
+    .s3-req-title {
+      font-size: 13px; font-weight: 700; letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.26);
+      margin-bottom: 20px;
+    }
+
+    .req-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 11px;
+      margin-bottom: 38px;
+    }
+    .req-item {
+      display: flex; align-items: center; gap: 11px;
+      padding: 14px 18px;
+      border-radius: 11px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+    }
+    .req-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .req-text { font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.6); }
+
+    .takeaway-title {
+      font-size: 13px; font-weight: 700; letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.26); margin-bottom: 18px;
+    }
+    .takeaway-list { display: flex; flex-direction: column; gap: 12px; }
+    .ta-item { display: flex; align-items: flex-start; gap: 11px; }
+    .ta-badge {
+      font-size: 11px; font-weight: 800; letter-spacing: 0.07em;
+      padding: 5px 10px; border-radius: 5px;
+      white-space: nowrap; flex-shrink: 0; margin-top: 2px;
+    }
+    .ta-badge.ask   { background: rgba(16,96,255,0.25);  color: #6B9FFF; }
+    .ta-badge.write { background: rgba(0,255,144,0.14);  color: var(--green); }
+    .ta-badge.build { background: rgba(124,58,237,0.2);  color: #B08AFF; }
+    .ta-badge.check { background: rgba(255,107,53,0.2);  color: #FF8C66; }
+    .ta-text { font-size: 15px; color: rgba(255,255,255,0.5); line-height: 1.55; }
+
+    .s3-strip {
+      flex-shrink: 0;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 18px 80px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .s3-strip-left { font-size: 12px; color: rgba(255,255,255,0.18); letter-spacing: 0.04em; }
+    .s3-strip-right { font-size: 12px; font-weight: 600; color: rgba(0,255,144,0.4); letter-spacing: 0.04em; }
+  </style>
+</head>
+<body>
+
+<div class="deck" id="deck">
+
+  <!-- ══ SLIDE 1: Software 3.0 Cover ══ -->
+  <div class="slide" id="s1">
+
+    <div class="s1-left">
+      <div class="s1-tag">Agent-Native Economy</div>
+
+      <div class="s1-title">
+        Software<br>
+        <span class="sw-num">3.0</span>
+      </div>
+      <div class="s1-subtitle">LLMs as a new computing layer</div>
+
+      <div class="s1-desc">
+        LLMs don't just speed up old work — they unlock entirely new possibilities, make some apps obsolete, and turn unstructured knowledge into computable material.
+      </div>
+
+      <div class="s1-pills">
+        <div class="sw-pill">
+          <div class="sw-pill-num">1.0</div>
+          <div class="sw-pill-label">Humans write rules</div>
+          <div class="sw-pill-sub">Explicit logic &amp; code</div>
+        </div>
+        <div class="sw-pill">
+          <div class="sw-pill-num">2.0</div>
+          <div class="sw-pill-label">Networks learn weights</div>
+          <div class="sw-pill-sub">Data + gradient descent</div>
+        </div>
+        <div class="sw-pill active">
+          <div class="sw-pill-num">3.0</div>
+          <div class="sw-pill-label">Prompt programs the LLM</div>
+          <div class="sw-pill-sub">Context · Tools · Skills</div>
+        </div>
+      </div>
+
+      <div class="s1-source">Source: Karpathy · Sequoia Ascent 2026</div>
+    </div>
+
+    <!-- Right: clean vertical card stack -->
+    <div class="s1-right">
+      <div class="s1-bg-num">3</div>
+
+      <div class="concept-card">
+        <div class="cc-label">New Possibility</div>
+        <div class="cc-title">Apps get swallowed<br>by models</div>
+        <div class="cc-body">
+          MenuGen didn't need to exist. One photo in, a full menu with images out — the entire software stack becomes scaffolding.
+        </div>
+        <span class="cc-tag">Media → Media</span>
+      </div>
+
+      <div class="concept-card">
+        <div class="cc-label">New Interface</div>
+        <div class="cc-title">install .md, not .sh</div>
+        <div class="cc-body">
+          English is no longer just documentation — it becomes a program the LLM interprets, executes, and debugs.
+        </div>
+        <span class="cc-tag">Skills as Code</span>
+      </div>
+
+      <div class="concept-card">
+        <div class="cc-label">New Computing</div>
+        <div class="cc-title">Compile knowledge,<br>don't just retrieve it</div>
+        <div class="cc-body">
+          LLM knowledge bases turn raw material into a living Markdown wiki — summaries, backlinks, gaps, contradictions.
+        </div>
+        <span class="cc-tag">Knowledge → Computable</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 2: Jagged Intelligence ══ -->
+  <div class="slide" id="s2">
+    <div class="s2-inner">
+
+      <div class="s2-header">
+        <div>
+          <div class="s2-kicker">Core Concept · Karpathy 2026</div>
+          <div class="s2-title">Jagged <em>Intelligence</em></div>
+        </div>
+        <div class="s2-right-desc">
+          The same model can refactor 100K lines of code and give terrible lifestyle advice. Capability spikes where tasks are <strong>verifiable</strong> and <strong>economically valuable</strong>.
+        </div>
+      </div>
+
+      <div class="s2-jagged">
+        <svg width="100%" height="80" viewBox="0 -16 900 88" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="jg" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#1060FF" stop-opacity="0.6"/>
+              <stop offset="100%" stop-color="#00FF90" stop-opacity="0.8"/>
+            </linearGradient>
+          </defs>
+          <line x1="0" y1="60" x2="900" y2="60" stroke="rgba(11,11,30,0.1)" stroke-width="1"/>
+          <line x1="0" y1="38" x2="900" y2="38" stroke="rgba(11,11,30,0.05)" stroke-width="1" stroke-dasharray="4 4"/>
+          <polyline
+            points="0,56 60,53 120,7 180,51 240,47 300,4 360,49 420,45 480,9 540,43 600,59 660,14 720,51 780,47 840,5 900,49"
+            fill="none" stroke="url(#jg)" stroke-width="2.5" stroke-linejoin="round"
+          />
+          <polygon
+            points="0,56 60,53 120,7 180,51 240,47 300,4 360,49 420,45 480,9 540,43 600,59 660,14 720,51 780,47 840,5 900,49 900,72 0,72"
+            fill="rgba(16,96,255,0.05)"
+          />
+          <text x="120" y="-4" text-anchor="middle" font-size="10" font-weight="700" font-family="Inter,sans-serif" fill="#1060FF">CODE</text>
+          <text x="300" y="-7" text-anchor="middle" font-size="10" font-weight="700" font-family="Inter,sans-serif" fill="#1060FF">MATH</text>
+          <text x="480" y="-2" text-anchor="middle" font-size="10" font-weight="700" font-family="Inter,sans-serif" fill="#00C46A">SECURITY</text>
+          <text x="660" y="3"  text-anchor="middle" font-size="10" font-weight="700" font-family="Inter,sans-serif" fill="#1060FF">BENCHMARKS</text>
+          <text x="840" y="-6" text-anchor="middle" font-size="10" font-weight="700" font-family="Inter,sans-serif" fill="#00C46A">TESTING</text>
+          <text x="60"  y="70" text-anchor="middle" font-size="9"  font-family="Inter,sans-serif" fill="rgba(11,11,30,0.3)">writing</text>
+          <text x="240" y="70" text-anchor="middle" font-size="9"  font-family="Inter,sans-serif" fill="rgba(11,11,30,0.3)">advice</text>
+          <text x="420" y="70" text-anchor="middle" font-size="9"  font-family="Inter,sans-serif" fill="rgba(11,11,30,0.3)">lifestyle</text>
+          <text x="600" y="70" text-anchor="middle" font-size="9"  font-family="Inter,sans-serif" fill="rgba(11,11,30,0.3)">emotion</text>
+          <text x="780" y="70" text-anchor="middle" font-size="9"  font-family="Inter,sans-serif" fill="rgba(11,11,30,0.3)">judgement</text>
+        </svg>
+      </div>
+
+      <div class="s2-cards">
+        <div class="transform-card tc-blue">
+          <div class="tc-num">01 · Apps &amp; Products</div>
+          <div class="tc-title">Does this app still<br>need to exist?</div>
+          <div class="tc-transform">
+            <div class="tc-row">
+              <div class="tc-from">Full software stack</div>
+              <div class="tc-arrow">→</div>
+              <div class="tc-to">Media-to-media transform</div>
+            </div>
+          </div>
+          <div class="tc-body">
+            Don't ask "can we build this faster with AI?" — ask whether the product itself is still necessary at all.
+          </div>
+          <div class="tc-example">
+            <strong>Example: MenuGen</strong>
+            Photo in → menu with AI-generated dish images out. The entire app stack disappears.
+          </div>
+        </div>
+
+        <div class="transform-card tc-green">
+          <div class="tc-num">02 · Workflows &amp; Automation</div>
+          <div class="tc-title">install .md,<br>not .sh scripts</div>
+          <div class="tc-transform">
+            <div class="tc-row">
+              <div class="tc-from">.sh scripts (brittle)</div>
+              <div class="tc-arrow">→</div>
+              <div class="tc-to">.md skills (executable)</div>
+            </div>
+          </div>
+          <div class="tc-body">
+            English is no longer just documentation — it becomes a program the LLM interprets, executes, checks, and fixes.
+          </div>
+          <div class="tc-example">
+            <strong>Practice</strong>
+            Write SOPs as .md skill files. Let the agent read, run, and adapt them automatically.
+          </div>
+        </div>
+
+        <div class="transform-card tc-purple">
+          <div class="tc-num">03 · Knowledge &amp; Information</div>
+          <div class="tc-title">Compile knowledge,<br>don't retrieve it</div>
+          <div class="tc-transform">
+            <div class="tc-row">
+              <div class="tc-from">Search &amp; retrieve</div>
+              <div class="tc-arrow">→</div>
+              <div class="tc-to">Compile &amp; generate</div>
+            </div>
+          </div>
+          <div class="tc-body">
+            LLMs handle articles, transcripts, and notes — generating summaries, backlinks, and surfacing contradictions.
+          </div>
+          <div class="tc-example">
+            <strong>LLM Knowledge Base</strong>
+            Raw material → Markdown wiki → Summaries + backlinks → Continuously grows
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 3: Agent-Native Economy ══ -->
+  <div class="slide" id="s3">
+
+    <div class="s3-top">
+      <div class="s3-left">
+        <div class="s3-tag">Agent-Native Economy</div>
+
+        <div class="s3-heading">
+          Design products<br>
+          for <span class="hi">agents</span>
+        </div>
+
+        <div class="sal-grid">
+          <div class="sal-row sal-sensor">
+            <div class="sal-icon">📡</div>
+            <div class="sal-content">
+              <div class="sal-label">Sensor</div>
+              <div class="sal-text">Turn world state into agent-readable info — structured logs, Markdown docs, machine-readable schemas</div>
+            </div>
+          </div>
+          <div class="sal-row sal-actuator">
+            <div class="sal-icon">⚙️</div>
+            <div class="sal-content">
+              <div class="sal-label">Actuator</div>
+              <div class="sal-text">Let agents safely execute — CLI, MCP server, permission controls, auditable action logs</div>
+            </div>
+          </div>
+          <div class="sal-row sal-logic">
+            <div class="sal-icon">🧠</div>
+            <div class="sal-content">
+              <div class="sal-label">Logic</div>
+              <div class="sal-text">Shared decision layer — humans, classic code, and models each handle what they do best</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="s3-right">
+        <div class="s3-req-title">What Agent-Native Products Must Provide</div>
+        <div class="req-grid">
+          <div class="req-item"><div class="req-dot" style="background:#6B9FFF;"></div><div class="req-text">Markdown documentation</div></div>
+          <div class="req-item"><div class="req-dot" style="background:#6B9FFF;"></div><div class="req-text">CLI interface</div></div>
+          <div class="req-item"><div class="req-dot" style="background:#00FF90;"></div><div class="req-text">REST / GraphQL API</div></div>
+          <div class="req-item"><div class="req-dot" style="background:#00FF90;"></div><div class="req-text">MCP server</div></div>
+          <div class="req-item"><div class="req-dot" style="background:#B08AFF;"></div><div class="req-text">Structured logs</div></div>
+          <div class="req-item"><div class="req-dot" style="background:#B08AFF;"></div><div class="req-text">Machine-readable schema</div></div>
+          <div class="req-item"><div class="req-dot" style="background:#FF8C66;"></div><div class="req-text">Permission controls</div></div>
+          <div class="req-item"><div class="req-dot" style="background:#FF8C66;"></div><div class="req-text">Auditable action records</div></div>
+        </div>
+
+        <div class="takeaway-title">Act on This Today</div>
+        <div class="takeaway-list">
+          <div class="ta-item">
+            <div class="ta-badge ask">ASK</div>
+            <div class="ta-text">For every app: "Will a model replace this entirely?" — not just "Can AI build it faster?"</div>
+          </div>
+          <div class="ta-item">
+            <div class="ta-badge write">WRITE</div>
+            <div class="ta-text">Turn your SOPs and tool guides into .md skill files agents can read and run</div>
+          </div>
+          <div class="ta-item">
+            <div class="ta-badge build">BUILD</div>
+            <div class="ta-text">Drop learning materials into raw/ — let an LLM compile a growing Markdown wiki</div>
+          </div>
+          <div class="ta-item">
+            <div class="ta-badge check">CHECK</div>
+            <div class="ta-text">Don't ask "Is this model smart?" — ask "Is this task verifiable and in its training distribution?"</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="s3-strip">
+      <div class="s3-strip-left">Source: Karpathy · Sequoia Ascent 2026 &nbsp;·&nbsp; Software 3.0 · Jagged Intelligence · Agent-Native Economy</div>
+      <div class="s3-strip-right">Design Library · Yang the user</div>
+    </div>
+  </div>
+
+</div>
+
+<button class="nav-btn" id="prev">&#8249;</button>
+<button class="nav-btn" id="next">&#8250;</button>
+
+<div class="dots">
+  <div class="dot active" onclick="goTo(0)"></div>
+  <div class="dot" onclick="goTo(1)"></div>
+  <div class="dot" onclick="goTo(2)"></div>
+</div>
+<div class="slide-num" id="snum">1 / 3</div>
+
+<script>
+  let cur = 0;
+  const deck    = document.getElementById('deck');
+  const dots    = document.querySelectorAll('.dot');
+  const snum    = document.getElementById('snum');
+  const navBtns = document.querySelectorAll('.nav-btn');
+
+  function goTo(n) {
+    cur = Math.max(0, Math.min(2, n));
+    deck.style.transform = `translateX(-${cur * 100}vw)`;
+    dots.forEach((d, i) => d.classList.toggle('active', i === cur));
+    snum.textContent = `${cur + 1} / 3`;
+    const onLight = cur === 1;
+    navBtns.forEach(b => b.classList.toggle('on-light', onLight));
+    snum.style.color = onLight ? 'rgba(11,11,30,0.3)' : 'rgba(255,255,255,0.3)';
+    dots.forEach(d => {
+      d.style.background = onLight ? 'rgba(16,96,255,0.2)' : 'rgba(255,255,255,0.25)';
+    });
+    dots[cur].style.background = onLight ? 'var(--blue)' : 'var(--green)';
+  }
+
+  document.getElementById('prev').onclick = () => goTo(cur - 1);
+  document.getElementById('next').onclick = () => goTo(cur + 1);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') goTo(cur + 1);
+    if (e.key === 'ArrowLeft')  goTo(cur - 1);
+  });
+</script>
+</body>
+</html>

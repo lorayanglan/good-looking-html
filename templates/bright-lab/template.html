@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vibe Coding → Agentic Engineering · Bright Lab</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --pink:    #F5A5E6;
+      --ink:     #001B20;
+      --paper:   #FFFFFF;
+      --cream:   #FFF8F2;
+      --orange:  #FF8C42;
+      --violet:  #7B6FE8;
+      --green:   #3DD68C;
+      --yellow:  #FFD940;
+      --sky:     #5BB8FF;
+      --text:    #0D1117;
+      --muted:   #6B7280;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--ink);
+      overflow: hidden;
+    }
+
+    .deck {
+      display: flex;
+      width: 300vw;
+      height: 100vh;
+      transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+    }
+
+    .slide {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-shrink: 0;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* ── Navigation ── */
+    .nav-btn { display: none; }
+
+    .dots {
+      position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
+      display: flex; gap: 8px; z-index: 100;
+    }
+    .dot {
+      width: 8px; height: 8px; border-radius: 999px;
+      background: rgba(0,0,0,0.18); cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .dot.active { background: var(--ink); transform: scale(1.35); }
+    .dot.on-dark { background: rgba(255,255,255,0.3); }
+    .dot.on-dark.active { background: var(--pink); }
+
+    .slide-num {
+      position: fixed; bottom: 26px; right: 28px;
+      font-size: 12px; font-weight: 600;
+      color: rgba(0,0,0,0.25); z-index: 100;
+      letter-spacing: 0.06em;
+    }
+
+    /* pill helper */
+    .pill {
+      display: inline-flex; align-items: center;
+      border-radius: 999px;
+      font-size: 13px; font-weight: 600;
+      padding: 6px 16px;
+      white-space: nowrap;
+    }
+    .pill-outline {
+      border: 1.5px solid var(--ink);
+      color: var(--ink);
+      background: transparent;
+    }
+    .pill-outline-white {
+      border: 1.5px solid rgba(255,255,255,0.5);
+      color: #fff;
+      background: transparent;
+    }
+    .pill-solid {
+      background: var(--ink);
+      color: #fff;
+      border: none;
+    }
+    .pill-pink {
+      background: var(--pink);
+      color: var(--ink);
+      border: none;
+    }
+
+    /* ══════════════════════════════════════════════
+       SLIDE 1 — Cover (Ink + Pink)
+    ══════════════════════════════════════════════ */
+    #s1 { background: var(--ink); flex-direction: column; }
+
+    /* Pink header band */
+    .s1-band {
+      flex-shrink: 0;
+      background: var(--pink);
+      padding: 0 72px;
+      height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .s1-band-title {
+      font-size: 15px; font-weight: 700;
+      color: var(--ink); letter-spacing: 0.01em;
+    }
+    .s1-band-right {
+      display: flex; gap: 10px; align-items: center;
+    }
+
+    /* Main body */
+    .s1-main {
+      flex: 1;
+      display: flex;
+      padding: 0 72px;
+      gap: 60px;
+      align-items: center;
+    }
+
+    /* Left: title + tags + source */
+    .s1-left {
+      flex: 1;
+      display: flex; flex-direction: column;
+      justify-content: center;
+      gap: 0;
+    }
+
+    .s1-eyebrow {
+      font-size: 13px; font-weight: 600; letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 24px;
+    }
+
+    .s1-title {
+      font-size: clamp(42px, 4.8vw, 68px);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.025em;
+      color: #fff;
+      margin-bottom: 28px;
+    }
+    .s1-title .hi { color: var(--pink); }
+
+    .s1-sub {
+      font-size: 18px; font-weight: 400;
+      color: rgba(255,255,255,0.45);
+      line-height: 1.7;
+      max-width: 420px;
+      margin-bottom: 40px;
+    }
+
+    .s1-pills {
+      display: flex; flex-wrap: wrap; gap: 10px;
+    }
+
+    .s1-source {
+      margin-top: 48px;
+      font-size: 13px; color: rgba(255,255,255,0.25);
+      letter-spacing: 0.03em;
+    }
+
+    /* Right: pure blob art panel */
+    .s1-art {
+      flex: 1;
+      height: 100%;
+      position: relative;
+      background: #ffffff;
+      overflow: hidden;
+    }
+
+    .blob {
+      position: absolute;
+      mix-blend-mode: multiply;
+    }
+    .b1 {
+      width: 44%; height: 48%;
+      background: var(--pink);
+      border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+      top: 4%; left: 14%;
+    }
+    .b2 {
+      width: 36%; height: 40%;
+      background: var(--orange);
+      border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+      top: -4%; left: 46%;
+    }
+    .b3 {
+      width: 40%; height: 44%;
+      background: var(--violet);
+      border-radius: 70% 30% 50% 50% / 30% 60% 40% 70%;
+      top: 36%; left: 22%;
+    }
+    .b4 {
+      width: 32%; height: 36%;
+      background: var(--green);
+      border-radius: 50% 50% 30% 70% / 50% 70% 30% 50%;
+      top: 56%; left: 5%;
+    }
+    .b5 {
+      width: 30%; height: 34%;
+      background: var(--sky);
+      border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+      top: 50%; left: 50%;
+    }
+    .b6 {
+      width: 22%; height: 26%;
+      background: var(--yellow);
+      border-radius: 50% 50% 50% 70% / 50% 50% 70% 60%;
+      top: 12%; left: 62%;
+    }
+
+    /* ══════════════════════════════════════════════
+       SLIDE 2 — Vibe Coding vs Agentic Engineering
+    ══════════════════════════════════════════════ */
+    #s2 { background: var(--paper); flex-direction: column; }
+
+    .s2-top {
+      flex-shrink: 0;
+      padding: 44px 72px 28px;
+      display: flex; align-items: flex-end; justify-content: space-between;
+    }
+
+    .s2-section-label {
+      font-size: 13px; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .s2-title {
+      font-size: clamp(36px, 4vw, 54px);
+      font-weight: 800; letter-spacing: -0.025em;
+      color: var(--text); line-height: 1.05;
+    }
+
+    .s2-right-label {
+      font-size: 17px; color: var(--muted);
+      line-height: 1.65; text-align: right; max-width: 280px;
+    }
+
+    /* Two column comparison */
+    .s2-cols {
+      flex: 1;
+      display: flex;
+      gap: 20px;
+      padding: 0 72px 16px;
+    }
+
+    .compare-col {
+      flex: 1;
+      border-radius: 32px;
+      padding: 36px 36px;
+      display: flex; flex-direction: column;
+    }
+    .cc-orange-bg { background: #FFF0E6; }
+    .cc-violet-bg { background: #EEF0FF; }
+
+    .col-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      border-radius: 999px;
+      padding: 6px 16px;
+      font-size: 13px; font-weight: 700;
+      margin-bottom: 24px; width: fit-content;
+    }
+    .badge-orange { background: var(--orange); color: #fff; }
+    .badge-violet { background: var(--violet); color: #fff; }
+
+    .col-title {
+      font-size: 34px; font-weight: 800;
+      letter-spacing: -0.02em; color: var(--text);
+      line-height: 1.1; margin-bottom: 20px;
+    }
+
+    .col-items {
+      display: flex; flex-direction: column; gap: 14px;
+      flex: 1;
+    }
+
+    .col-item {
+      display: flex; align-items: flex-start; gap: 12px;
+    }
+    .col-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      flex-shrink: 0; margin-top: 7px;
+    }
+    .dot-orange { background: var(--orange); }
+    .dot-violet { background: var(--violet); }
+
+    .col-item-text {
+      font-size: 18px; font-weight: 600;
+      color: var(--text); line-height: 1.5;
+    }
+    .col-item-sub {
+      font-size: 15px; color: var(--muted);
+      line-height: 1.5; margin-top: 3px;
+    }
+
+    /* Bottom example strip */
+    .s2-strip {
+      flex-shrink: 0;
+      border-top: 1px solid rgba(0,0,0,0.06);
+      padding: 22px 72px;
+      display: flex; align-items: center; gap: 12px;
+      background: #fff;
+    }
+    .strip-label {
+      font-size: 13px; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--muted);
+      margin-right: 8px; flex-shrink: 0;
+    }
+
+    /* ══════════════════════════════════════════════
+       SLIDE 3 — What Humans Keep
+    ══════════════════════════════════════════════ */
+    #s3 { background: var(--cream); flex-direction: column; }
+
+    .s3-top {
+      flex-shrink: 0;
+      padding: 52px 72px 0;
+      display: flex; align-items: flex-start; justify-content: space-between;
+    }
+
+    .s3-kicker {
+      font-size: 13px; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .s3-title {
+      font-size: clamp(34px, 3.8vw, 50px);
+      font-weight: 800; letter-spacing: -0.025em;
+      color: var(--text); line-height: 1.05;
+    }
+    .s3-title .hi { color: var(--violet); }
+
+    /* Quote block */
+    .s3-quote-wrap {
+      max-width: 400px;
+      background: var(--ink);
+      border-radius: 24px;
+      padding: 28px 32px;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .s3-quote-text {
+      font-size: 18px; font-weight: 600;
+      color: #fff; line-height: 1.6;
+      letter-spacing: -0.01em;
+    }
+    .s3-quote-text .hi { color: var(--pink); }
+    .s3-quote-attr {
+      font-size: 13px; color: rgba(255,255,255,0.35);
+      font-weight: 500;
+    }
+
+    /* 4-card grid */
+    .s3-grid {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 16px;
+      padding: 28px 72px 44px;
+    }
+
+    .keep-card {
+      border-radius: 28px;
+      padding: 28px 26px;
+      display: flex; flex-direction: column; gap: 10px;
+      position: relative; overflow: hidden;
+    }
+    .kc-pink   { background: var(--pink); }
+    .kc-yellow { background: var(--yellow); }
+    .kc-sky    { background: var(--sky); }
+    .kc-green  { background: var(--green); }
+
+    .kc-icon {
+      font-size: 28px; margin-bottom: 4px;
+    }
+    .kc-title {
+      font-size: 26px; font-weight: 800;
+      color: var(--ink); line-height: 1.15;
+      letter-spacing: -0.01em;
+    }
+    .kc-body {
+      font-size: 15px; font-weight: 500;
+      color: rgba(0,27,32,0.6); line-height: 1.65;
+    }
+    .kc-example {
+      margin-top: auto;
+      font-size: 12px; font-weight: 700;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      color: rgba(0,27,32,0.4);
+      padding-top: 14px;
+      border-top: 1px solid rgba(0,27,32,0.12);
+    }
+
+    /* Footer strip */
+    .s3-foot {
+      flex-shrink: 0;
+      padding: 16px 72px;
+      border-top: 1px solid rgba(0,0,0,0.06);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .s3-foot-left {
+      font-size: 12px; color: var(--muted); letter-spacing: 0.04em;
+    }
+    .s3-foot-right {
+      display: flex; gap: 8px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="deck" id="deck">
+
+  <!-- ══ SLIDE 1: Cover ══ -->
+  <div class="slide" id="s1">
+
+    <div class="s1-band">
+      <div class="s1-band-title">A bright home for experimental ideas</div>
+      <div class="s1-band-right">
+        <span class="pill pill-solid" style="font-size:12px; padding:5px 14px;">bright-lab</span>
+      </div>
+    </div>
+
+    <div class="s1-main">
+
+      <div class="s1-left">
+        <div class="s1-eyebrow">Karpathy · Sequoia Ascent 2026</div>
+
+        <div class="s1-title">
+          From <span class="hi">Vibe Coding</span><br>
+          to Agentic<br>
+          Engineering
+        </div>
+
+        <div class="s1-sub">
+          AI coding has crossed a threshold. It's no longer just "make things faster" — it's a new computing paradigm, and it demands a new kind of engineer.
+        </div>
+
+        <div class="s1-pills">
+          <span class="pill pill-outline-white">Software 3.0</span>
+          <span class="pill pill-outline-white">Jagged Intelligence</span>
+          <span class="pill pill-outline-white">Verifiability</span>
+          <span class="pill pill-pink">Agent-Native</span>
+        </div>
+
+        <div class="s1-source">Source: Karpathy · Sequoia Ascent 2026 · April 29, 2026</div>
+      </div>
+
+      <div class="s1-art">
+        <div class="blob b1"></div>
+        <div class="blob b2"></div>
+        <div class="blob b3"></div>
+        <div class="blob b4"></div>
+        <div class="blob b5"></div>
+        <div class="blob b6"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 2: Two Paths ══ -->
+  <div class="slide" id="s2">
+
+    <div class="s2-top">
+      <div>
+        <div class="s2-section-label">The Evolution</div>
+        <div class="s2-title">Two Modes.<br>One New Discipline.</div>
+      </div>
+      <div class="s2-right-label">
+        Vibe Coding raises the floor for everyone. Agentic Engineering raises the ceiling for professionals.
+      </div>
+    </div>
+
+    <div class="s2-cols">
+
+      <div class="compare-col cc-orange-bg">
+        <div class="col-badge badge-orange">Vibe Coding</div>
+        <div class="col-title">Lower the barrier.<br>Ship ideas fast.</div>
+        <div class="col-items">
+          <div class="col-item">
+            <div class="col-dot dot-orange"></div>
+            <div>
+              <div class="col-item-text">Anyone can build software</div>
+              <div class="col-item-sub">Non-engineers turn ideas into real products with AI as co-pilot</div>
+            </div>
+          </div>
+          <div class="col-item">
+            <div class="col-dot dot-orange"></div>
+            <div>
+              <div class="col-item-text">install .md, not .sh</div>
+              <div class="col-item-sub">Give the agent a markdown guide — it figures out your environment</div>
+            </div>
+          </div>
+          <div class="col-item">
+            <div class="col-dot dot-orange"></div>
+            <div>
+              <div class="col-item-text">Some apps won't need to exist</div>
+              <div class="col-item-sub">MenuGen: photo in, menu with images out — the whole app stack disappears</div>
+            </div>
+          </div>
+          <div class="col-item">
+            <div class="col-dot dot-orange"></div>
+            <div>
+              <div class="col-item-text">Great for MVP and exploration</div>
+              <div class="col-item-sub">Prototype quickly, learn by shipping, iterate with AI at your side</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="compare-col cc-violet-bg">
+        <div class="col-badge badge-violet">Agentic Engineering</div>
+        <div class="col-title">Raise the ceiling.<br>Preserve quality.</div>
+        <div class="col-items">
+          <div class="col-item">
+            <div class="col-dot dot-violet"></div>
+            <div>
+              <div class="col-item-text">Humans own taste and judgment</div>
+              <div class="col-item-sub">Agents generate. Engineers direct, review, and are responsible.</div>
+            </div>
+          </div>
+          <div class="col-item">
+            <div class="col-dot dot-violet"></div>
+            <div>
+              <div class="col-item-text">No security shortcuts</div>
+              <div class="col-item-sub">AI-written code needs the same auditing as human-written code — maybe more</div>
+            </div>
+          </div>
+          <div class="col-item">
+            <div class="col-dot dot-violet"></div>
+            <div>
+              <div class="col-item-text">Invest in your agent setup</div>
+              <div class="col-item-sub">AI-native engineers outperform by building better workflows, not just using AI</div>
+            </div>
+          </div>
+          <div class="col-item">
+            <div class="col-dot dot-violet"></div>
+            <div>
+              <div class="col-item-text">Hire for big-project thinking</div>
+              <div class="col-item-sub">"Build a Twitter clone, then let 5 agents attack it for security holes"</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="s2-strip">
+      <span class="strip-label">Key Concepts</span>
+      <span class="pill pill-outline" style="background:#FFF0E6;">install .md</span>
+      <span class="pill pill-outline" style="background:#EEF0FF;">MenuGen → zero app</span>
+      <span class="pill pill-outline" style="background:#F0FFF8;">LLM Knowledge Base</span>
+      <span class="pill pill-outline" style="background:#FFF9E6;">Verifiable tasks first</span>
+      <span class="pill pill-outline" style="background:#F0F7FF;">Agent-native infra</span>
+    </div>
+
+  </div>
+
+  <!-- ══ SLIDE 3: What Humans Keep ══ -->
+  <div class="slide" id="s3">
+
+    <div class="s3-top">
+      <div>
+        <div class="s3-kicker">The Human Role</div>
+        <div class="s3-title">
+          You can outsource<br>
+          <span class="hi">thinking.</span><br>
+          Not understanding.
+        </div>
+      </div>
+
+      <div class="s3-quote-wrap">
+        <div class="s3-quote-text">
+          "API details can go to the agent.<br>
+          <span class="hi">Taste, judgment, and spec</span> — those stay with the human."
+        </div>
+        <div class="s3-quote-attr">— Andrej Karpathy, Sequoia Ascent 2026</div>
+      </div>
+    </div>
+
+    <div class="s3-grid">
+
+      <div class="keep-card kc-pink">
+        <div class="kc-icon">🎨</div>
+        <div class="kc-title">Taste &amp;<br>Aesthetics</div>
+        <div class="kc-body">Agents write bloated, copy-paste code. Humans recognize elegant design and push back until it's clean.</div>
+        <div class="kc-example">Karpathy rewrote microGPT in 200 lines — the model couldn't simplify it</div>
+      </div>
+
+      <div class="keep-card kc-yellow">
+        <div class="kc-icon">⚖️</div>
+        <div class="kc-title">Judgment &amp;<br>Oversight</div>
+        <div class="kc-body">Agents make system-design errors. Like using email to match users when a persistent ID was needed.</div>
+        <div class="kc-example">MenuGen: agent used email — correct approach was user ID</div>
+      </div>
+
+      <div class="keep-card kc-sky">
+        <div class="kc-icon">📐</div>
+        <div class="kc-title">Spec &amp;<br>Direction</div>
+        <div class="kc-body">You must know what you're building, why it matters, and how to direct the agents doing it.</div>
+        <div class="kc-example">"If you can't direct, you can't be the agent's manager"</div>
+      </div>
+
+      <div class="keep-card kc-green">
+        <div class="kc-icon">🧠</div>
+        <div class="kc-title">Deep<br>Understanding</div>
+        <div class="kc-body">Tensor views, memory layout, architectural tradeoffs — the fundamentals agents can't replace.</div>
+        <div class="kc-example">reshape vs permute: agent uses them, you must know what's happening</div>
+      </div>
+
+    </div>
+
+    <div class="s3-foot">
+      <div class="s3-foot-left">Source: Karpathy · Sequoia Ascent 2026 · From Vibe Coding to Agentic Engineering</div>
+      <div class="s3-foot-right">
+        <span class="pill pill-outline" style="font-size:12px; padding:5px 14px;">Design Library · Yang the user</span>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<button class="nav-btn on-dark" id="prev">&#8249;</button>
+<button class="nav-btn on-dark" id="next">&#8250;</button>
+
+<div class="dots">
+  <div class="dot on-dark active" onclick="goTo(0)"></div>
+  <div class="dot on-dark" onclick="goTo(1)"></div>
+  <div class="dot on-dark" onclick="goTo(2)"></div>
+</div>
+<div class="slide-num" id="snum">1 / 3</div>
+
+<script>
+  let cur = 0;
+  const deck    = document.getElementById('deck');
+  const allDots = document.querySelectorAll('.dot');
+  const snum    = document.getElementById('snum');
+  const navBtns = document.querySelectorAll('.nav-btn');
+
+  function goTo(n) {
+    cur = Math.max(0, Math.min(2, n));
+    deck.style.transform = `translateX(-${cur * 100}vw)`;
+    allDots.forEach((d, i) => d.classList.toggle('active', i === cur));
+    snum.textContent = `${cur + 1} / 3`;
+
+    // Slide 1 = dark, Slide 2 & 3 = light
+    const dark = cur === 0;
+    navBtns.forEach(b => {
+      b.classList.toggle('on-dark', dark);
+    });
+    snum.style.color = dark ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.25)';
+    allDots.forEach(d => {
+      d.classList.toggle('on-dark', dark);
+    });
+  }
+
+  document.getElementById('prev').onclick = () => goTo(cur - 1);
+  document.getElementById('next').onclick = () => goTo(cur + 1);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') goTo(cur + 1);
+    if (e.key === 'ArrowLeft')  goTo(cur - 1);
+  });
+</script>
+</body>
+</html>

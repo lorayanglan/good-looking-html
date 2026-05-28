@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>2026 Annual Review · Literary Flow Style</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=DM+Sans:wght@300;400;500;600&family=Noto+Serif+SC:wght@400;500&family=Noto+Sans+SC:wght@300;400&display=swap" rel="stylesheet"/>
+
+<style>
+/* ╔══════════════════════════════════════════════════════════════════╗
+   ║  ZONE A · TOKENS — WISPR STYLE                                  ║
+   ╚══════════════════════════════════════════════════════════════════╝ */
+:root {
+  /* Palette */
+  --cream:      #FFFFEB;   /* large warm paper background */
+  --cream-card: #F5F5DC;   /* card surface, slightly warmer than background */
+  --green:      #034F46;   /* deep forest green anchor */
+  --green-deep: #122927;   /* deep green-black stage edge */
+  --black:      #1A1A1A;   /* soft black product stage */
+  --lavender:   #F0D7FF;   /* lavender CTA accent */
+  --muted:      #8C8C82;   /* muted secondary text */
+  --orange:     #E8783A;   /* small orange annotation accent */
+  --text:       #1A1A1A;   /* primary text */
+  --text-light: #FFFFFF;   /* text on dark backgrounds */
+
+  /* Typography */
+  --f-serif: 'Playfair Display','Noto Serif SC',Georgia,serif;
+  --f-sans:  'DM Sans','Noto Sans SC',system-ui,sans-serif;
+
+  /* Type scale */
+  --sz-hero:    clamp(52px, 7.5vw, 100px);
+  --sz-h1:      clamp(36px, 4.5vw, 60px);
+  --sz-h2:      clamp(22px, 2.6vw, 36px);
+  --sz-lead:    clamp(15px, 1.4vw, 20px);
+  --sz-body:    clamp(13px, 1.1vw, 16px);
+  --sz-label:   clamp(10px, 0.85vw, 13px);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body { height: 100%; font-family: var(--f-sans); overflow: hidden; }
+
+/* ── Deck: horizontal scroll container ── */
+#deck {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  overflow-x: scroll;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+#deck::-webkit-scrollbar { display: none; }
+
+/* ── Slide base ── */
+.slide {
+  width: 100vw;
+  height: 100vh;
+  flex-shrink: 0;
+  scroll-snap-align: start;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* ── Nav dots (bottom center) ── */
+#nav-dots {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 200;
+  /* pill background so dots are visible on both light and dark slides */
+  background: rgba(3,79,70,0.12);
+  backdrop-filter: blur(6px);
+  padding: 7px 14px;
+  border-radius: 100px;
+}
+.nav-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  border: none; padding: 0;
+  background: rgba(3,79,70,0.25);
+  cursor: pointer;
+  transition: background 0.3s, transform 0.3s;
+}
+.nav-dot.is-active {
+  background: var(--green);
+  transform: scale(1.5);
+}
+/* On the dark slide (slide2), invert dot colors */
+#slide2 ~ #nav-dots .nav-dot,
+.nav-dot[data-dark] { background: rgba(255,255,235,0.3); }
+.nav-dot[data-dark].is-active { background: var(--cream); }
+
+/* ═══════════════════════════════════════
+   SLIDE 1 — Cover
+═══════════════════════════════════════ */
+#slide1 { background: var(--cream); }
+
+.s1-topbar {
+  background: var(--green);
+  padding: 11px 52px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-shrink: 0;
+}
+.s1-topbar-left { font-family: var(--f-sans); font-size: 12px; font-weight: 400; color: rgba(255,255,255,0.75); letter-spacing: 0.06em; }
+.s1-topbar-right { font-family: var(--f-sans); font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.6); letter-spacing: 0.08em; text-transform: uppercase; }
+
+/* large background watermark */
+.s1-watermark {
+  position: absolute;
+  font-family: var(--f-serif);
+  font-size: clamp(180px, 30vw, 420px);
+  font-weight: 400;
+  color: rgba(3,79,70,0.055);
+  letter-spacing: -0.04em;
+  line-height: 1;
+  pointer-events: none;
+  white-space: nowrap;
+  right: -1vw; bottom: -0.08em;
+  z-index: 0;
+}
+
+/* cover body: vertically and horizontally centered */
+.s1-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 0 10vw 40px;
+  position: relative;
+  z-index: 1;
+}
+
+.s1-eyebrow {
+  font-family: var(--f-sans);
+  font-size: var(--sz-label); font-weight: 600;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+.s1-title {
+  font-family: var(--f-serif);
+  font-size: clamp(64px, 9.5vw, 128px);
+  font-weight: 400;
+  color: var(--text);
+  line-height: 1.0;
+  letter-spacing: -0.03em;
+  margin-bottom: 28px;
+}
+.s1-title em { font-style: italic; color: var(--muted); }
+
+.s1-desc {
+  font-family: var(--f-sans);
+  font-size: var(--sz-lead); font-weight: 300;
+  color: var(--muted);
+  line-height: 1.75;
+  max-width: 500px;
+  margin-bottom: 32px;
+}
+/* small annual stats: text only, no frames */
+.s1-stats-row {
+  display: flex; align-items: center; gap: 10px;
+  font-family: var(--f-sans);
+  font-size: var(--sz-label); font-weight: 400;
+  color: var(--muted); letter-spacing: 0.06em;
+  margin-bottom: 22px;
+}
+.s1-stats-dot { opacity: 0.35; }
+
+/* dark tag connects to the stage color on slide 2 */
+.s1-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.s1-chip {
+  display: inline-flex; align-items: center;
+  padding: 7px 16px; border-radius: 100px;
+  background: var(--black);
+  font-family: var(--f-sans);
+  font-size: 11px; font-weight: 400;
+  color: rgba(255,255,235,0.75);
+  letter-spacing: 0.04em;
+}
+
+/* lavender soundwave pill connects to slide 2 accents */
+.s1-wave-pill {
+  position: absolute;
+  right: 8vw; top: 50%;
+  transform: translateY(-50%);
+  width: 190px;
+  z-index: 1; pointer-events: none;
+}
+
+/* Voice trail SVG decoration */
+.voice-trail {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0.18;
+}
+.vt-1 { top: 16%; right: 8%;  width: 240px; }
+.vt-2 { bottom: 24%; right: 20%; width: 190px; }
+.vt-3 { top: 52%; left: 6%;  width: 150px; }
+
+/* ═══════════════════════════════════════
+   SLIDE 2 — Annual Highlights
+   top title, centered bar chart, bottom stat columns
+═══════════════════════════════════════ */
+#slide2 {
+  background: var(--cream);
+  padding: 8px 0;
+}
+
+.s2-stage-wrap {
+  flex: 1;
+  background: var(--black);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0;
+  padding: 36px 12vw 44px;
+}
+
+/* top: eyebrow and title */
+.s2-top { margin-bottom: 6px; }
+.s2-eyebrow {
+  font-family: var(--f-sans);
+  font-size: var(--sz-label); font-weight: 600;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: rgba(255,255,235,0.20);
+  margin-bottom: 10px;
+}
+.s2-title {
+  font-family: var(--f-serif);
+  font-size: clamp(38px, 5.5vw, 72px);
+  font-weight: 400;
+  color: var(--cream);
+  line-height: 1.0;
+  letter-spacing: -0.025em;
+}
+.s2-title em { font-style: italic; color: var(--lavender); }
+
+/* middle: centered bar chart, flexes to fill remaining space */
+.s2-chart-wrap {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 20px 0 16px;
+}
+.s2-chart-meta {
+  display: flex; align-items: baseline; gap: 14px;
+  margin-bottom: 16px;
+}
+.s2-chart-label {
+  font-family: var(--f-sans);
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 0.13em; text-transform: uppercase;
+  color: rgba(255,255,235,0.22);
+}
+.s2-chart-caption {
+  font-family: var(--f-sans);
+  font-size: 11px; font-weight: 300;
+  color: rgba(255,255,235,0.28);
+}
+.s2-bar-chart-svg { width: 100%; height: auto; display: block; }
+
+/* bottom: three stat columns */
+.s2-stats-row {
+  display: flex;
+  gap: 0;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255,255,235,0.08);
+}
+.s2-stat { flex: 1; display: flex; flex-direction: column; gap: 5px; }
+.s2-stat + .s2-stat {
+  border-left: 1px solid rgba(255,255,235,0.08);
+  padding-left: 28px;
+}
+.s2-stat-tag {
+  font-family: var(--f-sans);
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: rgba(255,255,235,0.22);
+}
+.s2-stat-num {
+  font-family: var(--f-serif);
+  font-size: clamp(22px, 2.6vw, 36px); font-weight: 500;
+  color: var(--cream);
+  letter-spacing: -0.02em; line-height: 1;
+}
+.s2-stat-desc {
+  font-family: var(--f-sans);
+  font-size: 11px; font-weight: 300;
+  color: rgba(255,255,235,0.30);
+}
+.s2-stat-bar {
+  height: 2px;
+  background: rgba(255,255,235,0.08);
+  border-radius: 1px;
+  margin-top: 6px;
+  overflow: hidden;
+}
+.s2-stat-bar-fill { height: 100%; border-radius: 1px; }
+
+/* ═══════════════════════════════════════
+   SLIDE 3 — Looking Ahead
+═══════════════════════════════════════ */
+#slide3 { background: var(--green-deep); }
+
+.s3-body {
+  flex: 1;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 0 80px 20px;
+  text-align: center;
+  position: relative; z-index: 1;
+}
+
+/* Big dotted flow path behind content */
+.s3-flow-bg {
+  position: absolute; inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.s3-eyebrow {
+  font-family: var(--f-sans);
+  font-size: var(--sz-label); font-weight: 600;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: rgba(255,255,235,0.35);
+  margin-bottom: 22px;
+}
+.s3-title {
+  font-family: var(--f-serif);
+  font-size: var(--sz-hero);
+  font-weight: 400;
+  color: var(--cream);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  margin-bottom: 18px;
+}
+.s3-title em { font-style: italic; color: var(--lavender); }
+
+.s3-sub {
+  font-family: var(--f-sans);
+  font-size: var(--sz-lead);
+  font-weight: 300;
+  color: rgba(255,255,235,0.5);
+  line-height: 1.75;
+  max-width: 520px;
+  margin-bottom: 44px;
+}
+
+.s3-goal-row {
+  display: flex; gap: 14px;
+  justify-content: center;
+}
+.s3-goal {
+  padding: 18px 26px;
+  border: 1.5px solid rgba(240,215,255,0.2);
+  border-radius: 14px;
+  background: rgba(255,255,235,0.05);
+  backdrop-filter: blur(4px);
+  text-align: center;
+  min-width: 130px;
+}
+.s3-goal-num {
+  font-family: var(--f-serif);
+  font-size: clamp(22px, 2.8vw, 36px);
+  font-weight: 500;
+  color: var(--lavender);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.s3-goal-label {
+  font-family: var(--f-sans);
+  font-size: 11px; font-weight: 400;
+  color: rgba(255,255,235,0.4);
+  letter-spacing: 0.04em;
+}
+
+.s3-foot {
+  padding: 12px;
+  font-family: var(--f-sans);
+  font-size: 11px; font-weight: 400;
+  color: rgba(255,255,235,0.2);
+  letter-spacing: 0.08em;
+  text-align: center;
+  flex-shrink: 0;
+}
+</style>
+</head>
+<body>
+
+<div id="deck">
+
+<!-- ══════════ SLIDE 1 — Cover ══════════ -->
+<section class="slide" id="slide1">
+
+  <div class="s1-topbar">
+    <span class="s1-topbar-left">Personal Annual Review · 2026</span>
+    <span class="s1-topbar-right">Yang the user</span>
+  </div>
+
+  <!-- background year watermark -->
+  <div class="s1-watermark">2026</div>
+
+  <!-- soundwave ornament -->
+  <svg class="voice-trail vt-1" viewBox="0 0 240 90" fill="none">
+    <path d="M4 74 Q 60 12 120 46 Q 180 80 236 18" stroke="#034F46" stroke-width="1.8" stroke-dasharray="5 8" fill="none"/>
+    <circle cx="236" cy="18" r="5" fill="#034F46"/>
+    <circle cx="4"   cy="74" r="3.5" fill="#034F46"/>
+  </svg>
+  <svg class="voice-trail vt-2" viewBox="0 0 190 72" fill="none">
+    <path d="M4 58 Q 48 10 95 36 Q 142 62 186 14" stroke="#034F46" stroke-width="1.6" stroke-dasharray="5 8" fill="none"/>
+    <circle cx="186" cy="14" r="4" fill="#034F46"/>
+  </svg>
+  <svg class="voice-trail vt-3" viewBox="0 0 150 58" fill="none">
+    <path d="M4 46 Q 38 8 75 28 Q 112 48 146 10" stroke="#034F46" stroke-width="1.4" stroke-dasharray="4 7" fill="none"/>
+    <circle cx="146" cy="10" r="3.5" fill="#034F46"/>
+  </svg>
+
+  <!-- cover body -->
+  <div class="s1-body">
+    <div class="s1-eyebrow">2026 · Personal Review</div>
+    <div class="s1-title">
+      This Year,<br>
+      What I <em>Created</em>
+    </div>
+    <div class="s1-desc">Growth isn't always quantifiable — but looking back, every small thing counts.</div>
+    <div class="s1-stats-row">
+      <span>16 Aesthetic Styles</span>
+      <span class="s1-stats-dot">·</span>
+      <span>23 Books Read</span>
+      <span class="s1-stats-dot">·</span>
+      <span>365 Days Logged</span>
+    </div>
+    <div class="s1-chips">
+      <span class="s1-chip">Design Research</span>
+      <span class="s1-chip">Continuous Reading</span>
+      <span class="s1-chip">Build in Public</span>
+    </div>
+  </div>
+
+</section>
+
+<!-- ══════════ SLIDE 2 — Annual Highlights ══════════ -->
+<section class="slide" id="slide2">
+  <div class="s2-stage-wrap">
+
+    <!-- top: eyebrow and title -->
+    <div class="s2-top">
+      <div class="s2-eyebrow">Annual Highlights · 2026</div>
+      <div class="s2-title">This Year, I <em>Delivered</em></div>
+    </div>
+
+    <!-- center: full-width bar chart, flexes vertically -->
+    <div class="s2-chart-wrap">
+      <div class="s2-chart-meta">
+        <span class="s2-chart-label">Monthly Reading Distribution</span>
+        <span class="s2-chart-caption">23 books total · Lavender bars = peak months (May, Aug, Oct)</span>
+      </div>
+      <svg class="s2-bar-chart-svg" viewBox="0 0 860 210" preserveAspectRatio="xMidYMax meet" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- baseline -->
+        <line x1="20" y1="181" x2="840" y2="181" stroke="rgba(255,255,235,0.10)" stroke-width="1"/>
+        <!-- guide lines -->
+        <line x1="20" y1="121" x2="840" y2="121" stroke="rgba(255,255,235,0.04)" stroke-width="1" stroke-dasharray="4 6"/>
+        <line x1="20" y1="61"  x2="840" y2="61"  stroke="rgba(255,255,235,0.04)" stroke-width="1" stroke-dasharray="4 6"/>
+        <!-- data [1,2,2,1,3,2,1,3,2,3,2,1], 60px per unit, baseline y=181 -->
+        <rect x="44"  y="121" width="20" height="60"  rx="4" fill="#FFFFEB" fill-opacity="0.42"/>
+        <rect x="112" y="61"  width="20" height="120" rx="4" fill="#FFFFEB" fill-opacity="0.52"/>
+        <rect x="180" y="61"  width="20" height="120" rx="4" fill="#FFFFEB" fill-opacity="0.52"/>
+        <rect x="248" y="121" width="20" height="60"  rx="4" fill="#FFFFEB" fill-opacity="0.42"/>
+        <rect x="316" y="1"   width="20" height="180" rx="4" fill="#F0D7FF" fill-opacity="0.82"/>
+        <rect x="384" y="61"  width="20" height="120" rx="4" fill="#FFFFEB" fill-opacity="0.52"/>
+        <rect x="452" y="121" width="20" height="60"  rx="4" fill="#FFFFEB" fill-opacity="0.42"/>
+        <rect x="520" y="1"   width="20" height="180" rx="4" fill="#F0D7FF" fill-opacity="0.82"/>
+        <rect x="588" y="61"  width="20" height="120" rx="4" fill="#FFFFEB" fill-opacity="0.52"/>
+        <rect x="656" y="1"   width="20" height="180" rx="4" fill="#F0D7FF" fill-opacity="0.82"/>
+        <rect x="724" y="61"  width="20" height="120" rx="4" fill="#FFFFEB" fill-opacity="0.52"/>
+        <rect x="792" y="121" width="20" height="60"  rx="4" fill="#FFFFEB" fill-opacity="0.42"/>
+        <!-- month labels -->
+        <text x="54"  y="198" font-size="11" fill="rgba(255,255,235,0.22)" text-anchor="middle" font-family="system-ui,sans-serif">Jan</text>
+        <text x="122" y="198" font-size="11" fill="rgba(255,255,235,0.22)" text-anchor="middle" font-family="system-ui,sans-serif">Feb</text>
+        <text x="190" y="198" font-size="11" fill="rgba(255,255,235,0.22)" text-anchor="middle" font-family="system-ui,sans-serif">Mar</text>
+        <text x="258" y="198" font-size="11" fill="rgba(255,255,235,0.22)" text-anchor="middle" font-family="system-ui,sans-serif">Apr</text>
+        <text x="326" y="198" font-size="11" fill="rgba(255,255,235,0.88)" text-anchor="middle" font-family="system-ui,sans-serif">May</text>
+        <text x="394" y="198" font-size="11" fill="rgba(255,255,235,0.22)" text-anchor="middle" font-family="system-ui,sans-serif">Jun</text>
+        <text x="462" y="198" font-size="11" fill="rgba(255,255,235,0.22)" text-anchor="middle" font-family="system-ui,sans-serif">Jul</text>
+        <text x="530" y="198" font-size="11" fill="rgba(255,255,235,0.88)" text-anchor="middle" font-family="system-ui,sans-serif">Aug</text>
+        <text x="598" y="198" font-size="11" fill="rgba(255,255,235,0.22)" text-anchor="middle" font-family="system-ui,sans-serif">Sep</text>
+        <text x="666" y="198" font-size="11" fill="rgba(255,255,235,0.88)" text-anchor="middle" font-family="system-ui,sans-serif">Oct</text>
+        <text x="734" y="198" font-size="11" fill="rgba(255,255,235,0.22)" text-anchor="middle" font-family="system-ui,sans-serif">Nov</text>
+        <text x="802" y="198" font-size="11" fill="rgba(255,255,235,0.22)" text-anchor="middle" font-family="system-ui,sans-serif">Dec</text>
+        <!-- scale labels -->
+        <text x="14" y="184" font-size="9" fill="rgba(255,255,235,0.18)" text-anchor="end" font-family="system-ui,sans-serif">0</text>
+        <text x="14" y="124" font-size="9" fill="rgba(255,255,235,0.18)" text-anchor="end" font-family="system-ui,sans-serif">1</text>
+        <text x="14" y="64"  font-size="9" fill="rgba(255,255,235,0.18)" text-anchor="end" font-family="system-ui,sans-serif">2</text>
+        <text x="14" y="10"  font-size="9" fill="rgba(255,255,235,0.18)" text-anchor="end" font-family="system-ui,sans-serif">3</text>
+      </svg>
+    </div>
+
+    <!-- bottom: three stat columns -->
+    <div class="s2-stats-row">
+      <div class="s2-stat">
+        <div class="s2-stat-tag">Design Research</div>
+        <div class="s2-stat-num">16</div>
+        <div class="s2-stat-desc">Styles fully documented · 100% of goal</div>
+        <div class="s2-stat-bar"><div class="s2-stat-bar-fill" style="width:100%;background:var(--lavender)"></div></div>
+      </div>
+      <div class="s2-stat">
+        <div class="s2-stat-tag">Reading</div>
+        <div class="s2-stat-num">23</div>
+        <div class="s2-stat-desc">Target 28 books · 82% complete</div>
+        <div class="s2-stat-bar"><div class="s2-stat-bar-fill" style="width:82%;background:rgba(255,255,235,0.55)"></div></div>
+      </div>
+      <div class="s2-stat">
+        <div class="s2-stat-tag">Daily Log</div>
+        <div class="s2-stat-num">365</div>
+        <div class="s2-stat-desc">Streak unbroken · Full year</div>
+        <div class="s2-stat-bar"><div class="s2-stat-bar-fill" style="width:100%;background:rgba(240,215,255,0.45)"></div></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════ SLIDE 3 — Looking Ahead ══════════ -->
+<section class="slide" id="slide3">
+
+  <!-- Background flow path -->
+  <div class="s3-flow-bg">
+    <svg width="100%" height="100%" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" fill="none" opacity="0.12">
+      <path d="M-40 700 Q 200 400 500 500 Q 800 600 1000 300 Q 1200 100 1480 200"
+        stroke="#FFFFEB" stroke-width="2" stroke-dasharray="8 12" fill="none"/>
+      <path d="M-40 200 Q 300 350 600 200 Q 900 50 1200 300 Q 1350 400 1480 350"
+        stroke="#F0D7FF" stroke-width="1.5" stroke-dasharray="6 10" fill="none"/>
+      <circle cx="500" cy="500" r="6" fill="#FFFFEB"/>
+      <circle cx="1000" cy="300" r="5" fill="#F0D7FF"/>
+      <circle cx="600" cy="200" r="4" fill="#FFFFEB"/>
+    </svg>
+  </div>
+
+  <div class="s3-body">
+    <div class="s3-eyebrow">Looking Ahead · 2027</div>
+    <div class="s3-title">
+      Let Creation <em>Flow</em>
+    </div>
+    <div class="s3-sub">
+      2026 was a year of building foundations.<br>2027 — take them out, make them visible.
+    </div>
+    <div class="s3-goal-row">
+      <div class="s3-goal">
+        <div class="s3-goal-num">16 →</div>
+        <div class="s3-goal-label">Open Source All Styles</div>
+      </div>
+      <div class="s3-goal">
+        <div class="s3-goal-num">×4 / mo</div>
+        <div class="s3-goal-label">Publish Monthly</div>
+      </div>
+      <div class="s3-goal">
+        <div class="s3-goal-num">GitHub</div>
+        <div class="s3-goal-label">Launch Template Repo</div>
+      </div>
+      <div class="s3-goal">
+        <div class="s3-goal-num">Steady</div>
+        <div class="s3-goal-label">Keep the Pace</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="s3-foot">2026 Annual Review · Literary Flow Style · Design Library by Yang the user</div>
+
+</section>
+
+</div><!-- /#deck -->
+
+<!-- Nav dots -->
+<nav id="nav-dots"></nav>
+
+<script>
+(function () {
+  const slideIds  = ['slide1','slide2','slide3'];
+  const slideEls  = slideIds.map(id => document.getElementById(id));
+  const deck      = document.getElementById('deck');
+  const dotsEl    = document.getElementById('nav-dots');
+  const darkSlides = new Set(['slide2','slide3']);
+  let current = 0;
+
+  // Build dots
+  slideEls.forEach(function(_, i) {
+    const btn = document.createElement('button');
+    btn.className = 'nav-dot';
+    btn.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+    btn.addEventListener('click', function() { goTo(i); });
+    dotsEl.appendChild(btn);
+  });
+
+  function updateDots() {
+    const dots = Array.from(dotsEl.children);
+    dots.forEach(function(dot, i) {
+      dot.classList.toggle('is-active', i === current);
+    });
+    if (darkSlides.has(slideIds[current])) {
+      dotsEl.style.background = 'rgba(255,255,235,0.10)';
+      dots.forEach(function(d) {
+        d.style.background = d.classList.contains('is-active')
+          ? 'rgba(255,255,235,0.9)' : 'rgba(255,255,235,0.25)';
+      });
+    } else {
+      dotsEl.style.background = 'rgba(3,79,70,0.10)';
+      dots.forEach(function(d) {
+        d.style.background = d.classList.contains('is-active')
+          ? '#034F46' : 'rgba(3,79,70,0.22)';
+      });
+    }
+  }
+
+  function goTo(i) {
+    current = Math.max(0, Math.min(slideEls.length - 1, i));
+    // Horizontal scroll on deck
+    deck.scrollTo({ left: current * window.innerWidth, behavior: 'smooth' });
+    updateDots();
+  }
+
+  // Sync dots when user swipes/scrolls manually
+  const obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) {
+        current = slideIds.indexOf(e.target.id);
+        updateDots();
+      }
+    });
+  }, { threshold: 0.6, root: deck });
+  slideEls.forEach(function(el) { obs.observe(el); });
+
+  // Keyboard: left/right arrows
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goTo(current + 1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   goTo(current - 1);
+  });
+
+  updateDots();
+}());
+</script>
+</body>
+</html>

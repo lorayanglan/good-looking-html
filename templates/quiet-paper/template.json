@@ -1,0 +1,57 @@
+{
+  "slug": "quiet-paper",
+  "name": "Quiet Paper",
+  "tagline": "Paper-like productivity style with warm white surfaces, subtle borders, serif titles, and highlighter-like accents.",
+  "mood": [
+    "quiet",
+    "intelligent",
+    "light",
+    "paper-like",
+    "low-pressure",
+    "trustworthy"
+  ],
+  "occasion": [
+    "AI productivity tool",
+    "meeting notes app",
+    "knowledge work product",
+    "personal workflow summary",
+    "writing tool presentation",
+    "light B2B SaaS"
+  ],
+  "tone": [
+    "calm",
+    "understated",
+    "smart",
+    "personal",
+    "non-corporate"
+  ],
+  "formality": "medium",
+  "density": "medium",
+  "scheme": "light",
+  "palette": {
+    "background": "#FFFFFF",
+    "surface": "#F0F0E0",
+    "text_primary": "#101010",
+    "text_secondary": "#909090",
+    "accent_olive": "#B0C050",
+    "border": "#D0D0D0",
+    "description": "Large white/near-white paper base; muted grays for borders and secondary text; one acidic olive-green used like a highlighter — only on AI emphasis, download buttons, and key highlights; never large-area."
+  },
+  "typography": {
+    "display": "Georgia",
+    "body": "Inter",
+    "cn_sans": "Noto Sans SC",
+    "style": "Warm editorial serif for display headlines (brand storytelling and section titles); clean sans-serif for UI text, captions, buttons. Serif signals 'writing and notes'; sans signals 'tool and function'."
+  },
+  "slide_count": 3,
+  "navigation": "scroll-snap with keyboard arrow support",
+  "source": "public visual preset",
+  "best_for": "AI writing, meeting notes, knowledge work, personal productivity tools. Products that want to feel like 'a clean native notes app that became intelligent' rather than an AI dashboard. Before/after comparisons, testimonial walls, note-card UI language.",
+  "avoid_for": "High-energy launches, colorful brand identity, dark/cinematic experiences. Don't use for B2B data platforms needing high-density dashboards.",
+  "anti_patterns": [
+    "using blue-purple gradients, glassmorphism, or 3D spheres — kills the notebook feel",
+    "spreading olive-green over large background areas — it must work like a highlighter pen only",
+    "overcomplicating the product screenshots — 'fewer, more precise' is the aesthetic contract",
+    "replacing serif display with modern sans — the serif is what gives it warmth and literary identity"
+  ]
+}

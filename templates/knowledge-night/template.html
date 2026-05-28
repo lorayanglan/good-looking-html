@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Knowledge Night Style · Inside the LLM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:      #101010;
+    --card:    #1c1c1c;
+    --card2:   #222222;
+    --border:  rgba(255,255,255,0.08);
+    --purple:  #8040F0;
+    --purp-lt: #A090FF;
+    --purp-dim: rgba(128,64,240,0.15);
+    --green:   #40B080;
+    --white:   #FFFFFF;
+    --gray:    #A0A0A0;
+    --gray-dk: #606060;
+    --f: 'Inter', sans-serif;
+  }
+
+  html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); font-family: var(--f); }
+
+  #deck {
+    display: flex; width: 100%; height: 100%;
+    overflow-x: scroll; scroll-snap-type: x mandatory; scrollbar-width: none;
+  }
+  #deck::-webkit-scrollbar { display: none; }
+
+  .slide {
+    width: 100vw; height: 100vh; flex-shrink: 0;
+    scroll-snap-align: start;
+    background: var(--bg);
+    display: flex; flex-direction: column;
+    position: relative; overflow: hidden;
+  }
+
+  /* Nav */
+  #nav-dots {
+    position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 7px; z-index: 100;
+  }
+  .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: rgba(255,255,255,0.2); transition: background 0.25s; cursor: pointer;
+  }
+  .dot.active { background: var(--purp-lt); }
+  #page-counter {
+    position: fixed; bottom: 20px; right: 28px;
+    font-size: 11px; font-weight: 500; color: var(--gray-dk); letter-spacing: 0.04em; z-index: 100;
+  }
+
+  /* Top bar */
+  .top-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 52px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .top-logo {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 15px; font-weight: 700; color: var(--white);
+  }
+  .top-logo-gem {
+    width: 22px; height: 22px;
+  }
+  .top-tag { font-size: 11px; font-weight: 500; color: var(--gray-dk); letter-spacing: 0.06em; text-transform: uppercase; }
+
+  /* ═══════════════════════
+     SLIDE 1 — Hero + Graph
+  ═══════════════════════ */
+  .s1-body {
+    flex: 1; display: flex; min-height: 0;
+  }
+
+  .s1-left {
+    width: 42%; display: flex; flex-direction: column;
+    justify-content: center;
+    padding: 40px 48px 52px 52px;
+    border-right: 1px solid var(--border);
+  }
+
+  .s1-pill {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: var(--purp-dim);
+    border: 1px solid rgba(160,144,255,0.3);
+    border-radius: 100px;
+    padding: 5px 14px;
+    font-size: 11px; font-weight: 600; color: var(--purp-lt);
+    letter-spacing: 0.04em;
+    margin-bottom: 28px; align-self: flex-start;
+  }
+  .s1-pill::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--purp-lt); }
+
+  .s1-title {
+    font-size: clamp(52px, 5.5vw, 76px);
+    font-weight: 800; line-height: 1.05;
+    letter-spacing: -0.03em; color: var(--white);
+    margin-bottom: 20px;
+  }
+
+  .s1-desc {
+    font-size: clamp(18px, 1.7vw, 22px);
+    font-weight: 400; line-height: 1.75;
+    color: var(--gray); margin-bottom: 40px;
+  }
+
+  /* Formula block */
+  .s1-formula {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 18px 20px;
+    border-left: 2px solid var(--purple);
+  }
+  .s1-formula-label {
+    font-size: 12px; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--purp-lt);
+    margin-bottom: 10px;
+  }
+  .s1-formula-line {
+    font-size: 17px; font-weight: 500; color: var(--gray);
+    line-height: 1.9; font-family: 'Courier New', monospace;
+  }
+  .s1-formula-line span { color: var(--purp-lt); }
+
+  /* Right: graph network */
+  .s1-right {
+    flex: 1; position: relative;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+
+  /* ═══════════════════════════════════
+     SLIDE 2 — Training Pipeline + Radar
+  ═══════════════════════════════════ */
+  .s2-head {
+    padding: 20px 52px 18px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    display: flex; align-items: flex-end; justify-content: space-between;
+  }
+  .s2-eyebrow {
+    font-size: 12px; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--gray-dk);
+    margin-bottom: 6px;
+  }
+  .s2-title {
+    font-size: clamp(36px, 3.8vw, 50px);
+    font-weight: 800; color: var(--white);
+    letter-spacing: -0.025em; line-height: 1.05;
+  }
+  .s2-source {
+    font-size: 13px; font-weight: 400; color: var(--gray-dk);
+    text-align: right; line-height: 1.6;
+  }
+
+  .s2-body {
+    flex: 1; display: flex; min-height: 0;
+  }
+
+  /* Left: pipeline steps */
+  .s2-left {
+    width: 44%; border-right: 1px solid var(--border);
+    padding: 24px 36px 32px 52px;
+    display: flex; flex-direction: column; justify-content: center;
+    gap: 0;
+  }
+
+  .s2-step {
+    display: flex; gap: 18px; align-items: flex-start;
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .s2-step:last-child { border-bottom: none; }
+
+  .s2-step-dot {
+    width: 34px; height: 34px; border-radius: 50%;
+    border: 2px solid var(--purple);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700; color: var(--purp-lt);
+    flex-shrink: 0; margin-top: 2px;
+    background: var(--purp-dim);
+  }
+  .s2-step-title {
+    font-size: clamp(20px, 1.9vw, 24px);
+    font-weight: 700; color: var(--white);
+    margin-bottom: 6px; line-height: 1.2;
+  }
+  .s2-step-desc {
+    font-size: clamp(15px, 1.4vw, 17px);
+    font-weight: 400; color: var(--gray);
+    line-height: 1.65;
+  }
+  .s2-step-stat {
+    margin-top: 8px; font-size: 13px; font-weight: 600;
+    color: var(--purp-lt);
+  }
+
+  /* Right: radar chart */
+  .s2-right {
+    flex: 1; padding: 20px 36px 28px 28px;
+    display: flex; flex-direction: column;
+  }
+  .s2-chart-label {
+    font-size: 12px; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--gray-dk);
+    margin-bottom: 12px;
+  }
+  .s2-radar-wrap {
+    flex: 1;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* ═══════════════════════════
+     SLIDE 3 — Feature 2×2 Grid
+  ═══════════════════════════ */
+  .s3-head {
+    padding: 22px 52px 20px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .s3-eyebrow {
+    font-size: 12px; font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--gray-dk);
+    margin-bottom: 8px;
+  }
+  .s3-title {
+    font-size: clamp(36px, 3.8vw, 50px);
+    font-weight: 800; color: var(--white);
+    letter-spacing: -0.025em; line-height: 1.05;
+  }
+
+  .s3-grid {
+    flex: 1; display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    min-height: 0;
+    margin-bottom: 40px;
+  }
+
+  .s3-card {
+    background: var(--bg);
+    padding: 24px 32px;
+    display: flex; flex-direction: column;
+    position: relative;
+  }
+  .s3-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--purple) 0%, transparent 60%);
+  }
+  .s3-card:nth-child(2)::before { background: linear-gradient(90deg, var(--purp-lt) 0%, transparent 60%); }
+  .s3-card:nth-child(3)::before { background: linear-gradient(90deg, var(--green) 0%, transparent 60%); }
+  .s3-card:nth-child(4)::before { background: linear-gradient(90deg, #A090FF 0%, transparent 60%); }
+
+  .s3-card-icon {
+    font-size: 26px; margin-bottom: 14px;
+  }
+  .s3-card-title {
+    font-size: clamp(22px, 2.1vw, 28px);
+    font-weight: 700; color: var(--white);
+    margin-bottom: 12px; line-height: 1.2;
+  }
+  .s3-card-desc {
+    font-size: clamp(15px, 1.4vw, 18px);
+    font-weight: 400; color: var(--gray);
+    line-height: 1.7; flex: 1;
+  }
+  .s3-card-tag {
+    margin-top: 16px; align-self: flex-start;
+    font-size: 12px; font-weight: 600;
+    color: var(--gray-dk); letter-spacing: 0.05em;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 3px; padding: 4px 12px;
+  }
+</style>
+</head>
+<body>
+
+<div id="deck">
+
+  <!-- ════════════ SLIDE 1 ════════════ -->
+  <div class="slide" id="s1">
+    <div class="top-bar">
+      <div class="top-logo">
+        <!-- Knowledge Night gem icon -->
+        <svg class="top-logo-gem" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="11,2 20,8 17,19 5,19 2,8" fill="#8040F0" opacity="0.9"/>
+          <polygon points="11,2 20,8 11,12" fill="#A090FF" opacity="0.7"/>
+          <polygon points="11,2 2,8 11,12"  fill="#6020C0" opacity="0.9"/>
+          <polygon points="2,8 5,19 11,12"  fill="#5010A0" opacity="0.8"/>
+          <polygon points="20,8 17,19 11,12" fill="#9060E0" opacity="0.8"/>
+        </svg>
+        Knowledge Night
+      </div>
+      <span class="top-tag">Style Reference · Inside the LLM</span>
+    </div>
+
+    <div class="s1-body">
+      <div class="s1-left">
+        <div class="s1-pill">Karpathy · Deep Dive 2025</div>
+        <h1 class="s1-title">Sharpen your<br>understanding<br>of LLMs.</h1>
+        <p class="s1-desc">Large language models aren't databases or conscious minds. They're token prediction engines — with layered training that shapes knowledge, behavior, and reasoning.</p>
+
+        <div class="s1-formula">
+          <div class="s1-formula-label">Mental Model</div>
+          <div class="s1-formula-line">LLM = <span>internet knowledge</span> (lossy)</div>
+          <div class="s1-formula-line">    + <span>assistant behavior</span> (SFT)</div>
+          <div class="s1-formula-line">    + <span>working memory</span> (context)</div>
+          <div class="s1-formula-line">    + <span>reasoning strategy</span> (RLHF)</div>
+        </div>
+      </div>
+
+      <!-- Right: SVG knowledge graph -->
+      <div class="s1-right">
+        <svg viewBox="0 0 520 420" xmlns="http://www.w3.org/2000/svg" style="width:90%;height:90%">
+          <defs>
+            <radialGradient id="glow-p" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#8040F0" stop-opacity="0.5"/>
+              <stop offset="100%" stop-color="#8040F0" stop-opacity="0"/>
+            </radialGradient>
+            <radialGradient id="glow-g" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#40B080" stop-opacity="0.4"/>
+              <stop offset="100%" stop-color="#40B080" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+
+          <!-- Edge lines -->
+          <g stroke="rgba(255,255,255,0.12)" stroke-width="1" fill="none">
+            <line x1="260" y1="210" x2="140" y2="130"/>
+            <line x1="260" y1="210" x2="380" y2="130"/>
+            <line x1="260" y1="210" x2="200" y2="320"/>
+            <line x1="260" y1="210" x2="320" y2="310"/>
+            <line x1="140" y1="130" x2="80"  y2="80"/>
+            <line x1="140" y1="130" x2="90"  y2="200"/>
+            <line x1="380" y1="130" x2="440" y2="75"/>
+            <line x1="380" y1="130" x2="450" y2="200"/>
+            <line x1="200" y1="320" x2="130" y2="370"/>
+            <line x1="320" y1="310" x2="400" y2="360"/>
+            <line x1="80"  y1="80"  x2="50"  y2="140"/>
+            <line x1="440" y1="75"  x2="490" y2="130"/>
+            <line x1="200" y1="320" x2="260" y2="370"/>
+            <line x1="90"  y1="200" x2="50"  y2="260"/>
+            <line x1="450" y1="200" x2="490" y2="260"/>
+          </g>
+
+          <!-- Purple edges (active paths) -->
+          <g stroke="#8040F0" stroke-width="1.5" fill="none" opacity="0.5">
+            <line x1="260" y1="210" x2="380" y2="130"/>
+            <line x1="380" y1="130" x2="440" y2="75"/>
+            <line x1="260" y1="210" x2="320" y2="310"/>
+          </g>
+
+          <!-- Glow halos for active nodes -->
+          <ellipse cx="260" cy="210" rx="28" ry="28" fill="url(#glow-p)"/>
+          <ellipse cx="380" cy="130" rx="22" ry="22" fill="url(#glow-p)"/>
+          <ellipse cx="200" cy="320" rx="20" ry="20" fill="url(#glow-g)"/>
+
+          <!-- Regular nodes -->
+          <g fill="#303030" stroke="rgba(255,255,255,0.25)" stroke-width="1.5">
+            <circle cx="80"  cy="80"  r="6"/>
+            <circle cx="50"  cy="140" r="5"/>
+            <circle cx="90"  cy="200" r="6"/>
+            <circle cx="50"  cy="260" r="5"/>
+            <circle cx="130" cy="370" r="6"/>
+            <circle cx="260" cy="370" r="5"/>
+            <circle cx="440" cy="75"  r="6"/>
+            <circle cx="490" cy="130" r="5"/>
+            <circle cx="450" cy="200" r="6"/>
+            <circle cx="490" cy="260" r="5"/>
+            <circle cx="400" cy="360" r="6"/>
+            <circle cx="140" cy="130" r="8"/>
+          </g>
+
+          <!-- Active nodes — purple -->
+          <circle cx="260" cy="210" r="11" fill="#8040F0" stroke="#A090FF" stroke-width="2"/>
+          <circle cx="380" cy="130" r="9"  fill="#6020C0" stroke="#8040F0" stroke-width="2"/>
+          <circle cx="320" cy="310" r="7"  fill="#5010A0" stroke="#8040F0" stroke-width="1.5"/>
+
+          <!-- Green nodes -->
+          <circle cx="200" cy="320" r="8"  fill="#40B080" stroke="#60D0A0" stroke-width="1.5"/>
+          <circle cx="440" cy="75"  r="7"  fill="#308060" stroke="#40B080" stroke-width="1.5"/>
+
+          <!-- Node labels -->
+          <text x="260" y="193" text-anchor="middle" font-size="10" font-weight="700" fill="#A090FF" font-family="Inter,sans-serif">Token predict</text>
+          <text x="395" y="118" text-anchor="middle" font-size="9"  font-weight="600" fill="#C0B0FF" font-family="Inter,sans-serif">RLHF</text>
+          <text x="140" y="116" text-anchor="middle" font-size="9"  font-weight="600" fill="rgba(255,255,255,0.6)" font-family="Inter,sans-serif">Pre-train</text>
+          <text x="200" y="307" text-anchor="middle" font-size="9"  font-weight="600" fill="#60D0A0" font-family="Inter,sans-serif">Context</text>
+          <text x="454" y="61"  text-anchor="middle" font-size="9"  fill="#50C090" font-family="Inter,sans-serif">Tools</text>
+          <text x="320" y="296" text-anchor="middle" font-size="9"  fill="#8040F0" font-family="Inter,sans-serif">SFT</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════ SLIDE 2 ════════════ -->
+  <div class="slide" id="s2">
+    <div class="top-bar">
+      <div class="top-logo">
+        <svg class="top-logo-gem" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="11,2 20,8 17,19 5,19 2,8" fill="#8040F0" opacity="0.9"/>
+          <polygon points="11,2 20,8 11,12" fill="#A090FF" opacity="0.7"/>
+          <polygon points="11,2 2,8 11,12"  fill="#6020C0" opacity="0.9"/>
+        </svg>
+        Knowledge Night
+      </div>
+      <span class="top-tag">Training Pipeline · Capabilities</span>
+    </div>
+
+    <div class="s2-head">
+      <div>
+        <div class="s2-eyebrow">Three-Stage Training</div>
+        <div class="s2-title">How raw text becomes<br>a reasoning assistant</div>
+      </div>
+      <div class="s2-source">Source: Karpathy<br>"Deep Dive into LLMs"</div>
+    </div>
+
+    <div class="s2-body">
+      <div class="s2-left">
+        <div class="s2-step">
+          <div class="s2-step-dot">1</div>
+          <div>
+            <div class="s2-step-title">Pre-training: compress the internet</div>
+            <div class="s2-step-desc">15T tokens of cleaned web text — language, facts, code — stored as lossy statistical compression in model parameters.</div>
+            <div class="s2-step-stat">~15T tokens · FineWeb-scale</div>
+          </div>
+        </div>
+        <div class="s2-step">
+          <div class="s2-step-dot">2</div>
+          <div>
+            <div class="s2-step-title">SFT: learn to be an assistant</div>
+            <div class="s2-step-desc">Human experts demonstrate ideal responses. Model fine-tunes on examples, shifting from document predictor to conversation partner.</div>
+            <div class="s2-step-stat">~100K examples · behavior alignment</div>
+          </div>
+        </div>
+        <div class="s2-step">
+          <div class="s2-step-dot">3</div>
+          <div>
+            <div class="s2-step-title">RLHF: reinforce what works</div>
+            <div class="s2-step-desc">RL rewards correct answers on verifiable tasks. Models discover chain-of-thought reasoning without being explicitly taught it.</div>
+            <div class="s2-step-stat">Reward from test outcomes · emergent CoT</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: radar chart -->
+      <div class="s2-right">
+        <div class="s2-chart-label">Model capability by domain · Early vs Frontier LLM</div>
+        <div class="s2-radar-wrap">
+          <svg viewBox="0 0 380 320" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+            <!-- Radar grid — hexagon at 3 scales -->
+            <!-- Center: 190,160 -->
+            <!-- 6 axes at 0°,60°,120°,180°,240°,300° -->
+            <!-- r=110 (outer), r=73 (mid), r=37 (inner) -->
+
+            <!-- Outer hex -->
+            <polygon points="190,50 285,105 285,215 190,270 95,215 95,105" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+            <!-- Mid hex -->
+            <polygon points="190,87 248.5,122.5 248.5,197.5 190,233 131.5,197.5 131.5,122.5" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+            <!-- Inner hex -->
+            <polygon points="190,123 222.5,140.5 222.5,179.5 190,197 157.5,179.5 157.5,140.5" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+
+            <!-- Axis lines -->
+            <g stroke="rgba(255,255,255,0.07)" stroke-width="1">
+              <line x1="190" y1="160" x2="190" y2="50"/>
+              <line x1="190" y1="160" x2="285" y2="105"/>
+              <line x1="190" y1="160" x2="285" y2="215"/>
+              <line x1="190" y1="160" x2="190" y2="270"/>
+              <line x1="190" y1="160" x2="95"  y2="215"/>
+              <line x1="190" y1="160" x2="95"  y2="105"/>
+            </g>
+
+            <!-- Axis labels -->
+            <text x="190" y="40"  text-anchor="middle" font-size="11" font-weight="600" fill="#A0A0A0" font-family="Inter,sans-serif">Code</text>
+            <text x="298" y="103" text-anchor="start"  font-size="11" font-weight="600" fill="#A0A0A0" font-family="Inter,sans-serif">Math</text>
+            <text x="298" y="222" text-anchor="start"  font-size="11" font-weight="600" fill="#A0A0A0" font-family="Inter,sans-serif">Reasoning</text>
+            <text x="190" y="285" text-anchor="middle" font-size="11" font-weight="600" fill="#A0A0A0" font-family="Inter,sans-serif">the userguage</text>
+            <text x="82"  y="222" text-anchor="end"    font-size="11" font-weight="600" fill="#A0A0A0" font-family="Inter,sans-serif">Vision</text>
+            <text x="82"  y="103" text-anchor="end"    font-size="11" font-weight="600" fill="#A0A0A0" font-family="Inter,sans-serif">Tools</text>
+
+            <!-- Early LLM polygon (small, gray) -->
+            <!-- Code:45% Math:35% Reasoning:40% the userguage:70% Vision:20% Tools:30% -->
+            <!-- r=110; scaled r values: 49,38,44,77,22,33 -->
+            <!-- Points: Code(190,111) Math(237,133) Reasoning(228,188) the userguage(190,237) Vision(151,188) Tools(162,133) approximately -->
+            <polygon
+              points="190,111 237,133 228,188 190,237 151,188 162,133"
+              fill="rgba(255,255,255,0.05)"
+              stroke="rgba(255,255,255,0.25)"
+              stroke-width="1.5"
+            />
+
+            <!-- Frontier LLM polygon (large, purple) -->
+            <!-- Code:90% Math:85% Reasoning:88% the userguage:95% Vision:75% Tools:82% -->
+            <!-- r=110; scaled r values: 99,93,97,104,82,90 -->
+            <polygon
+              points="190,61 276,113 277,208 190,264 107,208 107,118"
+              fill="rgba(128,64,240,0.15)"
+              stroke="#8040F0"
+              stroke-width="2"
+            />
+
+            <!-- Legend — far right, clear of hexagon -->
+            <rect x="262" y="268" width="12" height="12" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
+            <text x="280" y="279" font-size="11" fill="#888" font-family="Inter,sans-serif">Early LLM</text>
+            <rect x="262" y="288" width="12" height="12" fill="rgba(128,64,240,0.3)" stroke="#8040F0" stroke-width="1.5"/>
+            <text x="280" y="299" font-size="11" fill="#A090FF" font-family="Inter,sans-serif" font-weight="600">Frontier LLM</text>
+
+            <!-- Center dot -->
+            <circle cx="190" cy="160" r="3" fill="#8040F0"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════ SLIDE 3 ════════════ -->
+  <div class="slide" id="s3">
+    <div class="top-bar">
+      <div class="top-logo">
+        <svg class="top-logo-gem" viewBox="0 0 22 22" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="11,2 20,8 17,19 5,19 2,8" fill="#8040F0" opacity="0.9"/>
+          <polygon points="11,2 20,8 11,12" fill="#A090FF" opacity="0.7"/>
+          <polygon points="11,2 2,8 11,12"  fill="#6020C0" opacity="0.9"/>
+        </svg>
+        Knowledge Night
+      </div>
+      <span class="top-tag">Four Pillars · How It Actually Works</span>
+    </div>
+
+    <div class="s3-head">
+      <div class="s3-eyebrow">Core Concepts</div>
+      <div class="s3-title">Four things to understand<br>before you use an LLM.</div>
+    </div>
+
+    <div class="s3-grid">
+      <div class="s3-card">
+        <div class="s3-card-icon">🔮</div>
+        <div class="s3-card-title">Token Prediction</div>
+        <div class="s3-card-desc">Every output is a token-by-token continuation — "expensive autocomplete." Predicting well requires learning language, facts, code, and reasoning from training data.</div>
+        <div class="s3-card-tag">Foundation</div>
+      </div>
+
+      <div class="s3-card">
+        <div class="s3-card-icon">🧠</div>
+        <div class="s3-card-title">Context Window</div>
+        <div class="s3-card-desc">The model has no persistent memory — only what's in the current context window. What's not in context doesn't exist, regardless of what was trained on.</div>
+        <div class="s3-card-tag">Memory model</div>
+      </div>
+
+      <div class="s3-card">
+        <div class="s3-card-icon">🔧</div>
+        <div class="s3-card-title">Tool Calling</div>
+        <div class="s3-card-desc">Models emit structured commands — search, run code, read files — and results flow back into context. This loop is how LLMs become agents.</div>
+        <div class="s3-card-tag">Action layer</div>
+      </div>
+
+      <div class="s3-card">
+        <div class="s3-card-icon">⛓</div>
+        <div class="s3-card-title">Chain-of-Thought</div>
+        <div class="s3-card-desc">Reasoning models learn to think step-by-step before answering — an emergent behavior discovered through RL on verifiable tasks, not explicitly programmed.</div>
+        <div class="s3-card-tag">Reasoning strategy</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /deck -->
+
+<nav id="nav-dots">
+  <div class="dot active" data-i="0"></div>
+  <div class="dot" data-i="1"></div>
+  <div class="dot" data-i="2"></div>
+</nav>
+<div id="page-counter">1 / 3</div>
+
+<script>
+  const deck = document.getElementById('deck');
+  const dots = document.querySelectorAll('.dot');
+  const counter = document.getElementById('page-counter');
+  const slides = document.querySelectorAll('.slide');
+
+  function goTo(i) { deck.scrollTo({ left: i * window.innerWidth, behavior: 'smooth' }); }
+  dots.forEach(d => d.addEventListener('click', () => goTo(+d.dataset.i)));
+
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const i = [...slides].indexOf(e.target);
+        dots.forEach((d, j) => d.classList.toggle('active', j === i));
+        counter.textContent = `${i + 1} / ${slides.length}`;
+      }
+    });
+  }, { root: deck, threshold: 0.5 });
+
+  slides.forEach(s => obs.observe(s));
+
+  document.addEventListener('keydown', e => {
+    const cur = Math.round(deck.scrollLeft / window.innerWidth);
+    if (e.key === 'ArrowRight' && cur < slides.length - 1) goTo(cur + 1);
+    if (e.key === 'ArrowLeft'  && cur > 0)                 goTo(cur - 1);
+  });
+</script>
+</body>
+</html>

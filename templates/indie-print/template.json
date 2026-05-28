@@ -1,0 +1,55 @@
+{
+  "slug": "indie-print",
+  "name": "Indie Print",
+  "tagline": "Indie creator print style with white base, thick black borders, hard shadows, and direct handmade energy.",
+  "mood": [
+    "grassroots",
+    "authentic",
+    "indie",
+    "unpretentious",
+    "direct",
+    "handmade"
+  ],
+  "occasion": [
+    "creator marketplace deck",
+    "digital product showcase",
+    "indie publishing summary",
+    "creator monetization presentation",
+    "personal project launch"
+  ],
+  "tone": [
+    "blunt",
+    "warm",
+    "accessible",
+    "no-nonsense",
+    "anti-corporate"
+  ],
+  "formality": "low",
+  "density": "low",
+  "scheme": "light",
+  "palette": {
+    "background": "#FFFFFF",
+    "text_primary": "#1A1A1A",
+    "border": "#1A1A1A",
+    "shadow": "#1A1A1A",
+    "accent_gold": "#F0B429",
+    "description": "Black-and-white dominant system with zero decorative color; only warm gold used as accent (coin illustrations, one emphasis element); hard drop shadows and thick black borders replace gradient depth; no soft shadows or glassmorphism."
+  },
+  "typography": {
+    "display": "DM Sans",
+    "body": "DM Sans",
+    "cn_sans": "Noto Sans SC",
+    "style": "Bold geometric sans-serif. Large headlines with direct short copy. Button text is small and bold matching thick border buttons. No decorative type, no cursive, no serif."
+  },
+  "slide_count": 3,
+  "navigation": "scroll-snap with keyboard arrow support",
+  "source": "public visual preset",
+  "best_for": "Creator economy showcases, independent maker presentations, digital product launches, personal project pages. For content where 'anyone can do this' accessibility is the message. Works for portfolios, indie tool pages, anti-SaaS product storytelling.",
+  "avoid_for": "B2B enterprise, luxury brands, products needing visual sophistication or multi-color expression. Don't use for content requiring formality or corporate trust signals.",
+  "anti_patterns": [
+    "adding soft gradients or glow effects — immediately destroys the zine/indie print feel",
+    "mixing hard shadows with complex multi-color palettes — power comes from extreme restraint",
+    "making the layout too dense — wide whitespace is a core component, not optional",
+    "replacing thick black borders with soft drop shadows — the border IS the identity"
+  ]
+}

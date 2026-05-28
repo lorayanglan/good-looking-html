@@ -1,0 +1,57 @@
+{
+  "slug": "literary-flow",
+  "name": "Literary Flow",
+  "tagline": "Warm editorial flow style with cream paper, deep green anchors, serif headlines, and calm motion cues.",
+  "mood": [
+    "calm",
+    "editorial",
+    "dreamy",
+    "confident",
+    "warm",
+    "voice-like",
+    "unhurried"
+  ],
+  "occasion": [
+    "AI writing or voice tool",
+    "personal productivity product",
+    "creative workflow deck",
+    "writer or maker tool",
+    "calm productivity landing"
+  ],
+  "tone": [
+    "literary",
+    "calm",
+    "self-confident",
+    "personal",
+    "anti-SaaS-generic"
+  ],
+  "formality": "medium",
+  "density": "medium",
+  "scheme": "mixed",
+  "palette": {
+    "cream": "#FFFFEB",
+    "forest_green": "#034F46",
+    "green_black": "#122927",
+    "soft_black": "#1A1A1A",
+    "lavender_cta": "#F0D7FF",
+    "accent_orange": "#FF8040",
+    "description": "Warm cream paper background for human warmth; deep forest green as brand anchor and trust signal; soft black for product stage (not harsh pure black); pale lavender as a tactile pastel CTA that works on both cream and dark backgrounds; orange only as micro-annotation in product UI."
+  },
+  "typography": {
+    "display": "Georgia",
+    "body": "Inter",
+    "cn_sans": "Noto Sans SC",
+    "style": "High-contrast Didone/editorial serif for display and section headlines (brand storytelling, emotional resonance); modern sans for body copy, captions, buttons. The serif-sans combination creates 'literary tool' rather than 'generic SaaS'."
+  },
+  "slide_count": 3,
+  "navigation": "scroll-snap with keyboard arrow support",
+  "source": "public visual preset",
+  "best_for": "AI writing, voice dictation, personal workflow, creator-adjacent productivity tools. When the product needs to feel warm and human rather than cold and technical. Calm productivity content, writing tools, voice products.",
+  "avoid_for": "Enterprise B2B, heavy data dashboards, high-density technical content, formal financial presentations. The warmth and editorial quality clash with corporate seriousness.",
+  "anti_patterns": [
+    "using generic SaaS blue gradients, glassmorphism, or dense dashboard heroes",
+    "only taking the serif headline and cream background without the voice-trail motion cues — the combination is the identity",
+    "making colors muddy — cream must be bright, green must be steady, black must be soft, lavender must be pale",
+    "stacking traditional cards instead of large whitespace editorial text blocks"
+  ]
+}

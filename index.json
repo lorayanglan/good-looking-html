@@ -1,0 +1,556 @@
+{
+  "schema_version": 1,
+  "owner": "public",
+  "template_count": 16,
+  "templates": [
+    {
+      "slug": "bright-lab",
+      "name": "Bright Lab",
+      "tagline": "Bright candy-colored gallery system with playful blocks, pill CTAs, organic shapes, and generous whitespace.",
+      "mood": [
+        "bright",
+        "experimental",
+        "friendly",
+        "exploratory",
+        "playful",
+        "candy"
+      ],
+      "occasion": [
+        "personal review deck",
+        "AI tool gallery",
+        "creative project showroom",
+        "wellness review",
+        "course or workshop summary",
+        "tools collection page",
+        "experimental product launch"
+      ],
+      "tone": [
+        "warm",
+        "open",
+        "approachable",
+        "modern",
+        "non-corporate"
+      ],
+      "formality": "medium",
+      "density": "medium",
+      "scheme": "mixed",
+      "best_for": "Decks and pages that want to feel bright, exploratory, and approachable rather than corporate or futuristic. Personal reviews, wellness summaries, AI tool galleries, creative project showrooms, experimental product launches. Strong when many items need their own identity within a unified container system.",
+      "avoid_for": "High-luxury brand decks, dark-mood cinematic narratives, single long-form essays, somber or austere material. The candy palette commits to a playful, experimental voice.",
+      "slide_count": 6,
+      "source": "public visual preset"
+    },
+    {
+      "slug": "bold-violet",
+      "name": "Bold Violet",
+      "tagline": "Bold violet product system with cream/lavender surfaces, floating dashboard cards, and confident brand-scale typography.",
+      "mood": [
+        "bold",
+        "vibrant",
+        "modern",
+        "distinctive",
+        "energetic",
+        "product-forward"
+      ],
+      "occasion": [
+        "SaaS tool landing page",
+        "e-commerce analytics product",
+        "high-recognition brand report",
+        "annual report deck",
+        "product launch",
+        "brand growth summary"
+      ],
+      "tone": [
+        "confident",
+        "assertive",
+        "professional",
+        "non-generic",
+        "memorable"
+      ],
+      "formality": "medium",
+      "density": "medium",
+      "scheme": "mixed",
+      "best_for": "Decks that need high visual identity and brand confidence. SaaS product reports, e-commerce annual summaries, brand growth presentations. Strong when you want to commit fully to a single bold color system rather than generic blue-white SaaS.",
+      "avoid_for": "Multi-color rainbow schemes, luxury minimal aesthetics, finance content requiring trust through restraint.",
+      "slide_count": 3,
+      "source": "public visual preset"
+    },
+    {
+      "slug": "dark-utility",
+      "name": "Dark Utility",
+      "tagline": "Purposeful dark utility style with near-black surfaces, a single muted accent, and product-first restraint.",
+      "mood": [
+        "clean",
+        "precise",
+        "understated",
+        "confident",
+        "tool-like",
+        "honest"
+      ],
+      "occasion": [
+        "utility app product page",
+        "open-source software landing",
+        "developer tool showcase",
+        "technical product summary",
+        "tool review deck"
+      ],
+      "tone": [
+        "minimal",
+        "purposeful",
+        "no-nonsense",
+        "developer-friendly"
+      ],
+      "formality": "low-medium",
+      "density": "low",
+      "scheme": "dark",
+      "best_for": "Tool and utility app showcases, open-source software presentations, developer-focused products that want to feel as purposeful as the tool itself.",
+      "avoid_for": "Consumer lifestyle products, warm personal narratives, anything requiring color expressiveness or warmth.",
+      "slide_count": 3,
+      "source": "public visual preset"
+    },
+    {
+      "slug": "enterprise-dark",
+      "name": "Enterprise Dark",
+      "tagline": "Enterprise-grade dark technical style with charcoal foundations, restrained warm accents, and authoritative scale.",
+      "mood": [
+        "deep",
+        "authoritative",
+        "technical",
+        "credible",
+        "serious",
+        "heavyweight"
+      ],
+      "occasion": [
+        "enterprise AI platform",
+        "B2B SaaS deck",
+        "developer API product",
+        "technical pitch",
+        "research summary",
+        "infrastructure product presentation"
+      ],
+      "tone": [
+        "professional",
+        "technical",
+        "trustworthy",
+        "non-consumer",
+        "authoritative"
+      ],
+      "formality": "high",
+      "density": "medium-high",
+      "scheme": "dark",
+      "best_for": "Enterprise AI, developer API platforms, B2B SaaS products that need to feel like serious infrastructure rather than consumer tools.",
+      "avoid_for": "Consumer products, personal narratives, content that needs warmth or playfulness.",
+      "slide_count": 3,
+      "source": "public visual preset"
+    },
+    {
+      "slug": "calm-process",
+      "name": "Calm Process",
+      "tagline": "Calm white-blue process style for step-by-step guidance, reassuring dashboards, and trustworthy onboarding.",
+      "mood": [
+        "calm",
+        "reassuring",
+        "empowering",
+        "clear",
+        "trustworthy",
+        "structured"
+      ],
+      "occasion": [
+        "consumer fintech product",
+        "personal finance tool",
+        "step-by-step process deck",
+        "onboarding flow summary",
+        "mobile app presentation"
+      ],
+      "tone": [
+        "warm-professional",
+        "structured",
+        "approachable",
+        "de-anxietizing"
+      ],
+      "formality": "medium",
+      "density": "medium",
+      "scheme": "light",
+      "best_for": "Consumer finance, personal tool onboarding, step-by-step process explanations, mobile app presentations. Ideal when content needs to feel manageable and non-threatening.",
+      "avoid_for": "Dark-mode content, high-energy product launches, luxury or premium aesthetics.",
+      "slide_count": 3,
+      "source": "public visual preset"
+    },
+    {
+      "slug": "warm-team",
+      "name": "Warm Team",
+      "tagline": "Warm professional team style with navy/off-white rhythm and friendly geometric accents.",
+      "mood": [
+        "warm",
+        "friendly",
+        "human",
+        "professional",
+        "approachable",
+        "balanced"
+      ],
+      "occasion": [
+        "HR tech product deck",
+        "people management tool",
+        "SMB SaaS presentation",
+        "team product showcase",
+        "company culture deck"
+      ],
+      "tone": [
+        "warm-professional",
+        "human",
+        "trustworthy",
+        "not-corporate-cold",
+        "relatable"
+      ],
+      "formality": "medium",
+      "density": "medium",
+      "scheme": "mixed",
+      "best_for": "HR tech, people management, SMB SaaS products, team culture and engagement presentations. Best when content needs to feel professional but warm.",
+      "avoid_for": "Consumer products (too formal) or large enterprise products (too intimate).",
+      "slide_count": 3,
+      "source": "public visual preset"
+    },
+    {
+      "slug": "editorial-minimal",
+      "name": "Editorial Minimal",
+      "tagline": "Premium editorial restraint: pure white, near-black type, extreme whitespace, and typography-led hierarchy.",
+      "mood": [
+        "quiet",
+        "premium",
+        "editorial",
+        "authoritative",
+        "focused",
+        "literary"
+      ],
+      "occasion": [
+        "publishing platform presentation",
+        "content creator deck",
+        "newsletter product",
+        "editorial design showcase",
+        "writing tool summary",
+        "long-form content product"
+      ],
+      "tone": [
+        "understated",
+        "confident",
+        "editorial",
+        "developer-friendly",
+        "high-trust"
+      ],
+      "formality": "medium-high",
+      "density": "medium",
+      "scheme": "light",
+      "best_for": "Publishing, newsletter, creator economy, open-source developer products. For content where the message itself is the product.",
+      "avoid_for": "Products needing visual energy, color-driven brand identity, dark or immersive experiences.",
+      "slide_count": 3,
+      "source": "public visual preset"
+    },
+    {
+      "slug": "quiet-paper",
+      "name": "Quiet Paper",
+      "tagline": "Paper-like productivity style with warm white surfaces, subtle borders, serif titles, and highlighter-like accents.",
+      "mood": [
+        "quiet",
+        "intelligent",
+        "light",
+        "paper-like",
+        "low-pressure",
+        "trustworthy"
+      ],
+      "occasion": [
+        "AI productivity tool",
+        "meeting notes app",
+        "knowledge work product",
+        "personal workflow summary",
+        "writing tool presentation",
+        "light B2B SaaS"
+      ],
+      "tone": [
+        "calm",
+        "understated",
+        "smart",
+        "personal",
+        "non-corporate"
+      ],
+      "formality": "medium",
+      "density": "medium",
+      "scheme": "light",
+      "best_for": "AI writing, meeting notes, knowledge work, personal productivity tools. Products that want to feel like 'a clean native notes app that became intelligent' rather than an AI dashboard.",
+      "avoid_for": "High-energy launches, colorful brand identity, dark/cinematic experiences.",
+      "slide_count": 3,
+      "source": "public visual preset"
+    },
+    {
+      "slug": "indie-print",
+      "name": "Indie Print",
+      "tagline": "Indie creator print style with white base, thick black borders, hard shadows, and direct handmade energy.",
+      "mood": [
+        "grassroots",
+        "authentic",
+        "indie",
+        "unpretentious",
+        "direct",
+        "handmade"
+      ],
+      "occasion": [
+        "creator marketplace deck",
+        "digital product showcase",
+        "indie publishing summary",
+        "creator monetization presentation",
+        "personal project launch"
+      ],
+      "tone": [
+        "blunt",
+        "warm",
+        "accessible",
+        "no-nonsense",
+        "anti-corporate"
+      ],
+      "formality": "low",
+      "density": "low",
+      "scheme": "light",
+      "best_for": "Creator economy showcases, independent maker presentations, digital product launches, personal project pages. For content where 'anyone can do this' accessibility is the message.",
+      "avoid_for": "B2B enterprise, luxury brands, products needing visual sophistication or multi-color expression.",
+      "slide_count": 3,
+      "source": "public visual preset"
+    },
+    {
+      "slug": "raw-copy",
+      "name": "Raw Copy",
+      "tagline": "Copy-as-design style with warm cream backdrops, fragmented typography, and intentionally imperfect life-like rhythm.",
+      "mood": [
+        "humorous",
+        "authentic",
+        "chaotic-warm",
+        "raw",
+        "relatable",
+        "life-like"
+      ],
+      "occasion": [
+        "consumer app landing page",
+        "lifestyle product",
+        "parenting or family content",
+        "personal project with strong copy",
+        "anti-marketing product deck"
+      ],
+      "tone": [
+        "self-deprecating",
+        "honest",
+        "informal",
+        "emotionally resonant",
+        "minimally designed"
+      ],
+      "formality": "low",
+      "density": "low",
+      "scheme": "light",
+      "best_for": "Consumer lifestyle apps, parenting/family products, personal projects with strong authentic copy voice. When the emotional resonance of the words IS the product.",
+      "avoid_for": "B2B products, enterprise tools, any product needing formal credibility signals.",
+      "slide_count": 3,
+      "source": "public visual preset"
+    },
+    {
+      "slug": "cinematic-dark",
+      "name": "Cinematic Dark",
+      "tagline": "Cinematic dark stage with near-black immersion, one vivid action color, and content-wall drama.",
+      "mood": [
+        "intense",
+        "immersive",
+        "cinematic",
+        "nocturnal",
+        "high-conversion",
+        "dramatic"
+      ],
+      "occasion": [
+        "entertainment product deck",
+        "subscription service landing",
+        "content-heavy presentation",
+        "dark immersive showcase",
+        "cinematic brand summary"
+      ],
+      "tone": [
+        "bold",
+        "direct",
+        "entertainment-grade",
+        "high-contrast",
+        "conversion-focused"
+      ],
+      "formality": "medium",
+      "density": "medium",
+      "scheme": "dark",
+      "best_for": "Entertainment, media, subscription products. Dark immersive experiences where content is the desire. High-conversion pages where the content library itself is the argument.",
+      "avoid_for": "Quiet knowledge tools, personal notes products, content requiring warmth or approachability.",
+      "slide_count": 3,
+      "source": "public visual preset"
+    },
+    {
+      "slug": "workspace-matrix",
+      "name": "Workspace Matrix",
+      "tagline": "Systematic workspace matrix with dark-to-light rhythm, functional color blocks, and feature-suite storytelling.",
+      "mood": [
+        "smart",
+        "systematic",
+        "playful-productive",
+        "capable",
+        "gamified-work",
+        "modern"
+      ],
+      "occasion": [
+        "AI workspace product",
+        "team collaboration deck",
+        "product suite showcase",
+        "knowledge management presentation",
+        "SaaS feature matrix"
+      ],
+      "tone": [
+        "modern",
+        "slightly-playful",
+        "professional",
+        "product-led",
+        "self-confident"
+      ],
+      "formality": "medium",
+      "density": "medium-high",
+      "scheme": "mixed",
+      "best_for": "AI workspace products, team collaboration suites, productivity app matrices. When you need to show how many different things work together as a unified system.",
+      "avoid_for": "Single-feature tools, high-luxury minimal aesthetics, content needing dark immersion throughout.",
+      "slide_count": 3,
+      "source": "public visual preset"
+    },
+    {
+      "slug": "knowledge-night",
+      "name": "Knowledge Night",
+      "tagline": "Focused night-workspace style for knowledge systems, private research, and graph-like thinking surfaces.",
+      "mood": [
+        "deep",
+        "focused",
+        "private",
+        "technical",
+        "contemplative",
+        "night-workspace"
+      ],
+      "occasion": [
+        "knowledge tool product",
+        "PKM app showcase",
+        "writing or research tool deck",
+        "developer tool with depth",
+        "dark personal OS presentation"
+      ],
+      "tone": [
+        "serious",
+        "focused",
+        "intellectual",
+        "developer-adjacent",
+        "high-trust"
+      ],
+      "formality": "medium-high",
+      "density": "medium",
+      "scheme": "dark",
+      "best_for": "Personal knowledge bases, PKM tools, writing apps, developer tools with depth. When the product is a private thinking space and long-term ownership of information is the value proposition.",
+      "avoid_for": "Light consumer products, social entertainment, high-conversion sales pages, warm personal narratives.",
+      "slide_count": 3,
+      "source": "public visual preset"
+    },
+    {
+      "slug": "photo-editorial",
+      "name": "Photo Editorial",
+      "tagline": "Photography magazine editorial style with stark black/white structure, oversized headlines, and hard color-block mosaics.",
+      "mood": [
+        "bold",
+        "photographic",
+        "editorial",
+        "professional-creative",
+        "high-impact",
+        "visual-dominant"
+      ],
+      "occasion": [
+        "photography platform",
+        "creator tools showcase",
+        "visual content product",
+        "portfolio or creative community deck",
+        "subscription plan comparison"
+      ],
+      "tone": [
+        "editorial",
+        "direct",
+        "confident",
+        "visual-first",
+        "creator-empowering"
+      ],
+      "formality": "medium-high",
+      "density": "high",
+      "scheme": "mixed",
+      "best_for": "Photography tools, creator communities, visual product platforms, creative professionals. When real photography can carry the visual work.",
+      "avoid_for": "B2B enterprise, quiet minimalist aesthetics, personal narratives without strong visual material.",
+      "slide_count": 3,
+      "source": "public visual preset"
+    },
+    {
+      "slug": "literary-flow",
+      "name": "Literary Flow",
+      "tagline": "Warm editorial flow style with cream paper, deep green anchors, serif headlines, and calm motion cues.",
+      "mood": [
+        "calm",
+        "editorial",
+        "dreamy",
+        "confident",
+        "warm",
+        "voice-like",
+        "unhurried"
+      ],
+      "occasion": [
+        "AI writing or voice tool",
+        "personal productivity product",
+        "creative workflow deck",
+        "writer or maker tool",
+        "calm productivity landing"
+      ],
+      "tone": [
+        "literary",
+        "calm",
+        "self-confident",
+        "personal",
+        "anti-SaaS-generic"
+      ],
+      "formality": "medium",
+      "density": "medium",
+      "scheme": "mixed",
+      "best_for": "AI writing, voice dictation, personal workflow, creator-adjacent productivity tools. When the product needs to feel warm and human rather than cold and technical.",
+      "avoid_for": "Enterprise B2B, heavy data dashboards, high-density technical content, formal financial presentations.",
+      "slide_count": 3,
+      "source": "public visual preset"
+    },
+    {
+      "slug": "b2b-blue",
+      "name": "B2B Blue",
+      "tagline": "High-conversion B2B style with white/pale-blue surfaces, bright action blue, and structured credibility sections.",
+      "mood": [
+        "trustworthy",
+        "clear",
+        "enterprise",
+        "conversion-focused",
+        "structured",
+        "ROI-visible"
+      ],
+      "occasion": [
+        "B2B SaaS landing deck",
+        "sales presentation",
+        "enterprise collaboration tool",
+        "pricing and plan comparison",
+        "lead generation deck"
+      ],
+      "tone": [
+        "professional",
+        "conversion-optimized",
+        "enterprise-grade",
+        "structured",
+        "clear"
+      ],
+      "formality": "high",
+      "density": "high",
+      "scheme": "light",
+      "best_for": "B2B SaaS, enterprise collaboration, sales decks with clear pricing and ROI messaging. When conversion is the primary goal and structural completeness matters more than aesthetic personality.",
+      "avoid_for": "Consumer products, content needing strong personality or artistic expression, anything requiring warmth or playfulness.",
+      "slide_count": 3,
+      "source": "public visual preset"
+    }
+  ]
+}

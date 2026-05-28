@@ -1,0 +1,54 @@
+{
+  "slug": "calm-process",
+  "name": "Calm Process",
+  "tagline": "Calm white-blue process style for step-by-step guidance, reassuring dashboards, and trustworthy onboarding.",
+  "mood": [
+    "calm",
+    "reassuring",
+    "empowering",
+    "clear",
+    "trustworthy",
+    "structured"
+  ],
+  "occasion": [
+    "consumer fintech product",
+    "personal finance tool",
+    "step-by-step process deck",
+    "onboarding flow summary",
+    "mobile app presentation"
+  ],
+  "tone": [
+    "warm-professional",
+    "structured",
+    "approachable",
+    "de-anxietizing"
+  ],
+  "formality": "medium",
+  "density": "medium",
+  "scheme": "light",
+  "palette": {
+    "background": "#FFFFFF",
+    "surface": "#F5F5F5",
+    "text_primary": "#333333",
+    "accent_blue": "#0052CC",
+    "light_gray": "#F5F5F5",
+    "description": "White and light gray base for trust and clarity; blue for CTA buttons and emphasis only; dark gray for body text; finance-appropriate restraint — no warm or alarming accent colors."
+  },
+  "typography": {
+    "display": "Inter",
+    "body": "Inter",
+    "cn_sans": "Noto Sans SC",
+    "style": "Modern readable sans-serif. Clear H1-H3 hierarchy. Step labels use number + short copy. No decorative type — clarity is the aesthetic."
+  },
+  "slide_count": 3,
+  "navigation": "scroll-snap with keyboard arrow support",
+  "source": "public visual preset",
+  "best_for": "Consumer finance, personal tool onboarding, step-by-step process explanations, mobile app presentations. Ideal when the content needs to feel 'manageable' and non-threatening — turning complex things into clear steps.",
+  "avoid_for": "Dark-mode content, high-energy product launches, luxury or premium aesthetics. Don't use red or orange CTAs for financial content.",
+  "anti_patterns": [
+    "using a dark background — financial tools need light/safe visual environment",
+    "omitting step process visualization — it's the most valuable design element here",
+    "using red or orange for CTAs — builds distrust in finance contexts",
+    "making the page too long without conversion points — users want fast clarity"
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "slug": "bold-violet",
+  "name": "Bold Violet",
+  "tagline": "Bold violet product system with cream/lavender surfaces, floating dashboard cards, and confident brand-scale typography.",
+  "mood": [
+    "bold",
+    "vibrant",
+    "modern",
+    "distinctive",
+    "energetic",
+    "product-forward"
+  ],
+  "occasion": [
+    "SaaS tool landing page",
+    "e-commerce analytics product",
+    "high-recognition brand report",
+    "annual report deck",
+    "product launch",
+    "brand growth summary"
+  ],
+  "tone": [
+    "confident",
+    "assertive",
+    "professional",
+    "non-generic",
+    "memorable"
+  ],
+  "formality": "medium",
+  "density": "medium",
+  "scheme": "mixed",
+  "palette": {
+    "violet": "#5B3FF8",
+    "deep_violet": "#4B35D8",
+    "cream": "#F5F0E8",
+    "cream_2": "#EDE8DC",
+    "lavender": "#D8D0F8",
+    "soft_purple": "#E8E4FA",
+    "footer_bg": "#9080D8",
+    "dark": "#1A1A2E",
+    "description": "Full violet/purple system throughout; cream and lavender as warm neutral base; depth achieved through purple hue variation (violet → deep violet → footer medium purple); no competing accent colors."
+  },
+  "typography": {
+    "display": "Inter",
+    "body": "Inter",
+    "cn_sans": "Noto Sans SC",
+    "style": "Bold geometric sans-serif. Single typeface family; hierarchy via weight and size. Large display titles in violet. No serifs, no decorative type."
+  },
+  "slide_count": 3,
+  "navigation": "scroll-snap with keyboard arrow support",
+  "source": "public visual preset",
+  "best_for": "Decks that need high visual identity and brand confidence. SaaS product reports, e-commerce annual summaries, brand growth presentations. Strong when you want to commit fully to a single bold color system rather than generic blue-white SaaS.",
+  "avoid_for": "Multi-color rainbow schemes, luxury minimal aesthetics, finance content requiring trust through restraint. Don't mix violet with other strong accent colors.",
+  "anti_patterns": [
+    "mixing violet with orange, green, or other strong accent colors — Bold Violet's power comes from single-color system discipline",
+    "omitting the oversized brand-name footer texture — it's the highest-memory visual component",
+    "overcomplicating floating dashboard cards — simple numbers + one chart is enough",
+    "using soft pastel violet instead of bold saturated violet — the energy depends on commitment to the hue"
+  ]
+}

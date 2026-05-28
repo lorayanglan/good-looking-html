@@ -1,0 +1,57 @@
+{
+  "slug": "knowledge-night",
+  "name": "Knowledge Night",
+  "tagline": "Focused night-workspace style for knowledge systems, private research, and graph-like thinking surfaces.",
+  "mood": [
+    "deep",
+    "focused",
+    "private",
+    "technical",
+    "contemplative",
+    "night-workspace"
+  ],
+  "occasion": [
+    "knowledge tool product",
+    "PKM app showcase",
+    "writing or research tool deck",
+    "developer tool with depth",
+    "dark personal OS presentation"
+  ],
+  "tone": [
+    "serious",
+    "focused",
+    "intellectual",
+    "developer-adjacent",
+    "high-trust"
+  ],
+  "formality": "medium-high",
+  "density": "medium",
+  "scheme": "dark",
+  "palette": {
+    "background": "#101010",
+    "surface": "#202020",
+    "text_primary": "#FFFFFF",
+    "text_secondary": "#C0C0C0",
+    "purple_primary": "#8040F0",
+    "purple_soft": "#A090FF",
+    "graph_green": "#40B080",
+    "description": "Near-black background with slightly lighter gray cards; white headlines and muted gray body text; purple used exclusively for brand identity (buttons, icons, crystal motif, selected graph nodes); green only appears in graph node states."
+  },
+  "typography": {
+    "display": "Inter",
+    "body": "Inter",
+    "cn_sans": "Noto Sans SC",
+    "style": "Compact bold sans-serif. Short confident brand statements like 'Sharpen your thinking.' Narrow centered content column. Dark background requires careful contrast management for body text."
+  },
+  "slide_count": 3,
+  "navigation": "scroll-snap with keyboard arrow support",
+  "source": "public visual preset",
+  "best_for": "Personal knowledge bases, PKM tools, writing apps, developer tools with depth. When the product is a private thinking space and long-term ownership of information is the value proposition. Dark, focused, intellectual content.",
+  "avoid_for": "Light consumer products, social entertainment, high-conversion sales pages, warm personal narratives. This is too serious and focused for light content.",
+  "anti_patterns": [
+    "making purple a full-screen gradient or large-area background — it must be a focused glow in the dark",
+    "replacing real product screenshots with generic illustrations — credibility comes from the actual tool",
+    "making cards too round or light — small-radius deep-gray cards match the tool identity",
+    "adding more than one accent color beyond purple (graph green counts as functional, not decorative)"
+  ]
+}

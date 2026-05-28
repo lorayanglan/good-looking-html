@@ -1,0 +1,56 @@
+{
+  "slug": "editorial-minimal",
+  "name": "Editorial Minimal",
+  "tagline": "Premium editorial restraint: pure white, near-black type, extreme whitespace, and typography-led hierarchy.",
+  "mood": [
+    "quiet",
+    "premium",
+    "editorial",
+    "authoritative",
+    "focused",
+    "literary"
+  ],
+  "occasion": [
+    "publishing platform presentation",
+    "content creator deck",
+    "newsletter product",
+    "editorial design showcase",
+    "writing tool summary",
+    "long-form content product"
+  ],
+  "tone": [
+    "understated",
+    "confident",
+    "editorial",
+    "developer-friendly",
+    "high-trust"
+  ],
+  "formality": "medium-high",
+  "density": "medium",
+  "scheme": "light",
+  "palette": {
+    "background": "#FFFFFF",
+    "text_primary": "#111111",
+    "text_secondary": "#888888",
+    "divider": "#CCCCCC",
+    "cta": "#111111",
+    "description": "Two-color system: black and white only. All color is used exclusively for the CTA button. Hierarchy achieved entirely through type size, weight, and gray-scale values."
+  },
+  "typography": {
+    "display": "Inter",
+    "body": "Inter",
+    "cn_sans": "Noto Sans SC",
+    "style": "Modern geometric sans-serif. Large headlines at 48-64px equivalent with loose line-height. Body at 16-18px with 1.6-1.7 line-height for reading comfort. No serifs, no decorative type."
+  },
+  "slide_count": 3,
+  "navigation": "scroll-snap with keyboard arrow support",
+  "source": "public visual preset",
+  "best_for": "Publishing, newsletter, creator economy, open-source developer products. For content where the message itself is the product. Strong when real numbers and real testimonials replace visual decoration.",
+  "avoid_for": "Products needing visual energy, color-driven brand identity, dark or immersive experiences. The restraint is the identity — don't try to 'liven it up' with color.",
+  "anti_patterns": [
+    "adding color background blocks or colorful cards — the premium feel comes from restraint",
+    "stacking too many product screenshots — two or three carefully selected real examples beat a full gallery",
+    "adding animations — this style's trust is built on 'we don't need flash'",
+    "using serif display fonts — Editorial Minimal is pure sans throughout"
+  ]
+}

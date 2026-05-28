@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LUNOVA · 2026 Brand Growth Report</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --violet:      #5B3FF8;
+      --deep:        #4B35D8;
+      --cream:       #F5F0E8;
+      --cream-2:     #EDE8DC;
+      --lavender:    #D8D0F8;
+      --soft-purple: #E8E4FA;
+      --footer-bg:   #9080D8;
+      --dark:        #1A1A2E;
+    }
+
+    html {
+      font-family: 'Inter', sans-serif;
+      scroll-snap-type: y mandatory;
+      overflow-y: scroll;
+      height: 100%;
+    }
+    body { height: 100%; }
+
+    .slide {
+      width: 100vw;
+      height: 100vh;
+      scroll-snap-align: start;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Nav */
+    .nav {
+      position: fixed;
+      bottom: 28px; right: 28px;
+      display: flex; align-items: center; gap: 10px;
+      z-index: 100;
+    }
+    .nav-btn {
+      width: 40px; height: 40px; border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.45);
+      background: rgba(255,255,255,0.12);
+      backdrop-filter: blur(8px);
+      color: #fff; font-size: 16px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+    }
+    .nav-btn:hover { background: rgba(255,255,255,0.28); }
+    .slide-counter {
+      font-size: 12px; font-weight: 700;
+      color: rgba(255,255,255,0.6);
+      letter-spacing: 0.08em;
+    }
+
+    /* Static bottom strip */
+    .stat-strip {
+      display: flex; align-items: center;
+      background: var(--violet);
+      padding: 0 48px;
+      height: 48px;
+      flex-shrink: 0;
+      gap: 0;
+    }
+    .strip-item {
+      flex: 1;
+      display: flex; align-items: center;
+      font-size: 13px; font-weight: 700;
+      color: #fff; letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+    .strip-item + .strip-item {
+      border-left: 1px solid rgba(255,255,255,0.2);
+      padding-left: 24px;
+    }
+    .strip-item span { opacity: 0.55; margin-right: 8px; font-weight: 400; }
+
+    /* ══════════════════════════════
+       SLIDE 1 — Cover
+    ══════════════════════════════ */
+    #slide1 {
+      background: linear-gradient(118deg, var(--cream) 0%, var(--cream) 38%, var(--lavender) 100%);
+    }
+
+    .s1-topbar {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      padding: 28px 52px;
+      flex-shrink: 0;
+    }
+    .s1-brand { font-size: 16px; font-weight: 900; color: var(--violet); letter-spacing: 0.02em; }
+    .s1-meta  { font-size: 12px; font-weight: 700; color: var(--violet); opacity: 0.5; letter-spacing: 0.1em; }
+
+    /* Two-column body */
+    .s1-body {
+      flex: 1;
+      display: flex;
+      min-height: 0;
+      padding: 0 52px 24px;
+      gap: 40px;
+    }
+
+    /* Left: fills its column with title */
+    .s1-left {
+      flex: 0 0 42%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 0;
+    }
+    .s1-eyebrow {
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--violet); opacity: 0.7;
+      margin-bottom: 16px;
+    }
+    .s1-title {
+      /* Left column width: 42vw; padding 52px each side; large title fills the column */
+      font-size: clamp(60px, calc((42vw - 104px) / 4), 200px);
+      font-weight: 900;
+      color: var(--violet);
+      line-height: 0.92;
+      letter-spacing: -0.03em;
+      margin-bottom: 24px;
+      white-space: nowrap;
+    }
+    .s1-desc {
+      font-size: 15px; font-weight: 400;
+      color: var(--dark); opacity: 0.6;
+      line-height: 1.7;
+      margin-bottom: 24px;
+      max-width: 340px;
+    }
+    .s1-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+    .chip {
+      padding: 6px 14px; border-radius: 100px;
+      font-size: 12px; font-weight: 700;
+      background: var(--soft-purple); color: var(--violet);
+    }
+
+    /* Right: 2×2 grid filling the right column */
+    .s1-right {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .kcard {
+      background: #fff;
+      border-radius: 20px;
+      padding: 24px 28px;
+      box-shadow: 0 4px 24px rgba(91,63,248,0.10), 0 1px 4px rgba(0,0,0,0.04);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .kcard.violet {
+      background: var(--violet);
+    }
+    .kcard-label {
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: #aaa;
+      margin-bottom: 8px;
+    }
+    .kcard.violet .kcard-label { color: rgba(255,255,255,0.5); }
+    .kcard-value {
+      font-size: clamp(28px, 3vw, 38px);
+      font-weight: 900;
+      color: var(--dark);
+      letter-spacing: -0.03em;
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+    .kcard.violet .kcard-value { color: #fff; }
+    .kcard-badge {
+      display: inline-block;
+      padding: 4px 12px; border-radius: 100px;
+      font-size: 12px; font-weight: 700;
+      background: #e8fdf1; color: #1a9c52;
+    }
+    .kcard.violet .kcard-badge { background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.9); }
+    .kcard-note {
+      font-size: 12px; font-weight: 600;
+      color: #aaa; margin-top: 6px;
+    }
+    .kcard.violet .kcard-note { color: rgba(255,255,255,0.45); }
+
+    /* Mini bars */
+    .mini-bars { display: flex; align-items: flex-end; gap: 4px; height: 28px; margin-top: 10px; }
+    .mbar { flex: 1; border-radius: 3px 3px 0 0; background: var(--lavender); }
+    .mbar.hi { background: var(--violet); }
+    .kcard.violet .mbar { background: rgba(255,255,255,0.2); }
+    .kcard.violet .mbar.hi { background: rgba(255,255,255,0.8); }
+
+    /* ══════════════════════════════
+       SLIDE 2 — Core Metrics
+    ══════════════════════════════ */
+    #slide2 { background: #fff; }
+
+    .s2-head {
+      padding: 32px 52px 22px;
+      border-bottom: 1px solid #f0edf8;
+      flex-shrink: 0;
+    }
+    .s2-eyebrow {
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--violet); margin-bottom: 8px;
+    }
+    .s2-title {
+      font-size: clamp(32px, 4vw, 52px);
+      font-weight: 900; color: var(--dark);
+      letter-spacing: -0.025em;
+    }
+
+    .s2-body {
+      flex: 1;
+      display: flex;
+      min-height: 0;
+      padding: 28px 52px 0;
+      gap: 40px;
+    }
+
+    .s2-kpis {
+      flex: 1.1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .s2-right {
+      flex: 0.9;
+      border-left: 1px solid #f0edf8;
+      padding-left: 40px;
+      display: flex; flex-direction: column;
+      gap: 24px;
+      overflow: hidden;
+    }
+    .s2-sec-label {
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: #bbb; margin-bottom: 12px;
+    }
+
+    .channel-row { display: flex; flex-direction: column; gap: 11px; }
+    .channel-item { display: flex; align-items: center; gap: 12px; }
+    .ch-name { font-size: 13px; font-weight: 700; color: var(--dark); width: 76px; flex-shrink: 0; }
+    .ch-track { flex: 1; height: 8px; background: var(--soft-purple); border-radius: 4px; overflow: hidden; }
+    .ch-fill  { height: 100%; background: var(--violet); border-radius: 4px; }
+    .ch-pct   { font-size: 13px; font-weight: 700; color: var(--violet); width: 38px; text-align: right; }
+
+    .hl-list  { display: flex; flex-direction: column; gap: 10px; }
+    .hl-item  { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; color: #555; line-height: 1.55; }
+    .hl-dot   { width: 8px; height: 8px; border-radius: 50%; background: var(--violet); flex-shrink: 0; margin-top: 5px; }
+
+    .s2-foot {
+      padding: 14px 52px;
+      border-top: 1px solid #f0edf8;
+      display: flex; align-items: center; gap: 8px;
+      flex-shrink: 0;
+    }
+    .foot-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #ccc; margin-right: 4px; }
+    .foot-badge { padding: 5px 14px; border-radius: 100px; font-size: 12px; font-weight: 600; background: var(--soft-purple); color: var(--violet); }
+
+    /* ══════════════════════════════
+       SLIDE 3 — Closing
+    ══════════════════════════════ */
+    #slide3 { background: var(--footer-bg); }
+
+    .s3-bg {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      pointer-events: none; overflow: hidden;
+    }
+    .s3-bg-text {
+      font-size: clamp(150px, 22vw, 260px);
+      font-weight: 900; color: var(--cream-2);
+      opacity: 0.15; letter-spacing: -0.04em;
+      white-space: nowrap; user-select: none;
+    }
+
+    .s3-body {
+      flex: 1;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      position: relative; z-index: 1;
+      padding: 0 60px;
+      text-align: center;
+    }
+    .s3-eyebrow {
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: rgba(237,232,220,0.55); margin-bottom: 18px;
+    }
+    .s3-title {
+      font-size: clamp(40px, 5.5vw, 72px);
+      font-weight: 900; color: #fff;
+      letter-spacing: -0.03em; line-height: 1.05;
+      margin-bottom: 16px;
+    }
+    .s3-sub {
+      font-size: 15px; font-weight: 400;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.7; max-width: 480px;
+      margin-bottom: 36px;
+    }
+    .s3-goals {
+      display: flex; gap: 14px;
+      justify-content: center; flex-wrap: wrap;
+    }
+    .goal-card {
+      background: rgba(255,255,255,0.12);
+      border: 1.5px solid rgba(255,255,255,0.22);
+      border-radius: 16px;
+      padding: 18px 26px; text-align: center;
+      min-width: 130px;
+      backdrop-filter: blur(4px);
+    }
+    .goal-num   { font-size: 26px; font-weight: 900; color: #fff; letter-spacing: -0.02em; margin-bottom: 4px; }
+    .goal-label { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.5); letter-spacing: 0.04em; }
+
+    /* Static strip for slide 3 */
+    #slide3 .stat-strip { background: rgba(0,0,0,0.18); }
+
+    .s3-foot {
+      padding: 12px;
+      font-size: 11px; font-weight: 600;
+      color: rgba(255,255,255,0.3); letter-spacing: 0.07em;
+      text-align: center;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════ SLIDE 1 ══════════ -->
+<section class="slide" id="slide1">
+
+  <div class="s1-topbar">
+    <div class="s1-brand">LUNOVA</div>
+    <div class="s1-meta">2026 ANNUAL REPORT</div>
+  </div>
+
+  <div class="s1-body">
+
+    <div class="s1-left">
+      <div class="s1-eyebrow">Annual Brand Growth Report</div>
+      <div class="s1-title">2026<br>Annual Review</div>
+      <div class="s1-desc">This year, LUNOVA grew from a niche fragrance label into one of the most watched emerging DTC brands.</div>
+      <div class="s1-chips">
+        <span class="chip">Revenue passed 10M</span>
+        <span class="chip">68% repeat rate</span>
+        <span class="chip">Omnichannel growth</span>
+      </div>
+    </div>
+
+    <div class="s1-right">
+
+      <div class="kcard violet">
+        <div>
+          <div class="kcard-label">Annual Revenue</div>
+          <div class="kcard-value">$12.8M</div>
+        </div>
+        <div>
+          <span class="kcard-badge">↑ 214% YoY</span>
+          <div class="mini-bars" style="margin-top:12px">
+            <div class="mbar" style="height:30%"></div>
+            <div class="mbar" style="height:45%"></div>
+            <div class="mbar" style="height:38%"></div>
+            <div class="mbar" style="height:62%"></div>
+            <div class="mbar" style="height:54%"></div>
+            <div class="mbar hi" style="height:92%"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="kcard">
+        <div>
+          <div class="kcard-label">Total Orders</div>
+          <div class="kcard-value">86,400</div>
+        </div>
+        <div>
+          <span class="kcard-badge">↑ 3.1x YoY</span>
+          <div class="kcard-note">237 orders/day</div>
+        </div>
+      </div>
+
+      <div class="kcard">
+        <div>
+          <div class="kcard-label">Repeat Purchase Rate</div>
+          <div class="kcard-value">68%</div>
+        </div>
+        <div>
+          <span class="kcard-badge">Industry avg. 34%</span>
+          <div class="kcard-note">2x industry average</div>
+        </div>
+      </div>
+
+      <div class="kcard violet">
+        <div>
+          <div class="kcard-label">Customer Rating</div>
+          <div class="kcard-value">4.9 ★</div>
+        </div>
+        <div>
+          <span class="kcard-badge">12,000+ reviews</span>
+          <div class="kcard-note" style="color:rgba(255,255,255,0.4)">98.3% positive</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="stat-strip">
+    <div class="strip-item"><span>Revenue</span>$12.8M</div>
+    <div class="strip-item"><span>Orders</span>86,400</div>
+    <div class="strip-item"><span>Repeat Rate</span>68%</div>
+    <div class="strip-item"><span>Rating</span>4.9 ★</div>
+    <div class="strip-item"><span>Positive Rate</span>98.3%</div>
+  </div>
+
+</section>
+
+<!-- ══════════ SLIDE 2 ══════════ -->
+<section class="slide" id="slide2">
+
+  <div class="s2-head">
+    <div class="s2-eyebrow">Core Metrics · 2026</div>
+    <div class="s2-title">What We Built This Year</div>
+  </div>
+
+  <div class="s2-body">
+
+    <div class="s2-kpis">
+      <div class="kcard violet">
+        <div class="kcard-label">Revenue</div>
+        <div class="kcard-value" style="font-size:clamp(22px,2.4vw,30px)">$12.8M</div>
+        <span class="kcard-badge">vs $4.08M last year</span>
+      </div>
+      <div class="kcard">
+        <div class="kcard-label">Orders</div>
+        <div class="kcard-value" style="font-size:clamp(22px,2.4vw,30px)">86,400</div>
+        <span class="kcard-badge">237 orders/day</span>
+      </div>
+      <div class="kcard">
+        <div class="kcard-label">Repeat Rate</div>
+        <div class="kcard-value" style="font-size:clamp(22px,2.4vw,30px)">68%</div>
+        <span class="kcard-badge">Industry avg. 34%</span>
+      </div>
+      <div class="kcard">
+        <div class="kcard-label">Average Order Value</div>
+        <div class="kcard-value" style="font-size:clamp(22px,2.4vw,30px)">¥148</div>
+        <span class="kcard-badge">↑ 32% YoY</span>
+      </div>
+      <div class="kcard">
+        <div class="kcard-label">New Customers</div>
+        <div class="kcard-value" style="font-size:clamp(22px,2.4vw,30px)">41,000</div>
+        <span class="kcard-badge">38% from referrals</span>
+      </div>
+      <div class="kcard violet">
+        <div class="kcard-label">NPS Score</div>
+        <div class="kcard-value" style="font-size:clamp(22px,2.4vw,30px)">+78</div>
+        <span class="kcard-badge">Top 5% in category</span>
+      </div>
+    </div>
+
+    <div class="s2-right">
+      <div>
+        <div class="s2-sec-label">Growth Sources</div>
+        <div class="channel-row">
+          <div class="channel-item">
+            <div class="ch-name">Social Content</div>
+            <div class="ch-track"><div class="ch-fill" style="width:78%"></div></div>
+            <div class="ch-pct">78%</div>
+          </div>
+          <div class="channel-item">
+            <div class="ch-name">Short Video</div>
+            <div class="ch-track"><div class="ch-fill" style="width:55%"></div></div>
+            <div class="ch-pct">55%</div>
+          </div>
+          <div class="channel-item">
+            <div class="ch-name">Marketplace</div>
+            <div class="ch-track"><div class="ch-fill" style="width:43%"></div></div>
+            <div class="ch-pct">43%</div>
+          </div>
+          <div class="channel-item">
+            <div class="ch-name">Direct Store</div>
+            <div class="ch-track"><div class="ch-fill" style="width:29%"></div></div>
+            <div class="ch-pct">29%</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="s2-sec-label">Annual Highlights</div>
+        <div class="hl-list">
+          <div class="hl-item"><div class="hl-dot"></div><div>March: Morning Mist candle reached Top 3 on social trend charts and sold 8,200 units in one month</div></div>
+          <div class="hl-item"><div class="hl-dot"></div><div>June: Summer campaign passed $1.8M on day one, setting a new single-day record</div></div>
+          <div class="hl-item"><div class="hl-dot"></div><div>November: repeat rate passed 70%, with returning customers driving 52% of revenue</div></div>
+          <div class="hl-item"><div class="hl-dot"></div><div>December: closed seed funding at an $80M valuation</div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="s2-foot">
+    <span class="foot-label">2027 Goals</span>
+    <span class="foot-badge">Revenue $30M</span>
+    <span class="foot-badge">Enter 3 new markets</span>
+    <span class="foot-badge">Launch membership</span>
+  </div>
+
+</section>
+
+<!-- ══════════ SLIDE 3 ══════════ -->
+<section class="slide" id="slide3">
+
+  <div class="s3-bg"><div class="s3-bg-text">LUNOVA</div></div>
+
+  <div class="s3-body">
+    <div class="s3-eyebrow">2026 · Annual Report · Closing</div>
+    <div class="s3-title">From The First Candle<br>To The Next Decade</div>
+    <div class="s3-sub">Thank you to every customer behind 86,400 orders.<br>In 2027, we move forward with sharper goals.</div>
+    <div class="s3-goals">
+      <div class="goal-card">
+        <div class="goal-num">$30M</div>
+        <div class="goal-label">2027 Revenue Target</div>
+      </div>
+      <div class="goal-card">
+        <div class="goal-num">3</div>
+        <div class="goal-label">New Markets</div>
+      </div>
+      <div class="goal-card">
+        <div class="goal-num">150,000</div>
+        <div class="goal-label">Target Registered Users</div>
+      </div>
+      <div class="goal-card">
+        <div class="goal-num">12</div>
+        <div class="goal-label">New Product Launches</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stat-strip" style="background:rgba(0,0,0,0.18)">
+    <div class="strip-item"><span>Revenue Target</span>$30M</div>
+    <div class="strip-item"><span>New Markets</span>3 cities</div>
+    <div class="strip-item"><span>Registered Users</span>150,000</div>
+    <div class="strip-item"><span>Launches</span>12</div>
+    <div class="strip-item"><span>Brand</span>LUNOVA 2027</div>
+  </div>
+
+  <div class="s3-foot">LUNOVA · Annual Brand Growth Report · 2026 · Design Library by Yang the user</div>
+
+</section>
+
+<!-- Nav -->
+<div class="nav">
+  <button class="nav-btn" onclick="goPrev()">&#8593;</button>
+  <span class="slide-counter" id="counter">1 / 3</span>
+  <button class="nav-btn" onclick="goNext()">&#8595;</button>
+</div>
+
+<script>
+  const slides = ['slide1', 'slide2', 'slide3'];
+  let current = 0;
+  function scrollTo(i) {
+    current = Math.max(0, Math.min(slides.length - 1, i));
+    document.getElementById(slides[current]).scrollIntoView({ behavior: 'smooth' });
+    document.getElementById('counter').textContent = (current + 1) + ' / ' + slides.length;
+  }
+  function goNext() { scrollTo(current + 1); }
+  function goPrev() { scrollTo(current - 1); }
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        current = slides.indexOf(e.target.id);
+        document.getElementById('counter').textContent = (current + 1) + ' / ' + slides.length;
+      }
+    });
+  }, { threshold: 0.6 });
+  slides.forEach(id => obs.observe(document.getElementById(id)));
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') goNext();
+    if (e.key === 'ArrowUp'   || e.key === 'ArrowLeft')  goPrev();
+  });
+</script>
+</body>
+</html>

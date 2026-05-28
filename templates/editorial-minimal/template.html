@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Editorial Minimal Style · Karpathy on Code Agents</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black:    #111111;
+    --near:     #1f1f1f;
+    --mid:      #555555;
+    --muted:    #888888;
+    --border:   #e4e4e4;
+    --border-lt:#f0f0f0;
+    --white:    #ffffff;
+    --off:      #fafafa;
+    --f: 'Inter', sans-serif;
+  }
+
+  html, body { width: 100%; height: 100%; overflow: hidden; background: var(--black); font-family: var(--f); }
+
+  /* ── Deck ── */
+  #deck {
+    display: flex;
+    width: 100%; height: 100%;
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+  #deck::-webkit-scrollbar { display: none; }
+
+  .slide {
+    width: 100vw; height: 100vh;
+    flex-shrink: 0;
+    scroll-snap-align: start;
+    background: var(--white);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ── Nav chrome ── */
+  #nav-dots {
+    position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 7px; z-index: 100;
+  }
+  .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: rgba(17,17,17,0.2);
+    transition: background 0.25s;
+    cursor: pointer;
+  }
+  .dot.active { background: var(--black); }
+  #page-counter {
+    position: fixed; bottom: 20px; right: 28px;
+    font-family: var(--f); font-size: 11px; font-weight: 500;
+    color: var(--muted); letter-spacing: 0.04em;
+    z-index: 100;
+  }
+
+  /* ── Shared header strip ── */
+  .top-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 22px 52px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .top-logo {
+    font-size: 13px; font-weight: 700; letter-spacing: 0.06em;
+    color: var(--black); text-transform: uppercase;
+  }
+  .top-tag {
+    font-size: 12px; font-weight: 400; color: var(--muted);
+    letter-spacing: 0.03em;
+  }
+
+  /* ═══════════════════════════════════
+     SLIDE 1 — Full-width editorial title
+  ═══════════════════════════════════ */
+  #s1 { }
+
+  .s1-body {
+    flex: 1; display: flex; flex-direction: column;
+    justify-content: center;
+    padding: 0 52px;
+    max-width: 860px;
+  }
+
+  .s1-eyebrow {
+    font-size: 12px; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--muted);
+    margin-bottom: 28px;
+  }
+
+  .s1-title {
+    font-size: clamp(48px, 6vw, 80px);
+    font-weight: 800; line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: var(--black);
+    margin-bottom: 28px;
+  }
+
+  .s1-desc {
+    font-size: clamp(16px, 1.5vw, 19px);
+    font-weight: 300; line-height: 1.7;
+    color: var(--mid);
+    max-width: 620px;
+    margin-bottom: 52px;
+  }
+
+  /* Stat row */
+  .s1-stats {
+    display: flex; gap: 0;
+    border-top: 1px solid var(--border);
+    padding-top: 36px;
+  }
+  .s1-stat { flex: 1; }
+  .s1-stat + .s1-stat { padding-left: 36px; border-left: 1px solid var(--border); margin-left: 36px; }
+  .s1-stat-num {
+    font-size: clamp(36px, 4vw, 52px);
+    font-weight: 800; color: var(--black);
+    letter-spacing: -0.03em; line-height: 1;
+    margin-bottom: 8px;
+  }
+  .s1-stat-label {
+    font-size: 13px; font-weight: 400; color: var(--muted);
+    line-height: 1.4;
+  }
+
+  /* Right column — decorative quote */
+  .s1-right {
+    position: absolute; right: 0; top: 0; bottom: 0;
+    width: 38%;
+    background: var(--off);
+    border-left: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    justify-content: center;
+    padding: 52px 48px;
+  }
+
+  .s1-quote-mark {
+    font-size: 80px; line-height: 0.8;
+    color: var(--border-lt);
+    font-weight: 800;
+    margin-bottom: 20px;
+    letter-spacing: -0.04em;
+  }
+  .s1-quote-text {
+    font-size: clamp(15px, 1.4vw, 18px);
+    font-weight: 400; line-height: 1.7;
+    color: var(--near);
+    margin-bottom: 28px;
+  }
+  .s1-quote-attr {
+    font-size: 12px; font-weight: 600;
+    color: var(--muted); letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  /* ═══════════════════════════════════
+     SLIDE 2 — Comparison table layout
+  ═══════════════════════════════════ */
+  #s2 { }
+
+  .s2-head {
+    padding: 40px 52px 32px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .s2-eyebrow {
+    font-size: 12px; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--muted);
+    margin-bottom: 12px;
+  }
+  .s2-title {
+    font-size: clamp(32px, 3.6vw, 48px);
+    font-weight: 800; letter-spacing: -0.025em;
+    color: var(--black); line-height: 1.1;
+  }
+
+  .s2-body {
+    flex: 1; display: flex; min-height: 0;
+  }
+
+  /* Left: numbered list of shifts */
+  .s2-left {
+    flex: 1.1;
+    padding: 36px 52px 52px;
+    display: flex; flex-direction: column; gap: 0;
+    border-right: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  .s2-row {
+    display: flex; gap: 24px; align-items: flex-start;
+    padding: 22px 0;
+    border-bottom: 1px solid var(--border-lt);
+  }
+  .s2-row:last-child { border-bottom: none; }
+
+  .s2-num {
+    font-size: 11px; font-weight: 600;
+    color: var(--border);
+    letter-spacing: 0.04em;
+    min-width: 22px;
+    padding-top: 4px;
+  }
+  .s2-row-title {
+    font-size: clamp(16px, 1.5vw, 19px);
+    font-weight: 700; color: var(--black);
+    line-height: 1.25; margin-bottom: 6px;
+  }
+  .s2-row-desc {
+    font-size: clamp(13px, 1.1vw, 15px);
+    font-weight: 400; color: var(--mid);
+    line-height: 1.6;
+  }
+
+  /* Right: pull quotes / callout cards */
+  .s2-right {
+    width: 36%;
+    padding: 36px 40px 52px;
+    display: flex; flex-direction: column; gap: 16px;
+    background: var(--off);
+  }
+
+  .s2-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 20px 22px;
+  }
+  .s2-card-label {
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 10px;
+  }
+  .s2-card-text {
+    font-size: clamp(13px, 1.2vw, 15px);
+    font-weight: 400; color: var(--near);
+    line-height: 1.6;
+  }
+  .s2-card-text strong {
+    font-weight: 700; color: var(--black);
+  }
+
+  /* ═══════════════════════════════════
+     SLIDE 3 — Data + horizon view
+  ═══════════════════════════════════ */
+  #s3 { }
+
+  .s3-head {
+    padding: 40px 52px 32px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    display: flex; align-items: flex-end; justify-content: space-between;
+  }
+  .s3-title {
+    font-size: clamp(32px, 3.6vw, 48px);
+    font-weight: 800; letter-spacing: -0.025em;
+    color: var(--black); line-height: 1.1;
+  }
+  .s3-head-right {
+    font-size: 13px; font-weight: 400; color: var(--muted);
+    text-align: right; line-height: 1.6;
+  }
+
+  .s3-body {
+    flex: 1; display: flex; min-height: 0;
+    padding: 40px 52px 52px;
+    gap: 52px;
+    align-items: flex-start;
+  }
+
+  /* SVG timeline column */
+  .s3-left { flex: 1.3; display: flex; flex-direction: column; gap: 24px; }
+
+  /* Concept pills row */
+  .s3-pills {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin-bottom: 4px;
+  }
+  .s3-pill {
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 5px 13px;
+    font-size: 12px; font-weight: 500;
+    color: var(--mid);
+    letter-spacing: 0.02em;
+  }
+
+  /* SVG layer chart */
+  .s3-chart-label {
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 12px;
+  }
+
+  /* Right column: vertical list */
+  .s3-right {
+    width: 36%;
+    display: flex; flex-direction: column; gap: 0;
+  }
+  .s3-item {
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border-lt);
+  }
+  .s3-item:last-child { border-bottom: none; }
+  .s3-item-num {
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.1em; color: var(--border);
+    margin-bottom: 8px;
+  }
+  .s3-item-title {
+    font-size: clamp(14px, 1.3vw, 17px);
+    font-weight: 700; color: var(--black);
+    margin-bottom: 5px; line-height: 1.2;
+  }
+  .s3-item-desc {
+    font-size: clamp(12px, 1vw, 14px);
+    font-weight: 400; color: var(--mid); line-height: 1.55;
+  }
+
+  /* Bottom bar on s3 */
+  .s3-footer {
+    border-top: 1px solid var(--border);
+    padding: 16px 52px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .s3-footer-text {
+    font-size: 12px; font-weight: 400; color: var(--muted);
+  }
+  .s3-footer-text strong { color: var(--black); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div id="deck">
+
+  <!-- ════════════ SLIDE 1 ════════════ -->
+  <div class="slide" id="s1">
+    <div class="top-bar">
+      <span class="top-logo">Editorial Minimal</span>
+      <span class="top-tag">Style Reference · AI &amp; Agents</span>
+    </div>
+
+    <div class="s1-body">
+      <div class="s1-eyebrow">Andrej Karpathy · No Priors · March 2026</div>
+      <h1 class="s1-title">The Loopy<br>Era of AI</h1>
+      <p class="s1-desc">When coding agents run 24/7 in the background, the engineer's job shifts from writing code to orchestrating agents — and almost nobody has fully adapted yet.</p>
+
+      <div class="s1-stats">
+        <div class="s1-stat">
+          <div class="s1-stat-num">~0%</div>
+          <div class="s1-stat-label">of code Karpathy<br>now writes by hand</div>
+        </div>
+        <div class="s1-stat">
+          <div class="s1-stat-num">20 min</div>
+          <div class="s1-stat-label">avg. agent run time<br>per parallel task</div>
+        </div>
+        <div class="s1-stat">
+          <div class="s1-stat-num">6→1</div>
+          <div class="s1-stat-label">apps replaced by a<br>single home agent</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right column -->
+    <div class="s1-right">
+      <div class="s1-quote-mark">"</div>
+      <p class="s1-quote-text">I almost never write code anymore. My job is to express intent, goals, and constraints to coding agents — and let them implement it.</p>
+      <div class="s1-quote-attr">Andrej Karpathy · Karpathy.ai</div>
+    </div>
+  </div>
+
+  <!-- ════════════ SLIDE 2 ════════════ -->
+  <div class="slide" id="s2">
+    <div class="top-bar">
+      <span class="top-logo">Editorial Minimal</span>
+      <span class="top-tag">What Changed · The Five Shifts</span>
+    </div>
+
+    <div class="s2-head">
+      <div class="s2-eyebrow">The New Engineering Stack</div>
+      <div class="s2-title">From Writing Code<br>to Directing Agents</div>
+    </div>
+
+    <div class="s2-body">
+      <div class="s2-left">
+        <div class="s2-row">
+          <div class="s2-num">01</div>
+          <div>
+            <div class="s2-row-title">The bottleneck is no longer typing speed</div>
+            <div class="s2-row-desc">Karpathy compares today's token quota to a PhD student's GPU time. The anxiety isn't "am I coding fast enough" — it's "am I running enough agents in parallel."</div>
+          </div>
+        </div>
+        <div class="s2-row">
+          <div class="s2-num">02</div>
+          <div>
+            <div class="s2-row-title">The unit of work is now a feature, not a function</div>
+            <div class="s2-row-desc">Agents receive macro goals — "refactor this module," "research this problem" — and run for 20-minute stretches. Human review happens at the end, not the middle.</div>
+          </div>
+        </div>
+        <div class="s2-row">
+          <div class="s2-num">03</div>
+          <div>
+            <div class="s2-row-title">Agents need identity, memory, and a single inbox</div>
+            <div class="s2-row-desc">The next layer isn't better models — it's persistent agents with consistent character and a unified interface (e.g., WhatsApp) replacing six fragmented apps.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="s2-right">
+        <div class="s2-card">
+          <div class="s2-card-label">Key Metric</div>
+          <p class="s2-card-text">The real skill is no longer <strong>writing code</strong> — it's knowing how to <strong>parallelise agent tasks</strong> without creating conflicts between concurrent runs.</p>
+        </div>
+        <div class="s2-card">
+          <div class="s2-card-label">AutoResearch</div>
+          <p class="s2-card-text">Karpathy's goal: <strong>minimal human tokens in, massive autonomous output out</strong>. An agent reads a field's literature, runs experiments, synthesises findings — unattended.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════ SLIDE 3 ════════════ -->
+  <div class="slide" id="s3">
+    <div class="top-bar">
+      <span class="top-logo">Editorial Minimal</span>
+      <span class="top-tag">What's Next · The Horizon</span>
+    </div>
+
+    <div class="s3-head">
+      <div class="s3-title">The Digital World<br>Restructures First</div>
+      <div class="s3-head-right">Karpathy's roadmap<br>for agentic software</div>
+    </div>
+
+    <div class="s3-body">
+      <!-- SVG leverage chart -->
+      <div class="s3-left">
+        <div class="s3-chart-label">Leverage curve — human tokens in vs. autonomous work out</div>
+        <svg viewBox="0 0 520 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;">
+          <!-- Grid -->
+          <line x1="60" y1="20" x2="60" y2="185" stroke="#e4e4e4" stroke-width="1"/>
+          <line x1="60" y1="185" x2="510" y2="185" stroke="#e4e4e4" stroke-width="1"/>
+          <line x1="60" y1="135" x2="510" y2="135" stroke="#f0f0f0" stroke-width="1" stroke-dasharray="4 4"/>
+          <line x1="60" y1="85" x2="510" y2="85" stroke="#f0f0f0" stroke-width="1" stroke-dasharray="4 4"/>
+          <line x1="60" y1="35" x2="510" y2="35" stroke="#f0f0f0" stroke-width="1" stroke-dasharray="4 4"/>
+
+          <!-- Y axis labels -->
+          <text x="52" y="188" font-size="10" fill="#aaa" text-anchor="end" font-family="Inter,sans-serif">Low</text>
+          <text x="52" y="138" font-size="10" fill="#aaa" text-anchor="end" font-family="Inter,sans-serif">Mid</text>
+          <text x="52" y="88" font-size="10" fill="#aaa" text-anchor="end" font-family="Inter,sans-serif">High</text>
+          <text x="52" y="38" font-size="10" fill="#aaa" text-anchor="end" font-family="Inter,sans-serif">Max</text>
+          <text x="285" y="205" font-size="10" fill="#aaa" text-anchor="middle" font-family="Inter,sans-serif">Time →</text>
+
+          <!-- "Before" flat line -->
+          <path d="M70,175 L200,170 L330,165" stroke="#d0d0d0" stroke-width="2" fill="none" stroke-dasharray="5 3"/>
+
+          <!-- "Now" rising curve -->
+          <path d="M70,175 C130,170 160,140 200,115 C240,90 280,75 330,60" stroke="#888" stroke-width="2" fill="none"/>
+
+          <!-- "Future" exponential curve -->
+          <path d="M200,115 C250,95 290,60 330,38 C370,18 420,14 510,12" stroke="#111" stroke-width="2.5" fill="none"/>
+
+          <!-- Area under future curve -->
+          <path d="M200,115 C250,95 290,60 330,38 C370,18 420,14 510,12 L510,185 L200,185 Z" fill="#111" fill-opacity="0.04"/>
+
+          <!-- Era labels -->
+          <text x="130" y="158" font-size="11" fill="#bbb" font-family="Inter,sans-serif" font-weight="600">Before</text>
+          <text x="250" y="82" font-size="11" fill="#888" font-family="Inter,sans-serif" font-weight="600">Now</text>
+          <text x="415" y="30" font-size="11" fill="#111" font-family="Inter,sans-serif" font-weight="700">AutoResearch</text>
+
+          <!-- Dot markers -->
+          <circle cx="200" cy="115" r="4" fill="#888" stroke="#fff" stroke-width="2"/>
+          <circle cx="330" cy="60" r="4" fill="#555" stroke="#fff" stroke-width="2"/>
+          <circle cx="510" cy="12" r="4" fill="#111" stroke="#fff" stroke-width="2"/>
+        </svg>
+
+      </div>
+
+      <!-- Right list -->
+      <div class="s3-right">
+        <div class="s3-item">
+          <div class="s3-item-num">NEAR TERM</div>
+          <div class="s3-item-title">Agent teams replace solo sessions</div>
+          <div class="s3-item-desc">Multiple parallel agents on different repos, reviewed asynchronously. Scheduling skill becomes the new core competency.</div>
+        </div>
+        <div class="s3-item">
+          <div class="s3-item-num">MID TERM</div>
+          <div class="s3-item-title">Apps expose APIs; agents replace UIs</div>
+          <div class="s3-item-desc">The consumer app layer collapses. Karpathy's 6-app home setup shrinks to one agent. Hardware → API → natural language.</div>
+        </div>
+        <div class="s3-item">
+          <div class="s3-item-num">LONG TERM</div>
+          <div class="s3-item-title">Organisations written as Markdown</div>
+          <div class="s3-item-desc">Research orgs, documentation, curricula become agent-executable protocols — readable, version-controlled, continuously optimised.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="s3-footer">
+      <span class="s3-footer-text">Source: <strong>Karpathy · No Priors</strong> · "Skill Issue" · March 2026</span>
+    </div>
+  </div>
+
+</div><!-- /deck -->
+
+<!-- Dot nav -->
+<nav id="nav-dots">
+  <div class="dot active" data-i="0"></div>
+  <div class="dot" data-i="1"></div>
+  <div class="dot" data-i="2"></div>
+</nav>
+<div id="page-counter">1 / 3</div>
+
+<script>
+  const deck = document.getElementById('deck');
+  const dots = document.querySelectorAll('.dot');
+  const counter = document.getElementById('page-counter');
+  const slides = document.querySelectorAll('.slide');
+
+  function goTo(i) {
+    deck.scrollTo({ left: i * window.innerWidth, behavior: 'smooth' });
+  }
+
+  dots.forEach(d => d.addEventListener('click', () => goTo(+d.dataset.i)));
+
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const i = [...slides].indexOf(entry.target);
+        dots.forEach((d, j) => d.classList.toggle('active', j === i));
+        counter.textContent = `${i + 1} / ${slides.length}`;
+      }
+    });
+  }, { root: deck, threshold: 0.5 });
+
+  slides.forEach(s => obs.observe(s));
+
+  document.addEventListener('keydown', e => {
+    const cur = Math.round(deck.scrollLeft / window.innerWidth);
+    if (e.key === 'ArrowRight' && cur < slides.length - 1) goTo(cur + 1);
+    if (e.key === 'ArrowLeft'  && cur > 0)                 goTo(cur - 1);
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+{
+  "slug": "enterprise-dark",
+  "name": "Enterprise Dark",
+  "tagline": "Enterprise-grade dark technical style with charcoal foundations, restrained warm accents, and authoritative scale.",
+  "mood": [
+    "deep",
+    "authoritative",
+    "technical",
+    "credible",
+    "serious",
+    "heavyweight"
+  ],
+  "occasion": [
+    "enterprise AI platform",
+    "B2B SaaS deck",
+    "developer API product",
+    "technical pitch",
+    "research summary",
+    "infrastructure product presentation"
+  ],
+  "tone": [
+    "professional",
+    "technical",
+    "trustworthy",
+    "non-consumer",
+    "authoritative"
+  ],
+  "formality": "high",
+  "density": "medium-high",
+  "scheme": "dark",
+  "palette": {
+    "background": "#0F0F14",
+    "surface": "#1A1A24",
+    "text_primary": "#FFFFFF",
+    "text_secondary": "#AAAACC",
+    "accent_orange": "#FF6B35",
+    "button": "#FFFFFF",
+    "description": "Deep charcoal/navy background with white text; single warm orange accent used sparingly only in hero visuals and key highlights — never large-area; subtle purple-pink gradient graphics add depth in background."
+  },
+  "typography": {
+    "display": "Inter",
+    "body": "Inter",
+    "cn_sans": "Noto Sans SC",
+    "style": "Modern geometric sans-serif. Extra-large bold headlines (48-80px equivalent) for immediate impact. No serifs. Single typeface family. Weight contrast handles hierarchy."
+  },
+  "slide_count": 3,
+  "navigation": "scroll-snap with keyboard arrow support",
+  "source": "public visual preset",
+  "best_for": "Enterprise AI, developer API platforms, B2B SaaS products that need to feel like serious infrastructure rather than consumer tools. Technical pitches, analyst briefings, capability showcases.",
+  "avoid_for": "Consumer products, personal narratives, content that needs warmth or playfulness. Don't use if you need multi-color expressiveness or a light/friendly feel.",
+  "anti_patterns": [
+    "using orange as a large-area background — it must remain a small accent to stay powerful",
+    "making the design feel light or consumer-friendly — this must maintain heavyweight seriousness",
+    "stacking too many decorative graphics — background graphics are supporting cast, not lead",
+    "warm color-adjacent palettes — this is a cold technical system with one warm point of contrast"
+  ]
+}

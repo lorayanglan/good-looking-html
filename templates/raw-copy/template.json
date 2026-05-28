@@ -1,0 +1,52 @@
+{
+  "slug": "raw-copy",
+  "name": "Raw Copy",
+  "tagline": "Copy-as-design style with warm cream backdrops, fragmented typography, and intentionally imperfect life-like rhythm.",
+  "mood": [
+    "humorous",
+    "authentic",
+    "chaotic-warm",
+    "raw",
+    "relatable",
+    "life-like"
+  ],
+  "occasion": [
+    "consumer app landing page",
+    "lifestyle product",
+    "parenting or family content",
+    "personal project with strong copy",
+    "anti-marketing product deck"
+  ],
+  "tone": [
+    "self-deprecating",
+    "honest",
+    "informal",
+    "emotionally resonant",
+    "minimally designed"
+  ],
+  "formality": "low",
+  "density": "low",
+  "scheme": "light",
+  "palette": {
+    "background": "#F8F4EE",
+    "text_primary": "#1A1A1A",
+    "description": "Off-white or warm cream background with near-black text; palette is intentionally minimal — design relies entirely on typography and copy, not color. Any single accent color should be used with extreme restraint."
+  },
+  "typography": {
+    "display": "System UI",
+    "body": "System UI",
+    "cn_sans": "Noto Sans SC",
+    "style": "Intentionally plain — system font or a simple display sans. Large fragmented text blocks with intentionally imperfect line breaks. Text weight and size create the visual rhythm, not decoration."
+  },
+  "slide_count": 3,
+  "navigation": "scroll-snap with keyboard arrow support",
+  "source": "public visual preset",
+  "best_for": "Consumer lifestyle apps, parenting/family products, personal projects with strong authentic copy voice. When the emotional resonance of the words IS the product. Anti-design product storytelling.",
+  "avoid_for": "B2B products, enterprise tools, any product needing formal credibility signals. Completely wrong for technical, financial, or professional services content.",
+  "anti_patterns": [
+    "using for B2B or enterprise — emotional resonance depends on consumer context",
+    "adding illustrations or icons — pure text voice is the entire visual system; graphics break it",
+    "writing generic copy — each keyword must be real and resonant, weak copy makes this just look poorly designed",
+    "creating a polished layout — the imperfect imprecision IS the style"
+  ]
+}

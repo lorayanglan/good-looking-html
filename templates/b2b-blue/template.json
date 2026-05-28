@@ -1,0 +1,57 @@
+{
+  "slug": "b2b-blue",
+  "name": "B2B Blue",
+  "tagline": "High-conversion B2B style with white/pale-blue surfaces, bright action blue, and structured credibility sections.",
+  "mood": [
+    "trustworthy",
+    "clear",
+    "enterprise",
+    "conversion-focused",
+    "structured",
+    "ROI-visible"
+  ],
+  "occasion": [
+    "B2B SaaS landing deck",
+    "sales presentation",
+    "enterprise collaboration tool",
+    "pricing and plan comparison",
+    "lead generation deck"
+  ],
+  "tone": [
+    "professional",
+    "conversion-optimized",
+    "enterprise-grade",
+    "structured",
+    "clear"
+  ],
+  "formality": "high",
+  "density": "high",
+  "scheme": "light",
+  "palette": {
+    "background": "#FFFFFF",
+    "surface_pale_blue": "#F0F0FF",
+    "surface_light_blue": "#E0F0FF",
+    "brand_blue": "#1060FF",
+    "navy": "#000040",
+    "neon_green": "#00FF90",
+    "accent_orange": "#FF8000",
+    "description": "White and pale blue for information density; bright brand blue for all clickable elements; deep navy for credibility and ROI sections; neon green only for the primary lead form border and conversion focus elements; orange for statistical emphasis lines."
+  },
+  "typography": {
+    "display": "Inter",
+    "body": "Inter",
+    "cn_sans": "Noto Sans SC",
+    "style": "Clean professional sans-serif. Compact bold headlines (38-44px equivalent) for efficient scanning. Dense form labels and feature lists. No decorative type, no serifs."
+  },
+  "slide_count": 3,
+  "navigation": "scroll-snap with keyboard arrow support",
+  "source": "public visual preset",
+  "best_for": "B2B SaaS, enterprise collaboration, sales decks with clear pricing and ROI messaging. When conversion is the primary goal and structural completeness (form, pricing, ROI, FAQ, testimonials) matters more than aesthetic personality.",
+  "avoid_for": "Consumer products, content needing strong personality or artistic expression, anything requiring warmth or playfulness. This is an enterprise conversion machine, not a creative showcase.",
+  "anti_patterns": [
+    "hiding the lead form until the bottom — the dual-column hero with front-and-center form is structural",
+    "copying only the blue-white palette without the ROI calculator, pricing cards, and FAQ components — it's the complete structure that converts",
+    "using for artistic or personality-driven content — this is a sales tool",
+    "removing the navy deep-credibility sections — they are the trust anchor in an otherwise light page"
+  ]
+}

@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Engineering Stack · Calm Process Aesthetic</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue:       #0052CC;
+      --blue-mid:   #1A73E8;
+      --blue-light: #EBF3FF;
+      --blue-dim:   rgba(0,82,204,0.08);
+      --bg:         #FFFFFF;
+      --bg2:        #F7F9FC;
+      --text:       #1E293B;
+      --dim:        #64748B;
+      --dimmer:     #94A3B8;
+      --border:     #E2E8F0;
+      --green:      #16A34A;
+      --green-bg:   #DCFCE7;
+      --amber:      #D97706;
+      --amber-bg:   #FEF9C3;
+      --red:        #DC2626;
+      --red-bg:     #FEE2E2;
+      --card-shadow: 0 2px 16px rgba(0,0,0,0.07);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow: hidden;
+    }
+
+    .deck {
+      display: flex;
+      width: 300vw;
+      height: 100vh;
+      transition: transform 0.55s cubic-bezier(0.77, 0, 0.175, 1);
+    }
+
+    .slide {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-shrink: 0;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* ── Navigation ── */
+    .nav-btn {
+      position: fixed; top: 50%; transform: translateY(-50%);
+      z-index: 100;
+      background: rgba(0,82,204,0.08);
+      border: 1px solid rgba(0,82,204,0.18);
+      color: var(--blue);
+      width: 44px; height: 44px;
+      border-radius: 50%; cursor: pointer; font-size: 20px;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+    }
+    .nav-btn:hover { background: rgba(0,82,204,0.15); }
+    #prev { left: 20px; }
+    #next { right: 20px; }
+
+    .dots {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      display: flex; gap: 8px; z-index: 100;
+    }
+    .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--dimmer); cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .dot.active { background: var(--blue); transform: scale(1.4); }
+
+    .slide-num {
+      position: fixed; bottom: 24px; right: 28px;
+      font-size: 12px; color: var(--dimmer); z-index: 100;
+      letter-spacing: 0.06em;
+    }
+
+    /* ══════════════════════════════════════════════
+       SLIDE 1 — Cover + Stack Card
+    ══════════════════════════════════════════════ */
+    #s1 { background: var(--bg); align-items: stretch; }
+    #s1::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, var(--blue-light) 0%, transparent 50%);
+      opacity: 0.4; pointer-events: none;
+    }
+
+    .s1-left {
+      width: 50%; display: flex; flex-direction: column;
+      justify-content: center;
+      padding: 80px 52px 80px 80px;
+      position: relative; z-index: 1;
+    }
+
+    .s1-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--blue-light); border: 1px solid rgba(0,82,204,0.2);
+      border-radius: 6px; padding: 6px 14px;
+      font-size: 12px; font-weight: 600; color: var(--blue);
+      letter-spacing: 0.08em; text-transform: uppercase;
+      margin-bottom: 32px; width: fit-content;
+    }
+
+    .s1-title {
+      font-size: clamp(38px, 3.8vw, 56px);
+      font-weight: 900; line-height: 1.08; letter-spacing: -0.03em;
+      color: var(--text); margin-bottom: 24px;
+    }
+    .s1-title em { font-style: normal; color: var(--blue); }
+
+    .s1-sub {
+      font-size: 17px; font-weight: 400; color: var(--dim);
+      line-height: 1.65; max-width: 400px; margin-bottom: 44px;
+    }
+
+    .s1-metrics {
+      display: flex; flex-direction: column;
+      border-top: 1px solid var(--border);
+    }
+    .s1-metric {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 16px 0; border-bottom: 1px solid var(--border);
+    }
+    .s1-metric-label { font-size: 14px; color: var(--dim); }
+    .s1-metric-val { font-size: 15px; font-weight: 700; color: var(--blue); }
+
+    .s1-right {
+      width: 50%; display: flex; align-items: center; justify-content: center;
+      padding: 60px 80px 60px 32px;
+      position: relative; z-index: 1;
+    }
+
+    .app-card {
+      width: 100%; max-width: 380px;
+      background: var(--bg); border-radius: 20px;
+      box-shadow: var(--card-shadow), 0 0 0 1px var(--border);
+      overflow: hidden;
+    }
+    .app-header {
+      background: var(--blue);
+      padding: 24px 24px 28px;
+    }
+    .app-label {
+      font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.7);
+      letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 8px;
+    }
+    .app-total {
+      font-size: 36px; font-weight: 900; color: #fff;
+      letter-spacing: -0.03em; line-height: 1;
+    }
+    .app-change {
+      font-size: 14px; font-weight: 600; color: #5BF08A;
+      margin-top: 6px;
+    }
+
+    .app-chart { padding: 20px 24px 4px; background: var(--bg2); }
+
+    .app-positions { padding: 4px 24px 0; }
+    .pos-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 0; border-bottom: 1px solid var(--border);
+    }
+    .pos-row:last-child { border-bottom: none; }
+    .pos-ticker { font-size: 15px; font-weight: 700; color: var(--text); }
+    .pos-name { font-size: 12px; color: var(--dimmer); margin-top: 2px; }
+    .pos-right { text-align: right; }
+    .pos-shares { font-size: 12px; color: var(--dimmer); }
+    .pos-gain { font-size: 14px; font-weight: 700; color: var(--green); }
+    .pos-neutral { font-size: 14px; font-weight: 700; color: var(--blue); }
+
+    /* ══════════════════════════════════════════════
+       SLIDE 2 — 3-Layer Process Flow
+    ══════════════════════════════════════════════ */
+    #s2 { background: var(--bg2); flex-direction: column; }
+
+    .s2-top {
+      padding: 52px 80px 32px;
+      flex-shrink: 0;
+    }
+    .s2-label {
+      font-size: 12px; font-weight: 600; color: var(--blue);
+      letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 12px;
+    }
+    .s2-title {
+      font-size: clamp(32px, 3.2vw, 48px);
+      font-weight: 900; letter-spacing: -0.025em; color: var(--text);
+    }
+
+    .s2-flow {
+      flex: 1; display: flex; align-items: center; justify-content: center;
+      padding: 0 80px 56px;
+      gap: 0;
+    }
+
+    .step-card {
+      flex: 1; background: var(--bg);
+      border-radius: 16px;
+      box-shadow: var(--card-shadow);
+      border: 1px solid var(--border);
+      padding: 32px 28px;
+      display: flex; flex-direction: column;
+      max-width: 320px;
+    }
+
+    .step-num-row {
+      display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
+    }
+    .step-circle {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--blue); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; font-weight: 900; flex-shrink: 0;
+    }
+    .step-tag {
+      font-size: 11px; font-weight: 700; color: var(--blue);
+      letter-spacing: 0.1em; text-transform: uppercase;
+      background: var(--blue-light); border-radius: 4px; padding: 4px 10px;
+    }
+
+    .step-title {
+      font-size: 26px; font-weight: 900; letter-spacing: -0.02em;
+      color: var(--text); margin-bottom: 20px;
+    }
+
+    .step-items {
+      display: flex; flex-direction: column; gap: 0;
+      border-top: 1px solid var(--border);
+    }
+    .step-item {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 12px 0; border-bottom: 1px solid var(--border);
+    }
+    .step-item:last-child { border-bottom: none; }
+    .step-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--blue); flex-shrink: 0; margin-top: 7px;
+    }
+    .step-item-text {
+      font-size: 14px; font-weight: 500; color: var(--dim); line-height: 1.5;
+    }
+    .step-item-text strong { color: var(--text); font-weight: 700; }
+
+    .step-arrow {
+      display: flex; align-items: center; justify-content: center;
+      width: 56px; flex-shrink: 0;
+    }
+    .arrow-line {
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+    }
+    .arrow-shaft {
+      width: 32px; height: 2px; background: var(--blue); opacity: 0.4;
+    }
+    .arrow-head {
+      font-size: 18px; color: var(--blue); opacity: 0.5; line-height: 1;
+      margin-top: -4px;
+    }
+
+    /* ══════════════════════════════════════════════
+       SLIDE 3 — Key Numbers + Engineering Principles
+    ══════════════════════════════════════════════ */
+    #s3 { background: var(--bg); flex-direction: column; }
+
+    .s3-top {
+      padding: 52px 80px 32px;
+      flex-shrink: 0;
+    }
+    .s3-top-label {
+      font-size: 12px; font-weight: 600; color: var(--blue);
+      letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 12px;
+    }
+    .s3-top-title {
+      font-size: clamp(28px, 2.8vw, 42px);
+      font-weight: 900; letter-spacing: -0.02em; color: var(--text);
+    }
+
+    .s3-stats-row {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 16px; padding: 0 80px; flex-shrink: 0; margin-bottom: 28px;
+    }
+
+    .stat-card {
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 12px; padding: 20px 20px 18px;
+    }
+    .stat-icon { font-size: 22px; margin-bottom: 8px; }
+    .stat-num {
+      font-size: 32px; font-weight: 900; letter-spacing: -0.025em;
+      color: var(--text); line-height: 1; margin-bottom: 4px;
+    }
+    .stat-num.blue { color: var(--blue); }
+    .stat-num.amber { color: var(--amber); }
+    .stat-num.red { color: var(--red); }
+    .stat-label { font-size: 13px; font-weight: 500; color: var(--dim); }
+
+    .s3-notes {
+      flex: 1; padding: 0 80px 48px;
+      display: flex; flex-direction: column; gap: 0;
+      border-top: 1px solid var(--border); margin: 0 80px;
+    }
+
+    .note-row {
+      display: flex; align-items: flex-start; gap: 20px;
+      padding: 16px 0; border-bottom: 1px solid var(--border);
+    }
+    .note-row:last-child { border-bottom: none; }
+
+    .note-badge {
+      flex-shrink: 0; padding: 4px 10px; border-radius: 5px;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
+      text-transform: uppercase; min-width: 64px; text-align: center;
+    }
+    .badge-warn { background: var(--amber-bg); color: var(--amber); }
+    .badge-block { background: var(--red-bg); color: var(--red); }
+    .badge-info { background: var(--blue-light); color: var(--blue); }
+    .badge-green { background: var(--green-bg); color: var(--green); }
+
+    .note-title {
+      font-size: 16px; font-weight: 700; color: var(--text);
+      min-width: 220px; flex-shrink: 0;
+    }
+    .note-body { font-size: 14px; color: var(--dim); line-height: 1.55; flex: 1; }
+    .note-body strong { color: var(--text); font-weight: 600; }
+  </style>
+</head>
+<body>
+
+<div class="deck" id="deck">
+
+  <!-- ══ SLIDE 1: Cover ══ -->
+  <div class="slide" id="s1">
+    <div class="s1-left">
+      <div class="s1-badge">AI Engineering · Stanford Course Notes</div>
+
+      <div class="s1-title">
+        From LLM<br>
+        <em>to Agentic Workflow</em>
+      </div>
+
+      <div class="s1-sub">
+        AI applications aren't just about calling a stronger model. The real leverage comes from engineering — layering Prompt Engineering, RAG, and Agentic Workflows on top of any base LLM.
+      </div>
+
+      <div class="s1-metrics">
+        <div class="s1-metric">
+          <span class="s1-metric-label">Engineering Layers</span>
+          <span class="s1-metric-val">6 Core Techniques</span>
+        </div>
+        <div class="s1-metric">
+          <span class="s1-metric-label">Default Starting Point</span>
+          <span class="s1-metric-val">RAG Before Fine-Tuning</span>
+        </div>
+        <div class="s1-metric">
+          <span class="s1-metric-label">Core Insight</span>
+          <span class="s1-metric-val">Vertical Stack, Not Just Model Upgrades</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="s1-right">
+      <div class="app-card">
+        <div class="app-header">
+          <div class="app-label">Capability Stack</div>
+          <div class="app-total">6 Layers</div>
+          <div class="app-change">▲ Base LLM → Full Agentic System</div>
+        </div>
+
+        <div class="app-chart">
+          <!-- Step-up capability chart: x=layer, y=cumulative capability -->
+          <svg viewBox="0 0 332 120" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%; display:block;">
+            <defs>
+              <linearGradient id="area-g" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%"   stop-color="#0052CC" stop-opacity="0.22"/>
+                <stop offset="100%" stop-color="#0052CC" stop-opacity="0.02"/>
+              </linearGradient>
+            </defs>
+            <line x1="16" y1="20"  x2="316" y2="20"  stroke="#E2E8F0" stroke-width="1"/>
+            <line x1="16" y1="56"  x2="316" y2="56"  stroke="#E2E8F0" stroke-width="1"/>
+            <line x1="16" y1="92"  x2="316" y2="92"  stroke="#E2E8F0" stroke-width="1"/>
+            <!-- Points: Base(16,92) Prompt(72,72) RAG(128,54) FineTune(184,44) Agent(240,28) Multi(296,14) -->
+            <path d="M 16,106 L 16,92 L 72,72 L 128,54 L 184,44 L 240,28 L 296,14 L 316,14 L 316,106 Z"
+              fill="url(#area-g)"/>
+            <polyline points="16,92 72,72 128,54 184,44 240,28 296,14"
+              fill="none" stroke="#0052CC" stroke-width="2.5" stroke-linejoin="round"/>
+            <circle cx="296" cy="14" r="5" fill="#fff" stroke="#0052CC" stroke-width="2.5"/>
+            <text x="296" y="10" text-anchor="middle" font-size="10" font-weight="700" fill="#0052CC" font-family="Inter,sans-serif">95%</text>
+            <text x="16"  y="116" text-anchor="middle" font-size="10" fill="#94A3B8" font-family="Inter,sans-serif">Base</text>
+            <text x="128" y="116" text-anchor="middle" font-size="10" fill="#94A3B8" font-family="Inter,sans-serif">RAG</text>
+            <text x="240" y="116" text-anchor="middle" font-size="10" fill="#94A3B8" font-family="Inter,sans-serif">Agent</text>
+            <text x="316" y="116" text-anchor="middle" font-size="10" fill="#94A3B8" font-family="Inter,sans-serif">Multi</text>
+          </svg>
+        </div>
+
+        <div class="app-positions">
+          <div class="pos-row">
+            <div>
+              <div class="pos-ticker">Prompt Eng.</div>
+              <div class="pos-name">Highest ROI · Lowest barrier</div>
+            </div>
+            <div class="pos-right">
+              <div class="pos-gain">Start here</div>
+              <div class="pos-shares">Days to learn</div>
+            </div>
+          </div>
+          <div class="pos-row">
+            <div>
+              <div class="pos-ticker">RAG</div>
+              <div class="pos-name">Private knowledge · Live data</div>
+            </div>
+            <div class="pos-right">
+              <div class="pos-neutral">Before fine-tune</div>
+              <div class="pos-shares">Weeks to build</div>
+            </div>
+          </div>
+          <div class="pos-row">
+            <div>
+              <div class="pos-ticker">Agentic</div>
+              <div class="pos-name">From answers to task execution</div>
+            </div>
+            <div class="pos-right">
+              <div class="pos-gain">High impact</div>
+              <div class="pos-shares">Months to mature</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 2: 3-Layer Engineering Stack ══ -->
+  <div class="slide" id="s2">
+    <div class="s2-top">
+      <div class="s2-label">From Single Model to Agentic System</div>
+      <div class="s2-title">Three Engineering Layers Every AI Builder Needs</div>
+    </div>
+
+    <div class="s2-flow">
+      <!-- Layer 1 -->
+      <div class="step-card">
+        <div class="step-num-row">
+          <div class="step-circle">1</div>
+          <div class="step-tag">Foundation</div>
+        </div>
+        <div class="step-title">Augment the Model</div>
+        <div class="step-items">
+          <div class="step-item">
+            <div class="step-dot"></div>
+            <div class="step-item-text"><strong>Prompt Engineering</strong>: Define role, output format, and focus — the highest-ROI technique in the stack</div>
+          </div>
+          <div class="step-item">
+            <div class="step-dot"></div>
+            <div class="step-item-text"><strong>Prompt Chaining</strong>: Split complex tasks into testable, debuggable steps with clear observability</div>
+          </div>
+          <div class="step-item">
+            <div class="step-dot"></div>
+            <div class="step-item-text"><strong>RAG</strong>: Chunk → embed → retrieve — inject private or real-time knowledge without retraining</div>
+          </div>
+          <div class="step-item">
+            <div class="step-dot"></div>
+            <div class="step-item-text"><strong>Fine-Tuning</strong>: Only when domain precision is critical and RAG isn't enough</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-arrow">
+        <div class="arrow-line">
+          <div class="arrow-shaft"></div>
+          <div class="arrow-head">→</div>
+        </div>
+      </div>
+
+      <!-- Layer 2 -->
+      <div class="step-card">
+        <div class="step-num-row">
+          <div class="step-circle">2</div>
+          <div class="step-tag">Workflow</div>
+        </div>
+        <div class="step-title">Build the Agent</div>
+        <div class="step-items">
+          <div class="step-item">
+            <div class="step-dot"></div>
+            <div class="step-item-text"><strong>Prompts + Context</strong>: Define the agent's role, constraints, and what information it can see</div>
+          </div>
+          <div class="step-item">
+            <div class="step-dot"></div>
+            <div class="step-item-text"><strong>Tools</strong>: Connect external APIs, databases, and services the agent can call</div>
+          </div>
+          <div class="step-item">
+            <div class="step-dot"></div>
+            <div class="step-item-text"><strong>Memory</strong>: Working memory (short-term) + archival memory (retrieved when needed)</div>
+          </div>
+          <div class="step-item">
+            <div class="step-dot"></div>
+            <div class="step-item-text"><strong>MCP</strong>: Universal protocol connecting agents to external services without custom integration code</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-arrow">
+        <div class="arrow-line">
+          <div class="arrow-shaft"></div>
+          <div class="arrow-head">→</div>
+        </div>
+      </div>
+
+      <!-- Layer 3 -->
+      <div class="step-card">
+        <div class="step-num-row">
+          <div class="step-circle">3</div>
+          <div class="step-tag">Production</div>
+        </div>
+        <div class="step-title">Evaluate &amp; Scale</div>
+        <div class="step-items">
+          <div class="step-item">
+            <div class="step-dot"></div>
+            <div class="step-item-text"><strong>Eval System</strong>: End-to-end and component-based — the backbone of any production agentic system</div>
+          </div>
+          <div class="step-item">
+            <div class="step-dot"></div>
+            <div class="step-item-text"><strong>LLM-as-Judge</strong>: Use a separate model to score outputs — pair with rubrics and few-shot examples</div>
+          </div>
+          <div class="step-item">
+            <div class="step-dot"></div>
+            <div class="step-item-text"><strong>Guardrails</strong>: Deterministic checks for edge cases; humans in the loop for high-stakes fuzzy decisions</div>
+          </div>
+          <div class="step-item">
+            <div class="step-dot"></div>
+            <div class="step-item-text"><strong>Multi-Agent</strong>: Add only when parallel processing or component reuse genuinely applies</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 3: Key Numbers + Engineering Principles ══ -->
+  <div class="slide" id="s3">
+    <div class="s3-top">
+      <div class="s3-top-label">Engineer's Decision Framework</div>
+      <div class="s3-top-title">Four Key Numbers · Four Engineering Rules</div>
+    </div>
+
+    <div class="s3-stats-row">
+      <div class="stat-card">
+        <div class="stat-icon">&#128161;</div>
+        <div class="stat-num blue">RAG</div>
+        <div class="stat-label">Default before considering fine-tuning</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">&#9881;</div>
+        <div class="stat-num amber">3</div>
+        <div class="stat-label">Agent autonomy levels (hardcoded → hybrid → fully autonomous)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">&#128202;</div>
+        <div class="stat-num blue">10</div>
+        <div class="stat-label">Core engineering conclusions from the Stanford AI course</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">&#128737;</div>
+        <div class="stat-num" style="font-size:24px; letter-spacing:-0.01em; padding-top:4px;">Eval</div>
+        <div class="stat-label">Must be designed before launch, not after</div>
+      </div>
+    </div>
+
+    <div class="s3-notes">
+      <div class="note-row">
+        <div class="note-badge badge-block">AVOID</div>
+        <div class="note-title">Don't Rush to Fine-Tuning</div>
+        <div class="note-body">Fine-tuning needs large labeled datasets and sacrifices generality. <strong>RAG + Prompt Engineering solves most problems</strong> at a fraction of the cost.</div>
+      </div>
+      <div class="note-row">
+        <div class="note-badge badge-warn">RULE</div>
+        <div class="note-title">Deterministic First, Then LLM</div>
+        <div class="note-body">If a step can be solved without AI, don't add AI. <strong>Keep LLMs for the genuinely fuzzy parts</strong> — and add guardrails around them.</div>
+      </div>
+      <div class="note-row">
+        <div class="note-badge badge-info">BUILD</div>
+        <div class="note-title">Evaluation Is Not Optional</div>
+        <div class="note-body">Eval systems are <strong>the foundation of production-grade agents</strong> — design objective and subjective evals before you ship, not after something breaks.</div>
+      </div>
+      <div class="note-row">
+        <div class="note-badge badge-green">SCALE</div>
+        <div class="note-title">Multi-Agent Only When Needed</div>
+        <div class="note-body"><strong>Parallel processing or component reuse</strong> are the only valid reasons to go multi-agent. Avoid over-engineering — one agent done well beats five done poorly.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<button class="nav-btn" id="prev">&#8249;</button>
+<button class="nav-btn" id="next">&#8250;</button>
+
+<div class="dots">
+  <div class="dot active" data-i="0"></div>
+  <div class="dot" data-i="1"></div>
+  <div class="dot" data-i="2"></div>
+</div>
+<div class="slide-num" id="slide-num">1 / 3</div>
+
+<script>
+  const deck = document.getElementById('deck');
+  const dots = document.querySelectorAll('.dot');
+  const slideNum = document.getElementById('slide-num');
+  let cur = 0;
+  const total = 3;
+
+  function goTo(n) {
+    cur = Math.max(0, Math.min(total - 1, n));
+    deck.style.transform = `translateX(-${cur * 100}vw)`;
+    dots.forEach((d, i) => d.classList.toggle('active', i === cur));
+    slideNum.textContent = `${cur + 1} / ${total}`;
+  }
+
+  document.getElementById('next').addEventListener('click', () => goTo(cur + 1));
+  document.getElementById('prev').addEventListener('click', () => goTo(cur - 1));
+  dots.forEach(d => d.addEventListener('click', () => goTo(+d.dataset.i)));
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goTo(cur + 1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   goTo(cur - 1);
+  });
+</script>
+</body>
+</html>

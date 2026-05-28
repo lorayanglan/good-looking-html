@@ -1,0 +1,56 @@
+{
+  "slug": "photo-editorial",
+  "name": "Photo Editorial",
+  "tagline": "Photography magazine editorial style with stark black/white structure, oversized headlines, and hard color-block mosaics.",
+  "mood": [
+    "bold",
+    "photographic",
+    "editorial",
+    "professional-creative",
+    "high-impact",
+    "visual-dominant"
+  ],
+  "occasion": [
+    "photography platform",
+    "creator tools showcase",
+    "visual content product",
+    "portfolio or creative community deck",
+    "subscription plan comparison"
+  ],
+  "tone": [
+    "editorial",
+    "direct",
+    "confident",
+    "visual-first",
+    "creator-empowering"
+  ],
+  "formality": "medium-high",
+  "density": "high",
+  "scheme": "mixed",
+  "palette": {
+    "background_white": "#FFFFFF",
+    "background_black": "#101010",
+    "surface_gray": "#F0F0F0",
+    "sky_blue": "#80C0E0",
+    "orange_red": "#FF7030",
+    "golden_orange": "#FFA030",
+    "description": "Black-and-white editorial backbone as the professional anchor; three hard color blocks (sky-blue, orange-red, golden-orange) for feature section mosaics — used as large-area backgrounds, not accents; real photography is the primary visual content."
+  },
+  "typography": {
+    "display": "Inter",
+    "body": "Inter",
+    "cn_sans": "Noto Sans SC",
+    "style": "Ultra-bold all-caps sans-serif for display and section headlines. Tight letter-spacing (tracking). Magazine-poster feeling. Body text small and information-dense. No decorative fonts, no serifs."
+  },
+  "slide_count": 3,
+  "navigation": "scroll-snap with keyboard arrow support",
+  "source": "public visual preset",
+  "best_for": "Photography tools, creator communities, visual product platforms, creative professionals. When real photography can carry the visual work. Editorial-graphic design reviews, portfolio platforms, creator monetization tools.",
+  "avoid_for": "B2B enterprise, quiet minimalist aesthetics, personal narratives without strong visual material. Don't use if you can't supply strong photographic content.",
+  "anti_patterns": [
+    "replacing real photography with illustrations — Photo Editorial's quality signal is the photography itself",
+    "softening the color blocks into gradients — hard-edged color blocks are the structural vocabulary",
+    "changing headlines from all-caps bold to softer type — the poster-headline feel is the identity",
+    "using the color blocks as small accents rather than full section backgrounds"
+  ]
+}

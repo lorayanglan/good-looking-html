@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Indie Print Style · Hyperspecific Apps</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black:  #1A1A1A;
+    --white:  #FFFFFF;
+    --gold:   #F0B429;
+    --gold-lt:#FEF3C7;
+    --gray:   #888888;
+    --lt:     #F5F5F5;
+    --shadow: 5px 5px 0px #1A1A1A;
+    --shadow-sm: 3px 3px 0px #1A1A1A;
+    --border: 2.5px solid #1A1A1A;
+    --f: 'Poppins', sans-serif;
+  }
+
+  html, body { width: 100%; height: 100%; overflow: hidden; background: var(--black); font-family: var(--f); }
+
+  /* ── Deck ── */
+  #deck {
+    display: flex; width: 100%; height: 100%;
+    overflow-x: scroll; scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+  #deck::-webkit-scrollbar { display: none; }
+
+  .slide {
+    width: 100vw; height: 100vh; flex-shrink: 0;
+    scroll-snap-align: start;
+    background: var(--white);
+    display: flex; flex-direction: column;
+    position: relative; overflow: hidden;
+  }
+
+  /* ── Nav ── */
+  #nav-dots {
+    position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 7px; z-index: 100;
+  }
+  .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    border: 2px solid var(--black);
+    background: transparent;
+    transition: background 0.2s; cursor: pointer;
+  }
+  .dot.active { background: var(--black); }
+  #page-counter {
+    position: fixed; bottom: 20px; right: 28px;
+    font-size: 11px; font-weight: 600; color: var(--gray);
+    letter-spacing: 0.04em; z-index: 100;
+  }
+
+  /* ── Top bar ── */
+  .top-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 22px 52px;
+    border-bottom: var(--border);
+    flex-shrink: 0;
+  }
+  .top-logo {
+    font-size: 18px; font-weight: 800; color: var(--black);
+    letter-spacing: -0.02em;
+  }
+  .top-logo span { color: var(--gold); }
+  .top-tag {
+    font-size: 11px; font-weight: 600; color: var(--gray);
+    letter-spacing: 0.08em; text-transform: uppercase;
+  }
+
+  /* ═══════════════════
+     SLIDE 1 — Hero
+  ═══════════════════ */
+
+  .s1-body {
+    flex: 1; display: flex; min-height: 0;
+  }
+
+  .s1-left {
+    flex: 1.1; display: flex; flex-direction: column;
+    justify-content: center;
+    padding: 40px 48px 52px 52px;
+    border-right: var(--border);
+  }
+
+  .s1-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--gold-lt);
+    border: var(--border);
+    font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--black);
+    padding: 5px 14px; border-radius: 100px;
+    margin-bottom: 28px; align-self: flex-start;
+    box-shadow: var(--shadow-sm);
+  }
+  .s1-eyebrow::before { content: '🪙'; font-size: 13px; }
+
+  .s1-title {
+    font-size: clamp(42px, 5.5vw, 76px);
+    font-weight: 900; line-height: 1.0;
+    letter-spacing: -0.03em; color: var(--black);
+    margin-bottom: 24px;
+  }
+  .s1-title u {
+    text-decoration: none;
+    background: var(--gold);
+    padding: 0 6px;
+    display: inline;
+  }
+
+  .s1-desc {
+    font-size: clamp(15px, 1.4vw, 18px);
+    font-weight: 400; line-height: 1.7;
+    color: #555;
+    margin-bottom: 40px;
+    max-width: 500px;
+  }
+
+  .s1-btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--black); color: var(--white);
+    font-family: var(--f); font-size: 15px; font-weight: 700;
+    padding: 14px 28px; border: var(--border);
+    border-radius: 4px;
+    box-shadow: var(--shadow);
+    cursor: pointer; align-self: flex-start;
+    text-decoration: none;
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
+  .s1-btn:hover { transform: translate(-2px, -2px); box-shadow: 7px 7px 0px #1A1A1A; }
+
+  /* Right side: gold coin SVG + stat pills */
+  .s1-right {
+    width: 42%; display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    padding: 40px 52px 52px;
+    gap: 28px;
+    background: var(--lt);
+  }
+
+  .s1-coin-wrap { position: relative; }
+
+  .s1-pills {
+    display: flex; flex-direction: column; gap: 12px; width: 100%;
+  }
+  .s1-pill {
+    background: var(--white);
+    border: var(--border);
+    border-radius: 6px;
+    box-shadow: var(--shadow-sm);
+    padding: 14px 18px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .s1-pill-icon {
+    font-size: 22px; flex-shrink: 0;
+  }
+  .s1-pill-title {
+    font-size: 14px; font-weight: 700; color: var(--black);
+    margin-bottom: 2px;
+  }
+  .s1-pill-sub {
+    font-size: 12px; font-weight: 400; color: var(--gray);
+  }
+
+  /* ═══════════════════════════
+     SLIDE 2 — Chart + List
+  ═══════════════════════════ */
+
+  .s2-head {
+    padding: 28px 52px 24px;
+    border-bottom: var(--border);
+    flex-shrink: 0;
+    display: flex; align-items: flex-end; justify-content: space-between;
+  }
+  .s2-head-left {}
+  .s2-eyebrow {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--gray);
+    margin-bottom: 8px;
+  }
+  .s2-title {
+    font-size: clamp(26px, 3vw, 40px);
+    font-weight: 900; color: var(--black);
+    letter-spacing: -0.025em; line-height: 1.05;
+  }
+  .s2-legend {
+    display: flex; gap: 20px; align-items: center;
+    padding-bottom: 4px;
+  }
+  .s2-legend-item { display: flex; align-items: center; gap: 7px; }
+  .s2-legend-dot {
+    width: 14px; height: 14px; border: 2px solid var(--black);
+    flex-shrink: 0;
+  }
+  .s2-legend-dot.before { background: #E0E0E0; }
+  .s2-legend-dot.after  { background: var(--gold); }
+  .s2-legend-label { font-size: 12px; font-weight: 600; color: var(--black); }
+
+  /* Body: left list + right chart */
+  .s2-body {
+    flex: 1; display: flex; min-height: 0;
+  }
+
+  .s2-list {
+    width: 32%; border-right: var(--border);
+    display: flex; flex-direction: column;
+    padding: 28px 32px 40px 52px;
+    gap: 0;
+  }
+  .s2-list-item {
+    padding: 18px 0;
+    border-bottom: 1.5px solid #E8E8E8;
+  }
+  .s2-list-item:last-child { border-bottom: none; }
+  .s2-list-num {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--gray);
+    margin-bottom: 6px;
+  }
+  .s2-list-title {
+    font-size: clamp(14px, 1.3vw, 17px);
+    font-weight: 800; color: var(--black);
+    line-height: 1.2; margin-bottom: 6px;
+  }
+  .s2-list-desc {
+    font-size: clamp(12px, 1vw, 13px);
+    font-weight: 400; color: #666;
+    line-height: 1.6;
+  }
+
+  /* Chart area */
+  .s2-chart-area {
+    flex: 1; display: flex; flex-direction: column;
+    padding: 28px 52px 36px 36px;
+  }
+  .s2-chart-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--gray);
+    margin-bottom: 16px;
+  }
+  .s2-chart-wrap {
+    flex: 1;
+    border: var(--border);
+    border-radius: 6px;
+    box-shadow: var(--shadow);
+    background: var(--white);
+    padding: 20px 24px 16px;
+    overflow: hidden;
+  }
+
+  /* ═══════════════════════════
+     SLIDE 3 — Case Studies
+  ═══════════════════════════ */
+
+  .s3-head {
+    padding: 28px 52px 24px;
+    border-bottom: var(--border);
+    flex-shrink: 0;
+    display: flex; align-items: flex-end; justify-content: space-between;
+  }
+  .s3-title {
+    font-size: clamp(28px, 3.4vw, 44px);
+    font-weight: 900; color: var(--black);
+    letter-spacing: -0.025em; line-height: 1.05;
+  }
+  .s3-badge {
+    background: var(--gold);
+    border: var(--border);
+    border-radius: 100px;
+    padding: 5px 16px;
+    font-size: 12px; font-weight: 700;
+    color: var(--black);
+    box-shadow: var(--shadow-sm);
+    white-space: nowrap;
+  }
+
+  .s3-cases {
+    flex: 1; display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    padding: 32px 52px 52px;
+    min-height: 0;
+  }
+
+  .s3-case {
+    border: var(--border);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    padding: 24px;
+    display: flex; flex-direction: column;
+    background: var(--white);
+  }
+  .s3-case + .s3-case { margin-left: 20px; }
+
+  .s3-case-tag {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: var(--black); color: var(--white);
+    padding: 3px 10px; border-radius: 2px;
+    align-self: flex-start; margin-bottom: 16px;
+  }
+  .s3-case-title {
+    font-size: clamp(17px, 1.7vw, 21px);
+    font-weight: 800; color: var(--black);
+    line-height: 1.2; margin-bottom: 12px;
+  }
+  .s3-case-desc {
+    font-size: clamp(13px, 1.1vw, 15px);
+    font-weight: 400; color: #555;
+    line-height: 1.7; flex: 1;
+  }
+
+  .s3-case-result {
+    margin-top: 20px; padding: 12px 14px;
+    border: var(--border);
+    border-radius: 4px;
+    background: var(--gold-lt);
+    display: flex; align-items: flex-start; gap: 10px;
+  }
+  .s3-case-result-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .s3-case-result-text {
+    font-size: 13px; font-weight: 600; color: var(--black);
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+
+<div id="deck">
+
+  <!-- ════════════ SLIDE 1 ════════════ -->
+  <div class="slide" id="s1">
+    <div class="top-bar">
+      <span class="top-logo">Gum<span>road</span></span>
+      <span class="top-tag">Style Reference · Hyperspecific Apps</span>
+    </div>
+
+    <div class="s1-body">
+      <div class="s1-left">
+        <div class="s1-eyebrow">AI Creator Economy · 2026</div>
+        <h1 class="s1-title">Go from 0<br>to your <u>own</u><br>software</h1>
+        <p class="s1-desc">AI coding tools let anyone build software so specific it could never be a SaaS product — because it's built for exactly one person's workflow.</p>
+        <a class="s1-btn" href="#">Build your first app →</a>
+      </div>
+
+      <div class="s1-right">
+        <!-- Gold coin SVG illustration -->
+        <div class="s1-coin-wrap">
+          <svg viewBox="0 0 200 160" xmlns="http://www.w3.org/2000/svg" width="200" height="160">
+            <!-- Stack of coins -->
+            <!-- Bottom coin shadow -->
+            <ellipse cx="102" cy="128" rx="52" ry="14" fill="#1A1A1A" opacity="0.15"/>
+            <!-- Coin 3 (bottom) -->
+            <ellipse cx="100" cy="120" rx="50" ry="13" fill="#C97F10" stroke="#1A1A1A" stroke-width="2"/>
+            <ellipse cx="100" cy="115" rx="50" ry="13" fill="#E8A020" stroke="#1A1A1A" stroke-width="2"/>
+            <!-- Coin 2 -->
+            <ellipse cx="100" cy="100" rx="50" ry="13" fill="#C97F10" stroke="#1A1A1A" stroke-width="2"/>
+            <ellipse cx="100" cy="95" rx="50" ry="13" fill="#EDB030" stroke="#1A1A1A" stroke-width="2"/>
+            <!-- Coin 1 (top) -->
+            <ellipse cx="100" cy="80" rx="50" ry="13" fill="#C97F10" stroke="#1A1A1A" stroke-width="2"/>
+            <ellipse cx="100" cy="74" rx="50" ry="13" fill="#F0B429" stroke="#1A1A1A" stroke-width="2.5"/>
+            <!-- $ sign on top coin -->
+            <text x="100" y="79" text-anchor="middle" font-size="16" font-weight="900" fill="#1A1A1A" font-family="Poppins,sans-serif">$</text>
+            <!-- Sparkle decorations -->
+            <text x="30" y="55" font-size="18" font-family="sans-serif">✦</text>
+            <text x="158" y="45" font-size="13" font-family="sans-serif">✦</text>
+            <text x="145" y="110" font-size="10" font-family="sans-serif">✦</text>
+            <text x="18" y="100" font-size="12" font-family="sans-serif">✦</text>
+          </svg>
+        </div>
+
+        <div class="s1-pills">
+          <div class="s1-pill">
+            <div class="s1-pill-icon">😤</div>
+            <div>
+              <div class="s1-pill-title">Painful but necessary</div>
+              <div class="s1-pill-sub">Accounting, taxes, admin</div>
+            </div>
+          </div>
+          <div class="s1-pill">
+            <div class="s1-pill-icon">📋</div>
+            <div>
+              <div class="s1-pill-title">Important but neglected</div>
+              <div class="s1-pill-sub">Fitness logs, weekly reviews</div>
+            </div>
+          </div>
+          <div class="s1-pill">
+            <div class="s1-pill-icon">🎨</div>
+            <div>
+              <div class="s1-pill-title">Wanted but skill-gated</div>
+              <div class="s1-pill-sub">Comics, games, dashboards</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════ SLIDE 2 ════════════ -->
+  <div class="slide" id="s2">
+    <div class="top-bar">
+      <span class="top-logo">Gum<span>road</span></span>
+      <span class="top-tag">The Three Categories · What to Build</span>
+    </div>
+
+    <div class="s2-head">
+      <div class="s2-head-left">
+        <div class="s2-eyebrow">Hours per month · Before vs After</div>
+        <div class="s2-title">The same work.<br>A fraction of the time.</div>
+      </div>
+      <div class="s2-legend">
+        <div class="s2-legend-item"><div class="s2-legend-dot before"></div><div class="s2-legend-label">Before (manual)</div></div>
+        <div class="s2-legend-item"><div class="s2-legend-dot after"></div><div class="s2-legend-label">After (AI app)</div></div>
+      </div>
+    </div>
+
+    <div class="s2-body">
+      <!-- Left: category list -->
+      <div class="s2-list">
+        <div class="s2-list-item">
+          <div class="s2-list-num">Category 01</div>
+          <div class="s2-list-title">Painful but necessary</div>
+          <div class="s2-list-desc">Accounting, taxes, admin — tasks you dread but can't skip.</div>
+        </div>
+        <div class="s2-list-item">
+          <div class="s2-list-num">Category 02</div>
+          <div class="s2-list-title">Important but neglected</div>
+          <div class="s2-list-desc">Fitness logs, reviews, journaling — high value, low activation.</div>
+        </div>
+        <div class="s2-list-item">
+          <div class="s2-list-num">Category 03</div>
+          <div class="s2-list-title">Wanted but skill-gated</div>
+          <div class="s2-list-desc">Comics, dashboards, games — previously impossible, now just buildable.</div>
+        </div>
+      </div>
+
+      <!-- Right: bar chart -->
+      <div class="s2-chart-area">
+        <div class="s2-chart-label">Monthly hours spent · 3 creator use cases</div>
+        <div class="s2-chart-wrap">
+          <svg viewBox="0 0 580 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block;">
+
+            <!-- Grid lines -->
+            <line x1="64" y1="20"  x2="560" y2="20"  stroke="#E8E8E8" stroke-width="1.5" stroke-dasharray="5 4"/>
+            <line x1="64" y1="68"  x2="560" y2="68"  stroke="#E8E8E8" stroke-width="1.5" stroke-dasharray="5 4"/>
+            <line x1="64" y1="116" x2="560" y2="116" stroke="#E8E8E8" stroke-width="1.5" stroke-dasharray="5 4"/>
+            <line x1="64" y1="164" x2="560" y2="164" stroke="#E8E8E8" stroke-width="1.5" stroke-dasharray="5 4"/>
+            <line x1="64" y1="212" x2="560" y2="212" stroke="#1A1A1A" stroke-width="2"/>
+
+            <!-- Y axis -->
+            <line x1="64" y1="16" x2="64" y2="212" stroke="#1A1A1A" stroke-width="2"/>
+
+            <!-- Y axis labels -->
+            <text x="56" y="24"  text-anchor="end" font-size="11" fill="#888" font-family="Poppins,sans-serif" font-weight="600">16h</text>
+            <text x="56" y="72"  text-anchor="end" font-size="11" fill="#888" font-family="Poppins,sans-serif" font-weight="600">12h</text>
+            <text x="56" y="120" text-anchor="end" font-size="11" fill="#888" font-family="Poppins,sans-serif" font-weight="600">8h</text>
+            <text x="56" y="168" text-anchor="end" font-size="11" fill="#888" font-family="Poppins,sans-serif" font-weight="600">4h</text>
+            <text x="56" y="216" text-anchor="end" font-size="11" fill="#888" font-family="Poppins,sans-serif" font-weight="600">0h</text>
+
+            <!-- GROUP 1: Accounting -->
+            <!-- Before: 14h → y = 212 - (14/16)*192 = 212-168 = 44, height=168 -->
+            <rect x="108" y="44" width="52" height="168" fill="#E0E0E0" stroke="#1A1A1A" stroke-width="2"/>
+            <text x="134" y="38" text-anchor="middle" font-size="12" font-weight="800" fill="#1A1A1A" font-family="Poppins,sans-serif">14h</text>
+            <!-- After: 2h → y = 212 - (2/16)*192 = 212-24 = 188, height=24 -->
+            <rect x="166" y="188" width="52" height="24" fill="#F0B429" stroke="#1A1A1A" stroke-width="2"/>
+            <text x="192" y="182" text-anchor="middle" font-size="12" font-weight="800" fill="#1A1A1A" font-family="Poppins,sans-serif">2h</text>
+            <!-- Label -->
+            <text x="163" y="232" text-anchor="middle" font-size="12" font-weight="700" fill="#1A1A1A" font-family="Poppins,sans-serif">Accounting</text>
+
+            <!-- GROUP 2: Health Tracking -->
+            <!-- Before: 0h (never done) → y=212, height=0, show as thin stripe -->
+            <rect x="270" y="208" width="52" height="4" fill="#E0E0E0" stroke="#1A1A1A" stroke-width="2"/>
+            <text x="296" y="202" text-anchor="middle" font-size="12" font-weight="800" fill="#1A1A1A" font-family="Poppins,sans-serif">~0h</text>
+            <!-- After: 5h → y = 212 - (5/16)*192 = 212-60 = 152, height=60 -->
+            <rect x="328" y="152" width="52" height="60" fill="#F0B429" stroke="#1A1A1A" stroke-width="2"/>
+            <text x="354" y="146" text-anchor="middle" font-size="12" font-weight="800" fill="#1A1A1A" font-family="Poppins,sans-serif">5h</text>
+            <!-- Label -->
+            <text x="325" y="232" text-anchor="middle" font-size="12" font-weight="700" fill="#1A1A1A" font-family="Poppins,sans-serif">Health Log</text>
+
+            <!-- GROUP 3: Slide Deck -->
+            <!-- Before: 10h → y = 212 - (10/16)*192 = 212-120 = 92, height=120 -->
+            <rect x="430" y="92" width="52" height="120" fill="#E0E0E0" stroke="#1A1A1A" stroke-width="2"/>
+            <text x="456" y="86" text-anchor="middle" font-size="12" font-weight="800" fill="#1A1A1A" font-family="Poppins,sans-serif">10h</text>
+            <!-- After: 1.5h → y = 212 - (1.5/16)*192 = 212-18 = 194, height=18 -->
+            <rect x="488" y="194" width="52" height="18" fill="#F0B429" stroke="#1A1A1A" stroke-width="2"/>
+            <text x="514" y="188" text-anchor="middle" font-size="12" font-weight="800" fill="#1A1A1A" font-family="Poppins,sans-serif">1.5h</text>
+            <!-- Label -->
+            <text x="487" y="232" text-anchor="middle" font-size="12" font-weight="700" fill="#1A1A1A" font-family="Poppins,sans-serif">Slide Deck</text>
+
+            <!-- Annotation: Health Log note -->
+            <rect x="234" y="104" width="122" height="36" rx="3" fill="#FEF3C7" stroke="#1A1A1A" stroke-width="1.5"/>
+            <text x="295" y="118" text-anchor="middle" font-size="10" font-weight="700" fill="#1A1A1A" font-family="Poppins,sans-serif">Previously impossible</text>
+            <text x="295" y="132" text-anchor="middle" font-size="10" fill="#555" font-family="Poppins,sans-serif">now 5h of real output</text>
+            <line x1="295" y1="140" x2="295" y2="200" stroke="#1A1A1A" stroke-width="1.5" stroke-dasharray="3 3"/>
+
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════ SLIDE 3 ════════════ -->
+  <div class="slide" id="s3">
+    <div class="top-bar">
+      <span class="top-logo">Gum<span>road</span></span>
+      <span class="top-tag">Real Builds · Case Studies</span>
+    </div>
+
+    <div class="s3-head">
+      <div class="s3-title">Three apps built<br>in a weekend.</div>
+      <div class="s3-badge">🪙 Real creator stories</div>
+    </div>
+
+    <div class="s3-cases">
+      <div class="s3-case">
+        <div class="s3-case-tag">Finance</div>
+        <div class="s3-case-title">AI Accounting Tool</div>
+        <div class="s3-case-desc">Cross-border freelancer. Clients in 4 countries, invoices in 3 currencies. No SaaS fit her workflow — so she built her own: local AI handles bookkeeping, taxes, and multi-currency reconciliation. No monthly fee. No data leaks.</div>
+        <div class="s3-case-result">
+          <div class="s3-case-result-icon">✓</div>
+          <div class="s3-case-result-text">Replaced 3 SaaS subscriptions. Runs fully offline.</div>
+        </div>
+      </div>
+
+      <div class="s3-case">
+        <div class="s3-case-tag">Presentations</div>
+        <div class="s3-case-title">Slide Deck Generator</div>
+        <div class="s3-case-desc">Course creator with a signature visual style. Rebuilding decks for every workshop was burning hours. She trained AI on her own template — now paste content in, get a finished deck out, brand-perfect every time.</div>
+        <div class="s3-case-result">
+          <div class="s3-case-result-icon">✓</div>
+          <div class="s3-case-result-text">2-hour task → 8 minutes. Style is always consistent.</div>
+        </div>
+      </div>
+
+      <div class="s3-case">
+        <div class="s3-case-tag">Creative</div>
+        <div class="s3-case-title">Comic Generator</div>
+        <div class="s3-case-desc">Wanted to make comics. No drawing skill. Didn't want to spend months learning. Built a pipeline: rough sketch + text prompt → AI generates panels, handles layout, adds detail. First comic shipped in week one.</div>
+        <div class="s3-case-result">
+          <div class="s3-case-result-icon">✓</div>
+          <div class="s3-case-result-text">From "can't draw" to published comic in 7 days.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /deck -->
+
+<nav id="nav-dots">
+  <div class="dot active" data-i="0"></div>
+  <div class="dot" data-i="1"></div>
+  <div class="dot" data-i="2"></div>
+</nav>
+<div id="page-counter">1 / 3</div>
+
+<script>
+  const deck = document.getElementById('deck');
+  const dots = document.querySelectorAll('.dot');
+  const counter = document.getElementById('page-counter');
+  const slides = document.querySelectorAll('.slide');
+
+  function goTo(i) { deck.scrollTo({ left: i * window.innerWidth, behavior: 'smooth' }); }
+  dots.forEach(d => d.addEventListener('click', () => goTo(+d.dataset.i)));
+
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const i = [...slides].indexOf(e.target);
+        dots.forEach((d, j) => d.classList.toggle('active', j === i));
+        counter.textContent = `${i + 1} / ${slides.length}`;
+      }
+    });
+  }, { root: deck, threshold: 0.5 });
+
+  slides.forEach(s => obs.observe(s));
+
+  document.addEventListener('keydown', e => {
+    const cur = Math.round(deck.scrollLeft / window.innerWidth);
+    if (e.key === 'ArrowRight' && cur < slides.length - 1) goTo(cur + 1);
+    if (e.key === 'ArrowLeft'  && cur > 0)                 goTo(cur - 1);
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+{
+  "slug": "cinematic-dark",
+  "name": "Cinematic Dark",
+  "tagline": "Cinematic dark stage with near-black immersion, one vivid action color, and content-wall drama.",
+  "mood": [
+    "intense",
+    "immersive",
+    "cinematic",
+    "nocturnal",
+    "high-conversion",
+    "dramatic"
+  ],
+  "occasion": [
+    "entertainment product deck",
+    "subscription service landing",
+    "content-heavy presentation",
+    "dark immersive showcase",
+    "cinematic brand summary"
+  ],
+  "tone": [
+    "bold",
+    "direct",
+    "entertainment-grade",
+    "high-contrast",
+    "conversion-focused"
+  ],
+  "formality": "medium",
+  "density": "medium",
+  "scheme": "dark",
+  "palette": {
+    "background": "#000000",
+    "surface_dark": "#101010",
+    "card_dark_purple": "#1B1633",
+    "text_primary": "#FFFFFF",
+    "text_secondary": "#AAAAAA",
+    "cta_red": "#E50914",
+    "description": "Near-pure black base; white for all readable content; single vivid red used exclusively for CTA and logo; dark purple-black cards for secondary content blocks; no competing accent colors."
+  },
+  "typography": {
+    "display": "Inter",
+    "body": "Inter",
+    "cn_sans": "Noto Sans SC",
+    "style": "Heavy bold sans-serif. Hero titles at very large size (56-64px equivalent), high font-weight, centered alignment. Short punchy copy. Ranking numbers in outlined/giant style for content lists."
+  },
+  "slide_count": 3,
+  "navigation": "scroll-snap with keyboard arrow support",
+  "source": "public visual preset",
+  "best_for": "Entertainment, media, subscription products. Dark immersive experiences where content is the desire. Strong for high-conversion pages where the content library itself is the argument. Cinematic brand summaries.",
+  "avoid_for": "Quiet knowledge tools, personal notes products, content requiring warmth or approachability. This is a night-mode, conversion-machine aesthetic — wrong for calm or literary content.",
+  "anti_patterns": [
+    "letting the poster/content colors explode without the dark overlay mask — the unified black veil is critical",
+    "adding a second brand action color alongside red — red must be the only CTA color",
+    "using for calm productivity or personal tools — this is too 'nighttime and high-conversion'",
+    "softening the black background — the stark black is what creates the cinema stage"
+  ]
+}

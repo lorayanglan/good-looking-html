@@ -1,0 +1,156 @@
+{
+  "slug": "bright-lab",
+  "name": "Bright Lab",
+  "tagline": "Bright candy-colored gallery system with playful blocks, pill CTAs, organic shapes, and generous whitespace.",
+  "source": "public visual preset",
+  "spec": "design-spec.md",
+  "mood": [
+    "bright",
+    "experimental",
+    "friendly",
+    "exploratory",
+    "playful",
+    "candy"
+  ],
+  "occasion": [
+    "personal review deck",
+    "AI tool gallery",
+    "creative project showroom",
+    "wellness review",
+    "course or workshop summary",
+    "tools collection page",
+    "experimental product launch"
+  ],
+  "tone": [
+    "warm",
+    "open",
+    "approachable",
+    "modern",
+    "non-corporate"
+  ],
+  "formality": "medium",
+  "density": "medium",
+  "scheme": "mixed",
+  "palette": {
+    "pink": "#f5a5e6",
+    "pink_alt": "#f3a2e3",
+    "pink_soft": "#ffd9f3",
+    "ink": "#00171c",
+    "ink_alt": "#001b20",
+    "ink_soft": "#0a2228",
+    "paper": "#ffffff",
+    "cream": "#f7f5ef",
+    "violet": "#6b5bff",
+    "azure": "#2a7bff",
+    "orange": "#ff6f3c",
+    "neon": "#c6f053",
+    "lemon": "#ffe45c",
+    "coral": "#ff8a7a",
+    "text": "#0f1112",
+    "cream_text": "#f3efe2",
+    "description": "Bubblegum pink intro band paired with deep blue-black hero stage; product cards in blue-violet / bright blue / pink / orange / neon green / lemon yellow / coral. White as stable canvas, cream as secondary light surface. Black 1.5px outlines on pills. No shadows — layers come from color blocks, rounded shapes, and blob masks."
+  },
+  "typography": {
+    "display": "Plus Jakarta Sans",
+    "body": "Plus Jakarta Sans",
+    "cn_sans": "Noto Sans SC",
+    "fallback_intent": "Friendly product sans; Plus Jakarta Sans is the free implementation used here — preserve the import as-is",
+    "weights": "300 / 400 / 500 / 600 / 700 / 800",
+    "italic": "never",
+    "style": "Friendly geometric sans-serif. No serifs. No decorative type. Large but never shouty. Letter-spacing slightly negative on display, normal on body."
+  },
+  "type_scale": {
+    "display": "min(96px, 7vw, 12vh) · weight 700",
+    "h1": "min(64px, 5.2vw, 9vh) · weight 700",
+    "h2": "min(48px, 4.2vw, 7.4vh) · weight 700",
+    "h3": "min(28px, 2.4vw, 4.2vh) · weight 700",
+    "lead": "min(20px, 1.5vw, 2.6vh) · weight 400",
+    "body": "min(15px, 1.05vw, 2vh) · weight 400",
+    "small": "13px · weight 400"
+  },
+  "spacing": {
+    "pad_x": "clamp(36px, 6vw, 88px)",
+    "pad_y": "clamp(28px, 4.5vh, 56px)",
+    "gap_lg": "clamp(28px, 5vh, 60px)",
+    "gap_md": "clamp(14px, 3vh, 28px)",
+    "gap_sm": "clamp(8px, 1.5vh, 16px)"
+  },
+  "components": {
+    "pill": {
+      "shape": "999px capsule",
+      "outline": "1.5px solid currentColor (Bright Lab spec: 1px black, raised to 1.5 for Retina sharpness)",
+      "variants": [
+        "default",
+        "solid (ink)",
+        "solid-light (white)"
+      ]
+    },
+    "blob": {
+      "shape": "irregular border-radius 60% 40% 55% 45% / 50% 60% 40% 50%",
+      "use": "decorative background masses on cover, t-card overlay, gallery accents",
+      "colors": [
+        "violet",
+        "lemon",
+        "neon",
+        "pink",
+        "orange",
+        "azure",
+        "coral"
+      ]
+    },
+    "cards": {
+      "stat_card": "border-radius 32px, color block bg, stamp / number / label structure",
+      "t_card": "border-radius 28px, top meta + name + count + tag pills + vibe list, optional blob overlay",
+      "th_card": "border-radius 24px, rank label + theme name + progress bar + count + pct",
+      "lt_item": "border-radius 14px, compact pill: name + value, color-graded by tier (hot / warm / plain)"
+    },
+    "ribbon": {
+      "shape": "999px tilted pill",
+      "rotation": "-6° to +6° (sticker-scatter feel)",
+      "use": "closing slide accent stickers"
+    },
+    "marker": {
+      "shape": "inline pill highlight around a key word inside a heading",
+      "variants": [
+        "white",
+        "neon",
+        "pink",
+        "lemon"
+      ]
+    }
+  },
+  "layouts": {
+    "cover": "1.2fr / 1fr grid · text left · blob figure right with rotated badge",
+    "stats": "1fr / 1fr / 1fr / 1fr grid of 4 colored stat cards",
+    "featured": "1.35fr / 1fr / 1fr cols × 2 rows · big featured card spans 2 rows · 4 supporting cards in remaining cells",
+    "directory": "6-col grid of compact lt pills · color-graded hot / warm / plain by tier",
+    "themes": "3 × 3 grid of th-cards, each its own color block",
+    "closing": "1.2fr / 1fr grid · hero text left · tilted ribbon stickers right"
+  },
+  "navigation": "horizontal slide deck · keyboard (← → ↑ ↓ Space Home End) · mouse wheel with 900ms lock · touch swipe (≥50px) · bottom nav dots that recolor based on slide bg",
+  "motion": {
+    "slide_pan": "cubic-bezier(0.77, 0, 0.175, 1) · 0.85s · sharp & deliberate",
+    "element_enter": "cubic-bezier(0.16, 1, 0.3, 1) · 0.7s · spring-y ease-out",
+    "stagger": "data-delay 0–5 → 0 / 0.08 / 0.18 / 0.3 / 0.44 / 0.6s offsets"
+  },
+  "slide_count": 6,
+  "slide_types": [
+    "COVER (pink)",
+    "STATS (ink)",
+    "FEATURED (paper)",
+    "DIRECTORY (cream)",
+    "THEMES (paper)",
+    "CLOSING (ink)"
+  ],
+  "best_for": "Decks and pages that want to feel bright, exploratory, and approachable rather than corporate or futuristic. Personal reviews, wellness summaries, AI tool galleries, creative project showrooms, experimental product launches. Strong when many items need their own identity within a unified container system.",
+  "avoid_for": "High-luxury brand decks, dark-mood cinematic narratives, single long-form essays, somber or austere material. The candy palette commits to a playful, experimental voice.",
+  "anti_patterns": [
+    "dark neon / purple gradient AI cliché — Bright Lab intentionally rejects this look",
+    "drop shadows for depth — Bright Lab uses color blocks instead",
+    "uppercase ALL-CAPS CTAs — Bright Lab uses short title-case",
+    "serifs or decorative display fonts — Bright Lab is Sans-only",
+    "italic emphasis — Bright Lab has no italic language",
+    "thumbnail rows of identical-color cards — Bright Lab gives each item its own color",
+    "leaking developer chrome (module numbers, export timestamps, schema notes)"
+  ]
+}

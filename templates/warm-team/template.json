@@ -1,0 +1,54 @@
+{
+  "slug": "warm-team",
+  "name": "Warm Team",
+  "tagline": "Warm professional team style with navy/off-white rhythm and friendly geometric accents.",
+  "mood": [
+    "warm",
+    "friendly",
+    "human",
+    "professional",
+    "approachable",
+    "balanced"
+  ],
+  "occasion": [
+    "HR tech product deck",
+    "people management tool",
+    "SMB SaaS presentation",
+    "team product showcase",
+    "company culture deck"
+  ],
+  "tone": [
+    "warm-professional",
+    "human",
+    "trustworthy",
+    "not-corporate-cold",
+    "relatable"
+  ],
+  "formality": "medium",
+  "density": "medium",
+  "scheme": "mixed",
+  "palette": {
+    "navy": "#0C1D31",
+    "off_white": "#F7F5F2",
+    "accent_orange": "#F4874B",
+    "accent_blue": "#4B8CF4",
+    "accent_purple": "#C57BF4",
+    "description": "Deep navy and off-white backgrounds alternate for rhythm; three geometric accent colors each carry an emotional role: orange (energy/action), blue (reliability/tech), purple (warmth/care) — never mixed in one section."
+  },
+  "typography": {
+    "display": "DM Sans",
+    "body": "DM Sans",
+    "cn_sans": "Noto Sans SC",
+    "style": "Rounded geometric sans-serif. Friendly and approachable rather than strictly formal. Bold headlines without being aggressive. Single typeface family."
+  },
+  "slide_count": 3,
+  "navigation": "scroll-snap with keyboard arrow support",
+  "source": "public visual preset",
+  "best_for": "HR tech, people management, SMB SaaS products, team culture and engagement presentations. Best when the content needs to feel professional but warm — 'built for real teams, not cold enterprise software'.",
+  "avoid_for": "Consumer products (too formal) or large enterprise products (too intimate). The three accent colors are calibrated for SMB HR emotional register.",
+  "anti_patterns": [
+    "placing all three geometric accent colors in the same section — they need to each own their area",
+    "making geometric shapes too large or dominant — they are supporting cast, not the lead",
+    "using for consumer lifestyle or large enterprise content — it's precisely calibrated for SMB HR"
+  ]
+}

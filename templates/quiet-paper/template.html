@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>What If Your Notes Compiled Themselves? · Quiet Paper Style</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+
+<style>
+:root {
+  --white:      #FFFFFF;
+  --near-white: #F8F8F4;
+  --warm-card:  #F4F4E8;
+  --border:     #D8D8D0;
+  --border-lt:  #EBEBEB;
+  --black:      #101010;
+  --muted:      #888880;
+  --light:      #B8B8B0;
+  --green:      #B0C050;
+  --green-bg:   rgba(176,192,80,0.14);
+  --green-dim:  rgba(176,192,80,0.30);
+  --green-dark: #8A9A30;
+
+  --serif: 'Lora', Georgia, serif;
+  --sans:  'DM Sans', system-ui, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; font-family: var(--sans); overflow: hidden; background: var(--near-white); }
+
+/* ── Deck ── */
+#deck {
+  display: flex;
+  width: 100vw; height: 100vh;
+  overflow-x: scroll;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+#deck::-webkit-scrollbar { display: none; }
+
+.slide {
+  width: 100vw; height: 100vh;
+  flex-shrink: 0;
+  scroll-snap-align: start;
+  overflow: hidden;
+  display: flex; flex-direction: column;
+  position: relative;
+  background: var(--white);
+}
+
+/* ── Nav dots ── */
+#nav-dots {
+  position: fixed;
+  bottom: 22px; left: 50%;
+  transform: translateX(-50%);
+  display: flex; gap: 8px;
+  z-index: 200;
+  background: rgba(16,16,16,0.06);
+  backdrop-filter: blur(6px);
+  padding: 7px 14px; border-radius: 100px;
+}
+.nav-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  border: none; padding: 0; cursor: pointer;
+  background: rgba(16,16,16,0.18);
+  transition: background 0.3s, transform 0.3s;
+}
+.nav-dot.is-active {
+  background: var(--green-dark);
+  transform: scale(1.5);
+}
+
+/* ── Page counter ── */
+#page-counter {
+  position: fixed;
+  bottom: 22px; right: 28px;
+  font-family: var(--sans);
+  font-size: 11px; font-weight: 500;
+  letter-spacing: 0.06em;
+  color: rgba(16,16,16,0.22);
+  z-index: 200;
+  transition: color 0.3s;
+}
+
+/* Highlight span — the fluorescent highlighter pen */
+.hl {
+  background: var(--green-bg);
+  border-bottom: 2px solid var(--green);
+  padding: 0 3px;
+  border-radius: 2px;
+}
+
+/* ════════════════════════════════════════════════
+   SLIDE 1 — Cover
+   White canvas · centered narrow column
+   Floating background note cards · green highlight on title
+════════════════════════════════════════════════ */
+#slide1 { background: var(--white); }
+
+/* Floating background note cards */
+.s1-card-bg {
+  position: absolute;
+  background: var(--warm-card);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  pointer-events: none;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.06);
+  padding: 16px 18px;
+  font-family: var(--sans);
+}
+.s1-card-bg .cb-label {
+  font-size: 9px; font-weight: 600;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--light); margin-bottom: 10px;
+}
+.s1-card-bg .cb-line {
+  font-size: 11px; font-weight: 400; color: var(--muted);
+  line-height: 1.8; display: flex; align-items: center; gap: 7px;
+}
+.s1-card-bg .cb-line::before {
+  content: '';
+  display: block; width: 18px; height: 1px;
+  background: var(--border); flex-shrink: 0;
+}
+.cb-1 {
+  width: 240px;
+  top: 12%; right: 7%;
+  transform: rotate(2.5deg);
+  opacity: 0.75;
+}
+.cb-2 {
+  width: 200px;
+  bottom: 16%; right: 14%;
+  transform: rotate(-1.8deg);
+  opacity: 0.55;
+}
+.cb-3 {
+  width: 180px;
+  top: 28%; left: 5%;
+  transform: rotate(-2deg);
+  opacity: 0.45;
+}
+
+/* Minimal topnav */
+.s1-nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 40px;
+  flex-shrink: 0; position: relative; z-index: 2;
+}
+.s1-nav-logo {
+  font-family: var(--serif);
+  font-size: 14px; font-weight: 600;
+  color: var(--black); letter-spacing: -0.01em;
+}
+.s1-nav-links { display: flex; gap: 24px; }
+.s1-nav-link { font-size: 12px; font-weight: 400; color: var(--muted); }
+
+/* Centered hero */
+.s1-body {
+  flex: 1;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 0 14vw 40px;
+  position: relative; z-index: 2;
+  text-align: center;
+}
+.s1-eyebrow {
+  font-family: var(--sans);
+  font-size: 13px; font-weight: 600;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--light); margin-bottom: 22px;
+}
+.s1-title {
+  font-family: var(--serif);
+  font-size: clamp(52px, 6vw, 78px);
+  font-weight: 500; font-style: italic;
+  color: var(--black);
+  line-height: 1.15; letter-spacing: -0.01em;
+  margin-bottom: 24px;
+}
+.s1-title .hl { font-style: normal; font-weight: 600; }
+.s1-sub {
+  font-family: var(--sans);
+  font-size: clamp(16px, 1.5vw, 20px); font-weight: 300;
+  color: var(--muted); line-height: 1.70;
+  max-width: 520px; margin-bottom: 32px;
+}
+.s1-tag-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+.s1-tag {
+  font-family: var(--sans);
+  font-size: 13px; font-weight: 500;
+  color: var(--green-dark);
+  background: var(--green-bg);
+  border: 1px solid var(--green-dim);
+  padding: 7px 16px; border-radius: 100px;
+}
+.s1-source {
+  margin-top: 28px;
+  font-size: 13px; color: var(--light);
+  line-height: 1.6; letter-spacing: 0.01em;
+}
+
+/* ════════════════════════════════════════════════
+   SLIDE 2 — Before / After comparison
+   White · thin topbar · two note cards side by side
+════════════════════════════════════════════════ */
+#slide2 { background: var(--near-white); }
+
+.s2-topbar {
+  background: var(--white);
+  border-bottom: 1px solid var(--border-lt);
+  padding: 0 40px; height: 42px;
+  display: flex; align-items: center; gap: 6px;
+  flex-shrink: 0;
+}
+.s2-bc { font-family: var(--sans); font-size: 12px; color: var(--light); }
+.s2-bc-sep { color: var(--border); }
+.s2-bc-active { font-weight: 600; color: var(--black); }
+.s2-bc-meta { margin-left: auto; font-size: 11px; color: var(--light); }
+
+.s2-header {
+  padding: 24px 40px 16px; flex-shrink: 0;
+}
+.s2-eyebrow {
+  font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--light); margin-bottom: 6px;
+}
+.s2-title {
+  font-family: var(--serif);
+  font-size: clamp(34px, 3.8vw, 50px); font-weight: 600;
+  color: var(--black); letter-spacing: -0.02em; line-height: 1.1;
+}
+.s2-title .hl { font-style: italic; }
+
+/* Two-column before/after */
+.s2-cols {
+  flex: 1; min-height: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  padding: 0 40px 20px;
+}
+
+.s2-note {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+.s2-note.after { border-color: var(--green-dim); }
+
+.s2-note-header {
+  padding: 14px 20px;
+  border-bottom: 1.5px solid var(--border-lt);
+  display: flex; align-items: center; gap: 9px;
+  flex-shrink: 0;
+}
+.s2-note.after .s2-note-header { border-bottom-color: var(--green-dim); background: var(--green-bg); }
+.s2-note-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); }
+.s2-note.after .s2-note-dot { background: var(--green); }
+.s2-note-label {
+  font-family: var(--sans);
+  font-size: 13px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;
+  color: var(--muted);
+}
+.s2-note.after .s2-note-label { color: var(--green-dark); }
+
+.s2-note-body { flex: 1; padding: 22px 24px; display: flex; flex-direction: column; gap: 18px; }
+
+.s2-step {
+  display: flex; align-items: flex-start; gap: 14px;
+}
+.s2-step-num {
+  font-family: var(--sans);
+  font-size: 12px; font-weight: 600; color: var(--light);
+  width: 20px; flex-shrink: 0; margin-top: 3px;
+  letter-spacing: 0.04em;
+}
+.s2-note.after .s2-step-num { color: var(--green-dark); }
+.s2-step-content { flex: 1; }
+.s2-step-title {
+  font-family: var(--sans);
+  font-size: 18px; font-weight: 600; color: var(--black);
+  margin-bottom: 4px; line-height: 1.3;
+}
+.s2-step-desc {
+  font-size: 15px; font-weight: 400; color: var(--muted); line-height: 1.55;
+}
+.s2-step-desc .hl { font-size: 15px; }
+
+/* Bottom stats row */
+.s2-stats {
+  display: flex;
+  padding: 14px 40px;
+  border-top: 1px solid var(--border-lt);
+  background: var(--white);
+  gap: 0; flex-shrink: 0;
+}
+.s2-stat { flex: 1; text-align: center; }
+.s2-stat + .s2-stat { border-left: 1px solid var(--border-lt); }
+.s2-stat-num {
+  font-family: var(--serif);
+  font-size: clamp(18px, 2vw, 26px); font-weight: 600;
+  color: var(--black); letter-spacing: -0.02em; line-height: 1;
+  margin-bottom: 3px;
+}
+.s2-stat-num span { color: var(--green-dark); }
+.s2-stat-label {
+  font-size: 12px; font-weight: 400; color: var(--light);
+  letter-spacing: 0.02em;
+}
+
+/* ════════════════════════════════════════════════
+   SLIDE 3 — Green-framed window with flow diagram
+   White bg · olive green border · macOS window chrome
+   SVG compile loop as main visual
+════════════════════════════════════════════════ */
+#slide3 { background: var(--near-white); }
+
+.s3-outer {
+  flex: 1; min-height: 0;
+  margin: 20px 36px 28px;
+  border: 3px solid var(--green);
+  border-radius: 16px;
+  background: var(--white);
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+
+/* macOS-style window bar */
+.s3-winbar {
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--border-lt);
+  display: flex; align-items: center; gap: 6px;
+  flex-shrink: 0;
+}
+.s3-dot { width: 11px; height: 11px; border-radius: 50%; }
+.s3-dot.red    { background: #FF5F57; }
+.s3-dot.yellow { background: #FEBC2E; }
+.s3-dot.green  { background: var(--green); }
+.s3-win-title {
+  margin-left: 10px;
+  font-size: 12px; font-weight: 500;
+  color: var(--muted); letter-spacing: 0.01em;
+}
+
+/* Window content */
+.s3-content {
+  flex: 1; min-height: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 24px 48px 28px;
+}
+.s3-eyebrow {
+  font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--light); margin-bottom: 14px;
+  align-self: flex-start;
+}
+.s3-title {
+  font-family: var(--serif);
+  font-size: clamp(38px, 4.2vw, 54px); font-weight: 600;
+  color: var(--black); letter-spacing: -0.02em; line-height: 1.1;
+  margin-bottom: 6px; align-self: flex-start;
+}
+.s3-title .hl { font-style: italic; }
+.s3-subtitle {
+  font-size: 16px; font-weight: 300; color: var(--muted);
+  margin-bottom: 28px; align-self: flex-start;
+}
+
+/* Flow diagram SVG */
+.s3-flow-svg { width: 100%; height: auto; display: block; }
+
+/* Takeaways row */
+.s3-takeaways {
+  display: flex; gap: 12px;
+  margin-top: 22px; width: 100%;
+}
+.s3-tw {
+  flex: 1; padding: 12px 14px;
+  border: 1px solid var(--border-lt);
+  border-radius: 8px;
+  background: var(--near-white);
+}
+.s3-tw-icon { font-size: 15px; margin-bottom: 6px; display: block; }
+.s3-tw-title { font-size: 13px; font-weight: 600; color: var(--black); margin-bottom: 4px; }
+.s3-tw-desc  { font-size: 12px; font-weight: 400; color: var(--muted); line-height: 1.5; }
+.s3-tw.accent { border-color: var(--green-dim); background: var(--green-bg); }
+.s3-tw.accent .s3-tw-title { color: var(--green-dark); }
+
+.s3-foot {
+  padding: 0 36px 12px;
+  font-size: 11px; color: var(--light);
+  letter-spacing: 0.05em; flex-shrink: 0;
+}
+</style>
+</head>
+<body>
+
+<div id="deck">
+
+<!-- ══════════ SLIDE 1 — Cover ══════════ -->
+<section class="slide" id="slide1">
+
+  <!-- Background floating note cards -->
+  <div class="s1-card-bg cb-1">
+    <div class="cb-label">raw/ input</div>
+    <div class="cb-line">articles &amp; papers</div>
+    <div class="cb-line">GitHub repos</div>
+    <div class="cb-line">screenshots</div>
+    <div class="cb-line">transcripts</div>
+  </div>
+  <div class="s1-card-bg cb-2">
+    <div class="cb-label">compiled wiki</div>
+    <div class="cb-line">index files</div>
+    <div class="cb-line">concept nodes</div>
+    <div class="cb-line">backlinks</div>
+  </div>
+  <div class="s1-card-bg cb-3">
+    <div class="cb-label">output</div>
+    <div class="cb-line">Markdown files</div>
+    <div class="cb-line">slides · charts</div>
+  </div>
+
+  <div class="s1-nav">
+    <span class="s1-nav-logo">Quiet Paper · Style Reference</span>
+    <div class="s1-nav-links">
+      <span class="s1-nav-link">Information</span>
+      <span class="s1-nav-link">Practices</span>
+      <span class="s1-nav-link">AI-Brain</span>
+    </div>
+  </div>
+
+  <div class="s1-body">
+    <div class="s1-eyebrow">Karpathy · Apr 2026 · AI Information</div>
+    <div class="s1-title">
+      What if your notes<br>
+      <span class="hl">compiled</span> themselves?
+    </div>
+    <div class="s1-sub">
+      A modern knowledge base is more than note-taking: it lets models compile raw material into a structured wiki, then keep indexes, links, and answers maintained over time.
+    </div>
+    <div class="s1-tag-row">
+      <span class="s1-tag">LLM Knowledge Base</span>
+      <span class="s1-tag">Karpathy</span>
+      <span class="s1-tag">Markdown Wiki</span>
+      <span class="s1-tag">Personal PKM</span>
+    </div>
+    <div class="s1-source">
+      Source: Karpathy on X, Apr 2 2026 · Summarized May 2026<br>
+      AI Information · AI-Brain by Yang the user
+    </div>
+  </div>
+
+</section>
+
+<!-- ══════════ SLIDE 2 — Before / After ══════════ -->
+<section class="slide" id="slide2">
+
+  <div class="s2-topbar">
+    <span class="s2-bc">AI Information</span>
+    <span class="s2-bc-sep">/</span>
+    <span class="s2-bc">LLM Personal Knowledge Base</span>
+    <span class="s2-bc-sep">/</span>
+    <span class="s2-bc-active">The Shift</span>
+    <span class="s2-bc-meta">Summarized · May 2026</span>
+  </div>
+
+  <div class="s2-header">
+    <div class="s2-eyebrow">Old Way vs. New Way</div>
+    <div class="s2-title">Who <span class="hl">maintains</span> the knowledge?</div>
+  </div>
+
+  <div class="s2-cols">
+
+    <!-- Before card -->
+    <div class="s2-note before">
+      <div class="s2-note-header">
+        <div class="s2-note-dot"></div>
+        <div class="s2-note-label">Traditional PKM</div>
+      </div>
+      <div class="s2-note-body">
+        <div class="s2-step">
+          <div class="s2-step-num">01</div>
+          <div class="s2-step-content">
+            <div class="s2-step-title">You write every note</div>
+            <div class="s2-step-desc">Read source, decide what matters, find the words — all manually, every time.</div>
+          </div>
+        </div>
+        <div class="s2-step">
+          <div class="s2-step-num">02</div>
+          <div class="s2-step-content">
+            <div class="s2-step-title">You tag, link & maintain</div>
+            <div class="s2-step-desc">Build the graph by hand. The system slowly drifts unless you keep tending it.</div>
+          </div>
+        </div>
+        <div class="s2-step">
+          <div class="s2-step-num">03</div>
+          <div class="s2-step-content">
+            <div class="s2-step-title">You search & hope</div>
+            <div class="s2-step-desc">Ctrl+F and pray you tagged it right. Often ends in "I know I wrote this somewhere."</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- After card -->
+    <div class="s2-note after">
+      <div class="s2-note-header">
+        <div class="s2-note-dot"></div>
+        <div class="s2-note-label">LLM-Compiled Wiki</div>
+      </div>
+      <div class="s2-note-body">
+        <div class="s2-step">
+          <div class="s2-step-num">01</div>
+          <div class="s2-step-content">
+            <div class="s2-step-title">You collect raw material</div>
+            <div class="s2-step-desc">Articles, papers, repos, screenshots → drop into <span class="hl">raw/</span>. No formatting needed.</div>
+          </div>
+        </div>
+        <div class="s2-step">
+          <div class="s2-step-num">02</div>
+          <div class="s2-step-content">
+            <div class="s2-step-title"><span class="hl">LLM compiles</span> the wiki</div>
+            <div class="s2-step-desc">Summaries, concept nodes, backlinks, index files — the model structures everything. You judge, not write.</div>
+          </div>
+        </div>
+        <div class="s2-step">
+          <div class="s2-step-num">03</div>
+          <div class="s2-step-content">
+            <div class="s2-step-title">Outputs <span class="hl">write back</span> in</div>
+            <div class="s2-step-desc">Q&A answers, slides, charts → saved as files → fed back into the wiki. It compounds automatically.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="s2-stats">
+    <div class="s2-stat">
+      <div class="s2-stat-num">~<span>100</span></div>
+      <div class="s2-stat-label">articles in Karpathy's test wiki</div>
+    </div>
+    <div class="s2-stat">
+      <div class="s2-stat-num"><span>400k</span></div>
+      <div class="s2-stat-label">words — no fancy RAG needed</div>
+    </div>
+    <div class="s2-stat">
+      <div class="s2-stat-num"><span>0</span> manual links</div>
+      <div class="s2-stat-label">all backlinks by LLM</div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ══════════ SLIDE 3 — Green window + flow diagram ══════════ -->
+<section class="slide" id="slide3">
+
+  <div class="s3-outer">
+
+    <div class="s3-winbar">
+      <div class="s3-dot red"></div>
+      <div class="s3-dot yellow"></div>
+      <div class="s3-dot green"></div>
+      <span class="s3-win-title">knowledge-base / compile-loop.md</span>
+    </div>
+
+    <div class="s3-content">
+      <div class="s3-eyebrow">The Core Workflow</div>
+      <div class="s3-title">The <span class="hl">Compile</span> Loop</div>
+      <div class="s3-subtitle">How an LLM-maintained knowledge base runs — and compounds over time.</div>
+
+      <!-- Flow diagram SVG -->
+      <svg class="s3-flow-svg" viewBox="0 0 860 130" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Node backgrounds -->
+        <!-- 1. raw/ -->
+        <rect x="0"   y="25" width="120" height="80" rx="9" fill="#F4F4E8" stroke="#D8D8D0" stroke-width="1.5"/>
+        <!-- 2. LLM compile (accent) -->
+        <rect x="155" y="15" width="140" height="100" rx="9" fill="rgba(176,192,80,0.12)" stroke="#B0C050" stroke-width="2"/>
+        <!-- 3. wiki -->
+        <rect x="330" y="25" width="120" height="80" rx="9" fill="#F8F8F4" stroke="#D8D8D0" stroke-width="1.5"/>
+        <!-- 4. Q&A -->
+        <rect x="485" y="25" width="110" height="80" rx="9" fill="#F4F4E8" stroke="#D8D8D0" stroke-width="1.5"/>
+        <!-- 5. output (accent) -->
+        <rect x="630" y="25" width="120" height="80" rx="9" fill="rgba(176,192,80,0.08)" stroke="#B0C050" stroke-width="1.5"/>
+        <!-- write-back arc arrow -->
+        <path d="M750 25 Q 790 -8 540 -8 Q 330 -8 330 25" stroke="#B0C050" stroke-width="1.5" stroke-dasharray="5 5" fill="none"/>
+        <polygon points="330,20 325,30 335,30" fill="#B0C050"/>
+        <!-- write-back label -->
+        <text x="540" y="-14" font-size="9" fill="#8A9A30" text-anchor="middle" font-family="system-ui,sans-serif" font-weight="600" letter-spacing="0.06em">WRITE BACK</text>
+
+        <!-- Arrows between nodes -->
+        <line x1="120" y1="65" x2="153" y2="65" stroke="#D0D0C8" stroke-width="1.5"/>
+        <polygon points="153,61 161,65 153,69" fill="#D0D0C8"/>
+        <line x1="295" y1="65" x2="328" y2="65" stroke="#D0D0C8" stroke-width="1.5"/>
+        <polygon points="328,61 336,65 328,69" fill="#D0D0C8"/>
+        <line x1="450" y1="65" x2="483" y2="65" stroke="#D0D0C8" stroke-width="1.5"/>
+        <polygon points="483,61 491,65 483,69" fill="#D0D0C8"/>
+        <line x1="595" y1="65" x2="628" y2="65" stroke="#D0D0C8" stroke-width="1.5"/>
+        <polygon points="628,61 636,65 628,69" fill="#D0D0C8"/>
+
+        <!-- Node text: raw/ -->
+        <text x="60" y="51" font-size="13" fill="#101010" text-anchor="middle" font-family="'Lora',serif" font-weight="600">raw/</text>
+        <text x="60" y="67" font-size="9"  fill="#888880" text-anchor="middle" font-family="system-ui,sans-serif">articles · papers</text>
+        <text x="60" y="80" font-size="9"  fill="#888880" text-anchor="middle" font-family="system-ui,sans-serif">repos · screenshots</text>
+        <text x="60" y="93" font-size="9"  fill="#888880" text-anchor="middle" font-family="system-ui,sans-serif">transcripts</text>
+
+        <!-- Node text: LLM compile -->
+        <text x="225" y="48" font-size="13" fill="#101010" text-anchor="middle" font-family="'Lora',serif" font-weight="600">LLM</text>
+        <text x="225" y="63" font-size="11" fill="#8A9A30" text-anchor="middle" font-family="'Lora',serif" font-style="italic" font-weight="500">compile</text>
+        <text x="225" y="80" font-size="9"  fill="#888880" text-anchor="middle" font-family="system-ui,sans-serif">summaries · nodes</text>
+        <text x="225" y="93" font-size="9"  fill="#888880" text-anchor="middle" font-family="system-ui,sans-serif">backlinks · index</text>
+        <text x="225" y="106" font-size="9" fill="#888880" text-anchor="middle" font-family="system-ui,sans-serif">structure · links</text>
+
+        <!-- Node text: wiki -->
+        <text x="390" y="51" font-size="13" fill="#101010" text-anchor="middle" font-family="'Lora',serif" font-weight="600">wiki</text>
+        <text x="390" y="67" font-size="9"  fill="#888880" text-anchor="middle" font-family="system-ui,sans-serif">Markdown files</text>
+        <text x="390" y="80" font-size="9"  fill="#888880" text-anchor="middle" font-family="system-ui,sans-serif">Knowledge Night frontend</text>
+        <text x="390" y="93" font-size="9"  fill="#888880" text-anchor="middle" font-family="system-ui,sans-serif">concept network</text>
+
+        <!-- Node text: Q&A -->
+        <text x="540" y="51" font-size="13" fill="#101010" text-anchor="middle" font-family="'Lora',serif" font-weight="600">Q&amp;A</text>
+        <text x="540" y="67" font-size="9"  fill="#888880" text-anchor="middle" font-family="system-ui,sans-serif">agent reads wiki</text>
+        <text x="540" y="80" font-size="9"  fill="#888880" text-anchor="middle" font-family="system-ui,sans-serif">no fancy RAG</text>
+        <text x="540" y="93" font-size="9"  fill="#888880" text-anchor="middle" font-family="system-ui,sans-serif">at ~400k words</text>
+
+        <!-- Node text: output -->
+        <text x="690" y="51" font-size="13" fill="#101010" text-anchor="middle" font-family="'Lora',serif" font-weight="600">output</text>
+        <text x="690" y="67" font-size="9"  fill="#888880" text-anchor="middle" font-family="system-ui,sans-serif">Markdown · slides</text>
+        <text x="690" y="80" font-size="9"  fill="#888880" text-anchor="middle" font-family="system-ui,sans-serif">charts · visuals</text>
+        <text x="690" y="93" font-size="9"  fill="#8A9A30" text-anchor="middle" font-family="system-ui,sans-serif" font-weight="600">→ feeds back in</text>
+      </svg>
+
+      <!-- Takeaways -->
+      <div class="s3-takeaways">
+        <div class="s3-tw accent">
+          <span class="s3-tw-icon">📥</span>
+          <div class="s3-tw-title">Collect, don't curate</div>
+          <div class="s3-tw-desc">Drop raw material in first. Let the model structure it. Separate raw from compiled.</div>
+        </div>
+        <div class="s3-tw">
+          <span class="s3-tw-icon">🔍</span>
+          <div class="s3-tw-title">Clear structure beats RAG</div>
+          <div class="s3-tw-desc">At ~100 articles, good Markdown indexes let the agent navigate without vector search.</div>
+        </div>
+        <div class="s3-tw accent">
+          <span class="s3-tw-icon">♻️</span>
+          <div class="s3-tw-title">Outputs compound</div>
+          <div class="s3-tw-desc">Answers and slides are files. Write them back in. The wiki grows smarter with each loop.</div>
+        </div>
+        <div class="s3-tw">
+          <span class="s3-tw-icon">👁️</span>
+          <div class="s3-tw-title">You read, LLM maintains</div>
+          <div class="s3-tw-desc">Knowledge Night is your browser. The model is the maintainer. Human role: judge and direct.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="s3-foot">LLM Personal Knowledge Base · Quiet Paper Style · AI-Brain by Yang the user</div>
+
+</section>
+
+</div><!-- /#deck -->
+
+<nav id="nav-dots"></nav>
+<div id="page-counter"></div>
+
+<script>
+(function () {
+  const slideIds  = ['slide1','slide2','slide3'];
+  const slideEls  = slideIds.map(id => document.getElementById(id));
+  const deck      = document.getElementById('deck');
+  const dotsEl    = document.getElementById('nav-dots');
+  const counter   = document.getElementById('page-counter');
+  let current = 0;
+
+  slideEls.forEach(function(_, i) {
+    const btn = document.createElement('button');
+    btn.className = 'nav-dot';
+    btn.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+    btn.addEventListener('click', function() { goTo(i); });
+    dotsEl.appendChild(btn);
+  });
+
+  function updateDots() {
+    const dots = Array.from(dotsEl.children);
+    dots.forEach(function(dot, i) {
+      dot.classList.toggle('is-active', i === current);
+      dot.style.background = i === current
+        ? 'rgba(138,154,48,0.9)'
+        : 'rgba(16,16,16,0.18)';
+    });
+    dotsEl.style.background = 'rgba(16,16,16,0.06)';
+    counter.textContent = (current + 1) + ' / ' + slideIds.length;
+    counter.style.color = 'rgba(16,16,16,0.22)';
+  }
+
+  function goTo(i) {
+    current = Math.max(0, Math.min(slideEls.length - 1, i));
+    deck.scrollTo({ left: current * window.innerWidth, behavior: 'smooth' });
+    updateDots();
+  }
+
+  const obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) {
+        current = slideIds.indexOf(e.target.id);
+        updateDots();
+      }
+    });
+  }, { threshold: 0.6, root: deck });
+  slideEls.forEach(function(el) { obs.observe(el); });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goTo(current + 1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   goTo(current - 1);
+  });
+
+  updateDots();
+}());
+</script>
+</body>
+</html>

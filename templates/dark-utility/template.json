@@ -1,0 +1,54 @@
+{
+  "slug": "dark-utility",
+  "name": "Dark Utility",
+  "tagline": "Purposeful dark utility style with near-black surfaces, a single muted accent, and product-first restraint.",
+  "mood": [
+    "clean",
+    "precise",
+    "understated",
+    "confident",
+    "tool-like",
+    "honest"
+  ],
+  "occasion": [
+    "utility app product page",
+    "open-source software landing",
+    "developer tool showcase",
+    "technical product summary",
+    "tool review deck"
+  ],
+  "tone": [
+    "minimal",
+    "purposeful",
+    "no-nonsense",
+    "developer-friendly"
+  ],
+  "formality": "low-medium",
+  "density": "low",
+  "scheme": "dark",
+  "palette": {
+    "background": "#0D0D0D",
+    "surface": "#111118",
+    "text_primary": "#FFFFFF",
+    "text_secondary": "#AAAAAA",
+    "accent": "#4080C0",
+    "description": "Deep charcoal near-black background; white/light-gray text for high contrast; single muted blue or cyan accent for interactive elements and icons; no decorative color."
+  },
+  "typography": {
+    "display": "Inter",
+    "body": "Inter",
+    "cn_sans": "Noto Sans SC",
+    "style": "Modern geometric sans-serif. Clean, neutral, functional. Two levels of hierarchy — large bold headlines, small clear body text. No decorative type."
+  },
+  "slide_count": 3,
+  "navigation": "scroll-snap with keyboard arrow support",
+  "source": "public visual preset",
+  "best_for": "Tool and utility app showcases, open-source software presentations, developer-focused products that want to feel as purposeful as the tool itself. Works for technical reviews, feature summaries, and tool comparison decks.",
+  "avoid_for": "Consumer lifestyle products, warm personal narratives, anything requiring color expressiveness or warmth. Don't use if the content needs visual excitement.",
+  "anti_patterns": [
+    "adding decorative illustrations or marketing graphics — authenticity comes from showing the real product",
+    "using more than 2 accent colors — fewer colors = stronger tool identity",
+    "making the page too long — utility users want fast judgment, keep it short and precise",
+    "adding heavy animations — the style's credibility depends on functionality-first feel"
+  ]
+}

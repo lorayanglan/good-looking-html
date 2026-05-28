@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How LLMs Actually Work · Photo Editorial Aesthetic</title>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,700;0,900;1,700;1,900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black:  #101010;
+      --orange: #FF7030;
+      --blue:   #80C0E0;
+      --gold:   #FFA030;
+      --white:  #F5F5F5;
+      --gray1:  #1A1A1A;
+      --gray2:  #242424;
+      --gray3:  #323232;
+      --dim:    rgba(245,245,245,0.42);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--black);
+      color: var(--white);
+      overflow: hidden;
+    }
+
+    .deck {
+      display: flex;
+      width: 300vw;
+      height: 100vh;
+      transition: transform 0.55s cubic-bezier(0.77, 0, 0.175, 1);
+    }
+
+    .slide {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-shrink: 0;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* ── Navigation ── */
+    .nav-btn {
+      position: fixed; top: 50%; transform: translateY(-50%);
+      z-index: 100;
+      background: rgba(245,245,245,0.07);
+      border: 1px solid rgba(245,245,245,0.12);
+      color: var(--white);
+      width: 44px; height: 44px; border-radius: 0;
+      cursor: pointer; font-size: 20px;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+    }
+    .nav-btn:hover { background: rgba(245,245,245,0.14); }
+    #prev { left: 20px; }
+    #next { right: 20px; }
+
+    .dots {
+      position: fixed; bottom: 26px; left: 50%; transform: translateX(-50%);
+      display: flex; gap: 6px; z-index: 100;
+    }
+    .dot {
+      width: 20px; height: 3px;
+      background: rgba(245,245,245,0.18); cursor: pointer;
+      transition: background 0.2s, width 0.2s;
+    }
+    .dot.active { background: var(--orange); width: 36px; }
+
+    .slide-num {
+      position: fixed; bottom: 24px; right: 28px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px; font-weight: 700;
+      color: rgba(245,245,245,0.2); z-index: 100;
+      letter-spacing: 0.1em;
+    }
+
+    /* ══════════════════════════════════════════════
+       SLIDE 1 — Editorial Cover
+    ══════════════════════════════════════════════ */
+    #s1 { background: var(--black); flex-direction: column; }
+
+    /* Top bar */
+    .s1-bar {
+      flex-shrink: 0;
+      height: 56px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 72px;
+      border-bottom: 1px solid rgba(245,245,245,0.07);
+    }
+    .s1-bar-left {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px; font-weight: 700; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--orange);
+      display: flex; align-items: center; gap: 12px;
+    }
+    .s1-bar-left::before {
+      content: '';
+      display: inline-block;
+      width: 24px; height: 2px;
+      background: var(--orange);
+    }
+    .s1-bar-right {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 12px; font-weight: 700; letter-spacing: 0.14em;
+      text-transform: uppercase; color: rgba(245,245,245,0.25);
+    }
+
+    /* Main body */
+    .s1-body {
+      flex: 1;
+      display: flex;
+    }
+
+    /* Left: big title only */
+    .s1-left {
+      width: 46%;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 56px 52px 56px 72px;
+      border-right: 1px solid rgba(245,245,245,0.06);
+    }
+
+    .s1-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900; text-transform: uppercase;
+      line-height: 0.9; letter-spacing: -0.01em;
+      margin-bottom: 36px;
+    }
+    .s1-t1 { font-size: clamp(52px, 6vw, 84px); color: var(--white); display: block; }
+    .s1-t2 { font-size: clamp(72px, 9vw, 126px); color: var(--orange); display: block; }
+    .s1-t3 { font-size: clamp(52px, 6vw, 84px); color: rgba(245,245,245,0.35); display: block; font-style: italic; }
+
+    .s1-byline {
+      font-size: 17px; color: var(--dim);
+      line-height: 1.7; max-width: 360px;
+      margin-bottom: 48px;
+    }
+
+    /* Stat row */
+    .s1-stats {
+      display: flex; gap: 0;
+    }
+    .s1-stat {
+      padding: 0 28px 0 0; margin-right: 28px;
+      border-right: 1px solid rgba(245,245,245,0.1);
+    }
+    .s1-stat:last-child { border-right: none; }
+    .s1-sv {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 44px; font-weight: 900; line-height: 1;
+      color: var(--white); margin-bottom: 4px;
+    }
+    .s1-sl {
+      font-size: 12px; font-weight: 500;
+      color: var(--dim); letter-spacing: 0.04em;
+    }
+
+    /* Right: editorial pipeline grid */
+    .s1-right {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr 1fr;
+      gap: 0;
+    }
+
+    .pc {
+      padding: 28px 28px;
+      display: flex; flex-direction: column; justify-content: space-between;
+      border-right: 1px solid rgba(245,245,245,0.06);
+      border-bottom: 1px solid rgba(245,245,245,0.06);
+      position: relative; overflow: hidden;
+    }
+    .pc:nth-child(2n)   { border-right: none; }
+    .pc:nth-child(5),
+    .pc:nth-child(6)    { border-bottom: none; }
+
+    .pc-n {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 12px; font-weight: 900; letter-spacing: 0.12em;
+      margin-bottom: 20px;
+    }
+    .pc-name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 26px; font-weight: 900; text-transform: uppercase;
+      line-height: 1.05; letter-spacing: 0.01em;
+      margin-bottom: 8px;
+    }
+    .pc-sub {
+      font-size: 13px; color: rgba(245,245,245,0.42);
+      line-height: 1.5;
+    }
+
+    /* Cell color variants */
+    .pc-1 { background: var(--orange); }
+    .pc-1 .pc-n   { color: rgba(16,16,16,0.5); }
+    .pc-1 .pc-name{ color: var(--black); }
+    .pc-1 .pc-sub { color: rgba(16,16,16,0.55); }
+
+    .pc-2 { background: var(--gray2); }
+    .pc-2 .pc-n   { color: rgba(245,245,245,0.25); }
+    .pc-2 .pc-name{ color: var(--white); }
+
+    .pc-3 { background: var(--gray1); }
+    .pc-3 .pc-n   { color: rgba(245,245,245,0.22); }
+    .pc-3 .pc-name{ color: rgba(245,245,245,0.6); }
+
+    .pc-4 { background: var(--blue); }
+    .pc-4 .pc-n   { color: rgba(16,16,16,0.5); }
+    .pc-4 .pc-name{ color: var(--black); }
+    .pc-4 .pc-sub { color: rgba(16,16,16,0.55); }
+
+    .pc-5 { background: var(--gold); }
+    .pc-5 .pc-n   { color: rgba(16,16,16,0.5); }
+    .pc-5 .pc-name{ color: var(--black); }
+    .pc-5 .pc-sub { color: rgba(16,16,16,0.55); }
+
+    .pc-6 { background: var(--gray3); }
+    .pc-6 .pc-n   { color: rgba(245,245,245,0.22); }
+    .pc-6 .pc-name{ color: rgba(245,245,245,0.55); }
+
+    /* ══════════════════════════════════════════════
+       SLIDE 2 — Three Training Stages (sparse, big type)
+    ══════════════════════════════════════════════ */
+    #s2 { background: var(--black); flex-direction: column; }
+
+    .s2-header {
+      flex-shrink: 0;
+      padding: 48px 72px 36px;
+      border-bottom: 1px solid rgba(245,245,245,0.07);
+      display: flex; align-items: flex-end; justify-content: space-between;
+    }
+
+    .s2-eyebrow {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px; font-weight: 700; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--orange);
+      margin-bottom: 12px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .s2-eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 24px; height: 2px; background: var(--orange);
+    }
+
+    .s2-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(44px, 5.2vw, 72px);
+      font-weight: 900; text-transform: uppercase;
+      line-height: 0.92; letter-spacing: -0.01em;
+      color: var(--white);
+    }
+
+    .s2-intro {
+      max-width: 280px; text-align: right;
+      font-size: 15px; color: var(--dim); line-height: 1.65;
+    }
+
+    /* Stage columns */
+    .s2-stages {
+      flex: 1;
+      display: flex;
+    }
+
+    .stage {
+      flex: 1;
+      display: flex; flex-direction: column;
+      padding: 40px 44px 44px;
+      border-right: 1px solid rgba(245,245,245,0.06);
+      position: relative;
+    }
+    .stage:last-child { border-right: none; }
+
+    /* Big editorial-minimal number */
+    .stage-editorial-minimal {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 160px; font-weight: 900;
+      line-height: 1; letter-spacing: -0.04em;
+      color: rgba(245,245,245,0.04);
+      position: absolute; bottom: 20px; right: 24px;
+      user-select: none;
+    }
+
+    .stage-tag {
+      display: inline-block;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      margin-bottom: 20px;
+      width: fit-content;
+    }
+    .tag-orange { background: var(--orange); color: var(--black); }
+    .tag-blue   { background: var(--blue);   color: var(--black); }
+    .tag-gold   { background: var(--gold);   color: var(--black); }
+
+    .stage-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(32px, 3.2vw, 46px);
+      font-weight: 900; text-transform: uppercase;
+      color: var(--white); line-height: 1.0;
+      letter-spacing: 0.01em;
+      margin-bottom: 6px;
+    }
+
+    .stage-kicker {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 18px; font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 28px;
+    }
+    .stage:nth-child(1) .stage-kicker { color: rgba(255,112,48,0.55); }
+    .stage:nth-child(2) .stage-kicker { color: rgba(128,192,224,0.55); }
+    .stage:nth-child(3) .stage-kicker { color: rgba(255,160,48,0.55); }
+
+    .stage-facts {
+      display: flex; flex-direction: column; gap: 16px;
+      flex: 1;
+    }
+
+    .sf {
+      display: flex; flex-direction: column; gap: 4px;
+    }
+    .sf-key {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+    .stage:nth-child(1) .sf-key { color: var(--orange); }
+    .stage:nth-child(2) .sf-key { color: var(--blue); }
+    .stage:nth-child(3) .sf-key { color: var(--gold); }
+    .sf-val {
+      font-size: 16px; color: rgba(245,245,245,0.65);
+      line-height: 1.5;
+    }
+
+    /* Bottom divider accent */
+    .stage-accent {
+      height: 3px; margin-top: 28px;
+      background: linear-gradient(90deg, currentColor 0%, transparent 100%);
+    }
+    .stage:nth-child(1) .stage-accent { color: var(--orange); }
+    .stage:nth-child(2) .stage-accent { color: var(--blue); }
+    .stage:nth-child(3) .stage-accent { color: var(--gold); }
+
+    /* ══════════════════════════════════════════════
+       SLIDE 3 — Six Rules
+    ══════════════════════════════════════════════ */
+    #s3 { background: var(--black); }
+
+    .s3-left {
+      width: 36%;
+      height: 100%;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 72px 48px 72px 72px;
+      border-right: 1px solid rgba(245,245,245,0.06);
+      position: relative; overflow: hidden;
+    }
+
+    .s3-bg {
+      position: absolute;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 220px; font-weight: 900;
+      text-transform: uppercase;
+      color: rgba(245,245,245,0.03);
+      bottom: -30px; left: 32px;
+      line-height: 1; user-select: none;
+      letter-spacing: -0.04em;
+    }
+
+    .s3-eyebrow {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px; font-weight: 700; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--orange);
+      margin-bottom: 20px;
+      display: flex; align-items: center; gap: 12px;
+      position: relative; z-index: 1;
+    }
+    .s3-eyebrow::before {
+      content: '';
+      display: inline-block; width: 28px; height: 2px;
+      background: var(--orange);
+    }
+
+    .s3-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(52px, 5.8vw, 80px);
+      font-weight: 900; text-transform: uppercase;
+      line-height: 0.92; letter-spacing: -0.01em;
+      color: var(--white); margin-bottom: 32px;
+      position: relative; z-index: 1;
+    }
+    .s3-title .hi { color: var(--orange); }
+
+    .s3-quote {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 18px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.04em; color: rgba(245,245,245,0.28);
+      line-height: 1.5;
+      border-left: 3px solid var(--orange);
+      padding-left: 18px;
+      position: relative; z-index: 1;
+    }
+    .s3-quote .hl { color: var(--orange); }
+
+    .s3-right {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr 1fr;
+      padding: 40px 72px 40px 48px;
+      gap: 12px;
+    }
+
+    .rule-card {
+      background: var(--gray1);
+      padding: 22px 22px;
+      display: flex; flex-direction: column; gap: 8px;
+      border: 1px solid rgba(245,245,245,0.05);
+      position: relative; overflow: hidden;
+    }
+    .rule-card::after {
+      content: '';
+      position: absolute; top: 0; left: 0;
+      width: 3px; height: 100%;
+    }
+    .rc-o::after { background: var(--orange); }
+    .rc-b::after { background: var(--blue); }
+    .rc-g::after { background: var(--gold); }
+
+    .rule-num {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px; font-weight: 900; letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .rc-o .rule-num { color: var(--orange); }
+    .rc-b .rule-num { color: var(--blue); }
+    .rc-g .rule-num { color: var(--gold); }
+
+    .rule-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 28px; font-weight: 900;
+      text-transform: uppercase; letter-spacing: 0.02em;
+      color: var(--white); line-height: 1.0;
+    }
+
+    .rule-body {
+      font-size: 15px; color: var(--dim); line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+<div class="deck" id="deck">
+
+  <!-- ══ SLIDE 1 ══ -->
+  <div class="slide" id="s1">
+
+    <div class="s1-bar">
+      <div class="s1-bar-left">How LLMs Actually Work</div>
+      <div class="s1-bar-right">Source: Karpathy · 2025</div>
+    </div>
+
+    <div class="s1-body">
+
+      <div class="s1-left">
+        <div class="s1-title">
+          <span class="s1-t1">Not magic.</span>
+          <span class="s1-t2">Token</span>
+          <span class="s1-t3">Prediction.</span>
+        </div>
+
+        <div class="s1-byline">
+          The model's one job: predict the next token. Everything else — answers, reasoning, creativity — emerges from that single learned task.
+        </div>
+
+        <div class="s1-stats">
+          <div class="s1-stat">
+            <div class="s1-sv">44TB</div>
+            <div class="s1-sl">Training text</div>
+          </div>
+          <div class="s1-stat">
+            <div class="s1-sv">15T</div>
+            <div class="s1-sl">Tokens processed</div>
+          </div>
+          <div class="s1-stat">
+            <div class="s1-sv">3</div>
+            <div class="s1-sl">Training stages</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="s1-right">
+        <div class="pc pc-1">
+          <div class="pc-n">01</div>
+          <div>
+            <div class="pc-name">Pre-<br>training</div>
+            <div class="pc-sub">Compress the internet into parameters</div>
+          </div>
+        </div>
+        <div class="pc pc-2">
+          <div class="pc-n">02</div>
+          <div>
+            <div class="pc-name">Token-<br>ization</div>
+            <div class="pc-sub">Text → token IDs. Not words — numbers.</div>
+          </div>
+        </div>
+        <div class="pc pc-3">
+          <div class="pc-n">03</div>
+          <div>
+            <div class="pc-name">Base<br>Model</div>
+            <div class="pc-sub">Doc completer, not yet an assistant</div>
+          </div>
+        </div>
+        <div class="pc pc-4">
+          <div class="pc-n">04</div>
+          <div>
+            <div class="pc-name">Supervised<br>Fine-tune</div>
+            <div class="pc-sub">Human examples teach assistant behavior</div>
+          </div>
+        </div>
+        <div class="pc pc-5">
+          <div class="pc-n">05</div>
+          <div>
+            <div class="pc-name">Reinf.<br>Learning</div>
+            <div class="pc-sub">Trial &amp; error builds reasoning strategies</div>
+          </div>
+        </div>
+        <div class="pc pc-6">
+          <div class="pc-n">06</div>
+          <div>
+            <div class="pc-name">Tools<br>+ RAG</div>
+            <div class="pc-sub">Offload what parameters can't reliably hold</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 2 ══ -->
+  <div class="slide" id="s2">
+
+    <div class="s2-header">
+      <div>
+        <div class="s2-eyebrow">The Making of an LLM</div>
+        <div class="s2-title">Three Stages.<br>Stack in Order.</div>
+      </div>
+      <div class="s2-intro">
+        Each stage builds on the last. Pre-training gives knowledge, SFT shapes behavior, RL sharpens reasoning.
+      </div>
+    </div>
+
+    <div class="s2-stages">
+
+      <div class="stage">
+        <div class="stage-editorial-minimal">1</div>
+        <div class="stage-tag tag-orange">Stage 01 · Pre-training</div>
+        <div class="stage-title">Expensive<br>Autocomplete</div>
+        <div class="stage-kicker">Compress the internet</div>
+        <div class="stage-facts">
+          <div class="sf">
+            <div class="sf-key">Data</div>
+            <div class="sf-val">15 trillion tokens from filtered web text</div>
+          </div>
+          <div class="sf">
+            <div class="sf-key">Output</div>
+            <div class="sf-val">Base model — a document completer, not an assistant</div>
+          </div>
+          <div class="sf">
+            <div class="sf-key">Key Insight</div>
+            <div class="sf-val">Parameters = fuzzy memory, not a database</div>
+          </div>
+        </div>
+        <div class="stage-accent"></div>
+      </div>
+
+      <div class="stage">
+        <div class="stage-editorial-minimal">2</div>
+        <div class="stage-tag tag-blue">Stage 02 · Supervised FT</div>
+        <div class="stage-title">Teaching It<br>to Assist</div>
+        <div class="stage-kicker">Simulate a trained helper</div>
+        <div class="stage-facts">
+          <div class="sf">
+            <div class="sf-key">Input</div>
+            <div class="sf-val">Human-written ideal Q&amp;A dialogues</div>
+          </div>
+          <div class="sf">
+            <div class="sf-key">Output</div>
+            <div class="sf-val">Stable assistant persona — follows instructions, refuses harm</div>
+          </div>
+          <div class="sf">
+            <div class="sf-key">Key Insight</div>
+            <div class="sf-val">ChatGPT answers = "what a trained annotator would write"</div>
+          </div>
+        </div>
+        <div class="stage-accent"></div>
+      </div>
+
+      <div class="stage">
+        <div class="stage-editorial-minimal">3</div>
+        <div class="stage-tag tag-gold">Stage 03 · Reinforcement RL</div>
+        <div class="stage-title">Learning to<br>Reason</div>
+        <div class="stage-kicker">Trial, error, strategy</div>
+        <div class="stage-facts">
+          <div class="sf">
+            <div class="sf-key">Tasks</div>
+            <div class="sf-val">Math, code, logic — anything with a checkable answer</div>
+          </div>
+          <div class="sf">
+            <div class="sf-key">Output</div>
+            <div class="sf-val">Reasoning models: o-series, DeepSeek R1</div>
+          </div>
+          <div class="sf">
+            <div class="sf-key">Key Insight</div>
+            <div class="sf-val">"Wait, let me check" emerges from RL — nobody wrote it in</div>
+          </div>
+        </div>
+        <div class="stage-accent"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ SLIDE 3 ══ -->
+  <div class="slide" id="s3">
+
+    <div class="s3-left">
+      <div class="s3-bg">USE</div>
+      <div class="s3-eyebrow">Use LLMs Right</div>
+      <div class="s3-title">
+        Six<br>Rules That<br><span class="hi">Actually</span><br>Work
+      </div>
+      <div class="s3-quote">
+        Parameters =<br>
+        <span class="hl">fuzzy memory.</span><br>
+        Context =<br>
+        <span class="hl">working memory.</span>
+      </div>
+    </div>
+
+    <div class="s3-right">
+      <div class="rule-card rc-o">
+        <div class="rule-num">01 · Facts</div>
+        <div class="rule-title">Give It the Document</div>
+        <div class="rule-body">Don't rely on parameter memory. Paste the source or make it search. Context always beats recall.</div>
+      </div>
+      <div class="rule-card rc-b">
+        <div class="rule-num">02 · Compute</div>
+        <div class="rule-title">Let Code Do the Math</div>
+        <div class="rule-body">Arithmetic, counting, exact checks — hand these to a code interpreter. LLMs predict tokens, not correct digits.</div>
+      </div>
+      <div class="rule-card rc-g">
+        <div class="rule-num">03 · Reasoning</div>
+        <div class="rule-title">Give It Room to Think</div>
+        <div class="rule-body">More tokens = more computation. Hard problems need step-by-step room. Never force instant answers.</div>
+      </div>
+      <div class="rule-card rc-o">
+        <div class="rule-num">04 · Hallucination</div>
+        <div class="rule-title">Verify Before You Trust</div>
+        <div class="rule-body">The model generates what sounds right, not what is right. Any fact, number, or citation needs a human check.</div>
+      </div>
+      <div class="rule-card rc-b">
+        <div class="rule-num">05 · Tools</div>
+        <div class="rule-title">Offload What It Can't Hold</div>
+        <div class="rule-body">Search for facts. Run code for math. Query a DB for data. Tool calls swap fuzzy memory for exact answers.</div>
+      </div>
+      <div class="rule-card rc-g">
+        <div class="rule-num">06 · Mindset</div>
+        <div class="rule-title">Powerful Tool. Not Oracle.</div>
+        <div class="rule-body">Use it. Don't worship it. Check its work. You are still responsible for the final output.</div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<button class="nav-btn" id="prev">&#8249;</button>
+<button class="nav-btn" id="next">&#8250;</button>
+
+<div class="dots">
+  <div class="dot active" onclick="goTo(0)"></div>
+  <div class="dot" onclick="goTo(1)"></div>
+  <div class="dot" onclick="goTo(2)"></div>
+</div>
+<div class="slide-num" id="snum">1 / 3</div>
+
+<script>
+  let cur = 0;
+  const deck = document.getElementById('deck');
+  const dots = document.querySelectorAll('.dot');
+  const snum = document.getElementById('snum');
+
+  function goTo(n) {
+    cur = Math.max(0, Math.min(2, n));
+    deck.style.transform = `translateX(-${cur * 100}vw)`;
+    dots.forEach((d, i) => d.classList.toggle('active', i === cur));
+    snum.textContent = `${cur + 1} / 3`;
+  }
+
+  document.getElementById('prev').onclick = () => goTo(cur - 1);
+  document.getElementById('next').onclick = () => goTo(cur + 1);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') goTo(cur + 1);
+    if (e.key === 'ArrowLeft')  goTo(cur - 1);
+  });
+</script>
+</body>
+</html>

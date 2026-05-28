@@ -1,0 +1,8 @@
+interface:
+  display_name: "Good Looking HTML"
+  short_description: "Create polished single-file HTML artifacts"
+  brand_color: "#111827"
+  default_prompt: "Use $good-looking-html to turn this source material into a polished single-file HTML artifact."
+
+policy:
+  allow_implicit_invocation: true

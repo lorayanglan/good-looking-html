@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cinematic Dark Style · Software 3.0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --red:    #E50914;
+    --red-dk: #B20710;
+    --black:  #000000;
+    --deep:   #0a0a0a;
+    --purple: #1B1633;
+    --purple2:#221739;
+    --white:  #FFFFFF;
+    --gray:   #888888;
+    --lt:     #cccccc;
+    --f: 'Inter', sans-serif;
+  }
+
+  html, body { width: 100%; height: 100%; overflow: hidden; background: var(--black); font-family: var(--f); }
+
+  /* ── Deck ── */
+  #deck {
+    display: flex; width: 100%; height: 100%;
+    overflow-x: scroll; scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+  #deck::-webkit-scrollbar { display: none; }
+
+  .slide {
+    width: 100vw; height: 100vh; flex-shrink: 0;
+    scroll-snap-align: start;
+    background: var(--black);
+    display: flex; flex-direction: column;
+    position: relative; overflow: hidden;
+  }
+
+  /* ── Nav ── */
+  #nav-dots {
+    position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 7px; z-index: 100;
+  }
+  .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: rgba(255,255,255,0.25); transition: background 0.25s; cursor: pointer;
+  }
+  .dot.active { background: var(--red); }
+  #page-counter {
+    position: fixed; bottom: 20px; right: 28px;
+    font-size: 11px; font-weight: 500; letter-spacing: 0.04em;
+    color: rgba(255,255,255,0.35); z-index: 100;
+  }
+
+  /* ── Top bar ── */
+  .top-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 22px 52px;
+    flex-shrink: 0; z-index: 10; position: relative;
+  }
+  .top-logo {
+    font-size: 22px; font-weight: 900; letter-spacing: -0.02em;
+    color: var(--red); text-transform: uppercase;
+  }
+  .top-tag {
+    font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.45);
+    letter-spacing: 0.06em; text-transform: uppercase;
+  }
+
+  /* ═══════════════════════
+     SLIDE 1 — Cinematic Hero
+  ═══════════════════════ */
+
+  /* Background poster grid */
+  .s1-bg {
+    position: absolute; inset: 0;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 3px;
+    opacity: 0.18;
+    z-index: 0;
+  }
+  .s1-bg-tile {
+    background: var(--purple2);
+    border-radius: 3px;
+  }
+  .s1-bg-tile:nth-child(3n)   { background: #2a1e4a; }
+  .s1-bg-tile:nth-child(5n+1) { background: #12101f; }
+  .s1-bg-tile:nth-child(7n+2) { background: #1e1030; }
+
+  /* Gradient overlay on top of tile grid */
+  .s1-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to right, #000 40%, rgba(0,0,0,0.6) 75%, rgba(0,0,0,0.1) 100%),
+                linear-gradient(to top, #000 10%, transparent 60%);
+    z-index: 1;
+  }
+
+  /* Full-width two-column body */
+  .s1-body {
+    position: relative; z-index: 2;
+    flex: 1; display: flex; flex-direction: row;
+    padding: 0 52px 52px;
+    gap: 0;
+    min-height: 0;
+  }
+
+  .s1-left {
+    flex: 1.1; display: flex; flex-direction: column;
+    justify-content: center;
+    padding-right: 52px;
+    border-right: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .s1-right {
+    width: 38%; display: flex; flex-direction: column;
+    justify-content: center; gap: 0;
+    padding-left: 52px;
+  }
+
+  .s1-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--red); color: var(--white);
+    font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 5px 13px; border-radius: 2px;
+    margin-bottom: 28px; align-self: flex-start;
+  }
+
+  .s1-title {
+    font-size: clamp(52px, 7vw, 96px);
+    font-weight: 900; line-height: 0.95;
+    letter-spacing: -0.04em;
+    color: var(--white);
+    margin-bottom: 28px;
+  }
+  .s1-title em { color: var(--red); font-style: normal; }
+
+  .s1-desc {
+    font-size: clamp(15px, 1.4vw, 18px);
+    font-weight: 400; line-height: 1.65;
+    color: rgba(255,255,255,0.65);
+  }
+
+  /* Right side: stacked stats */
+  .s1-stat {
+    padding: 28px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+  .s1-stat:last-child { border-bottom: none; }
+  .s1-stat-num {
+    font-size: clamp(36px, 4.5vw, 62px);
+    font-weight: 900; color: var(--white);
+    letter-spacing: -0.04em; line-height: 1;
+    margin-bottom: 8px;
+  }
+  .s1-stat-num span { color: var(--red); }
+  .s1-stat-label {
+    font-size: 13px; font-weight: 400; color: rgba(255,255,255,0.45);
+    line-height: 1.4;
+  }
+
+  /* Red arc divider at bottom of s1 */
+  .s1-arc {
+    position: absolute; bottom: -2px; left: 0; right: 0; z-index: 3;
+    height: 40px; overflow: hidden;
+  }
+  .s1-arc svg { width: 100%; height: 40px; display: block; }
+
+  /* ═══════════════════════════
+     SLIDE 2 — Trending Rankings
+  ═══════════════════════════ */
+
+  .s2-head {
+    padding: 24px 52px 20px; flex-shrink: 0; z-index: 2; position: relative;
+  }
+  .s2-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; color: rgba(255,255,255,0.4);
+    margin-bottom: 8px;
+  }
+  .s2-title {
+    font-size: clamp(26px, 3.2vw, 40px);
+    font-weight: 900; color: var(--white);
+    letter-spacing: -0.025em; line-height: 1.05;
+  }
+
+  /* Horizontal ranked cards shelf */
+  .s2-shelf {
+    flex: 1; display: flex; align-items: center;
+    padding: 0 52px 52px;
+    gap: 0; overflow: hidden;
+  }
+
+  .s2-ranked {
+    flex: 1; display: flex; align-items: flex-end; gap: 0;
+    position: relative;
+  }
+
+  .s2-item {
+    position: relative; display: flex; align-items: flex-end;
+    flex: 1;
+  }
+
+  /* Giant rank number behind card */
+  .s2-rank {
+    font-size: clamp(90px, 13vw, 160px);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -0.06em;
+    color: transparent;
+    -webkit-text-stroke: 2px rgba(255,255,255,0.12);
+    user-select: none;
+    position: absolute;
+    bottom: -10px;
+    left: -14px;
+    z-index: 0;
+  }
+
+  /* Content card */
+  .s2-card {
+    position: relative; z-index: 1;
+    background: var(--purple);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 6px;
+    padding: 22px 20px 22px 22px;
+    margin-left: 60px;
+    flex: 1;
+    min-height: 0;
+  }
+  .s2-item:first-child .s2-card { margin-left: 70px; }
+
+  .s2-card-tag {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--red);
+    margin-bottom: 10px;
+  }
+  .s2-card-title {
+    font-size: clamp(17px, 1.8vw, 22px);
+    font-weight: 800; color: var(--white);
+    line-height: 1.2; margin-bottom: 12px;
+  }
+  .s2-card-desc {
+    font-size: clamp(14px, 1.2vw, 16px);
+    font-weight: 400; color: rgba(255,255,255,0.55);
+    line-height: 1.65;
+  }
+  .s2-card-highlight {
+    margin-top: 16px; padding: 10px 14px;
+    background: rgba(229,9,20,0.12);
+    border-left: 2px solid var(--red);
+    border-radius: 2px;
+    font-size: 14px; font-weight: 500;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.5;
+  }
+
+  /* ═══════════════════════════
+     SLIDE 3 — Benefit Cards
+  ═══════════════════════════ */
+
+  .s3-head {
+    padding: 24px 52px 24px; flex-shrink: 0;
+  }
+  .s3-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; color: rgba(255,255,255,0.4);
+    margin-bottom: 8px;
+  }
+  .s3-title {
+    font-size: clamp(26px, 3.2vw, 40px);
+    font-weight: 900; color: var(--white);
+    letter-spacing: -0.025em; line-height: 1.05;
+  }
+
+  .s3-grid {
+    flex: 1; display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    padding: 0 52px 52px;
+    min-height: 0;
+  }
+
+  .s3-card {
+    background: linear-gradient(135deg, var(--purple2) 0%, var(--purple) 100%);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 8px;
+    padding: 28px 26px;
+    display: flex; flex-direction: column;
+    position: relative; overflow: hidden;
+  }
+
+  /* Subtle glow in top-right of card */
+  .s3-card::before {
+    content: '';
+    position: absolute; top: -30px; right: -30px;
+    width: 100px; height: 100px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(229,9,20,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .s3-card:nth-child(2)::before { background: radial-gradient(circle, rgba(130,80,255,0.15) 0%, transparent 70%); }
+  .s3-card:nth-child(3)::before { background: radial-gradient(circle, rgba(255,140,60,0.12) 0%, transparent 70%); }
+
+  .s3-icon {
+    font-size: 26px; margin-bottom: 18px;
+    width: 48px; height: 48px;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(255,255,255,0.06);
+    border-radius: 10px;
+  }
+
+  .s3-card-title {
+    font-size: clamp(18px, 1.8vw, 22px);
+    font-weight: 800; color: var(--white);
+    line-height: 1.2; margin-bottom: 14px;
+  }
+  .s3-card-desc {
+    font-size: clamp(14px, 1.2vw, 16px);
+    font-weight: 400; color: rgba(255,255,255,0.55);
+    line-height: 1.65; flex: 1;
+  }
+  .s3-card-footer {
+    margin-top: 20px; padding-top: 16px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    font-size: 11px; font-weight: 600;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 0.04em;
+  }
+</style>
+</head>
+<body>
+
+<div id="deck">
+
+  <!-- ════════════ SLIDE 1 ════════════ -->
+  <div class="slide" id="s1">
+    <div class="top-bar">
+      <span class="top-logo">Cinematic Dark</span>
+      <span class="top-tag">Style Reference · Software 3.0</span>
+    </div>
+
+    <!-- Poster grid bg -->
+    <div class="s1-bg">
+      <div class="s1-bg-tile"></div><div class="s1-bg-tile"></div><div class="s1-bg-tile"></div><div class="s1-bg-tile"></div><div class="s1-bg-tile"></div>
+      <div class="s1-bg-tile"></div><div class="s1-bg-tile"></div><div class="s1-bg-tile"></div><div class="s1-bg-tile"></div><div class="s1-bg-tile"></div>
+      <div class="s1-bg-tile"></div><div class="s1-bg-tile"></div><div class="s1-bg-tile"></div><div class="s1-bg-tile"></div><div class="s1-bg-tile"></div>
+    </div>
+    <div class="s1-overlay"></div>
+
+    <div class="s1-body">
+      <div class="s1-left">
+        <div class="s1-badge">Karpathy · Sequoia Ascent 2026</div>
+        <h1 class="s1-title">Software<br><em>3.0</em></h1>
+        <p class="s1-desc">LLMs are not just making old work faster — they're creating a new computing layer where natural language becomes executable, and entire app categories dissolve.</p>
+      </div>
+      <div class="s1-right">
+        <div class="s1-stat">
+          <div class="s1-stat-num">3<span>×</span></div>
+          <div class="s1-stat-label">paradigm shifts<br>in one decade</div>
+        </div>
+        <div class="s1-stat">
+          <div class="s1-stat-num">∞</div>
+          <div class="s1-stat-label">knowledge now<br>computable</div>
+        </div>
+        <div class="s1-stat">
+          <div class="s1-stat-num">0<span>.sh</span></div>
+          <div class="s1-stat-label">scripts needed when<br>you write .md skills</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Red arc bottom divider -->
+    <div class="s1-arc">
+      <svg viewBox="0 0 1440 40" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,0 C360,40 1080,40 1440,0 L1440,40 L0,40 Z" fill="#E50914" opacity="0.7"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- ════════════ SLIDE 2 ════════════ -->
+  <div class="slide" id="s2">
+    <div class="top-bar">
+      <span class="top-logo">Cinematic Dark</span>
+      <span class="top-tag">The Three Shifts · Trending Now</span>
+    </div>
+
+    <div class="s2-head">
+      <div class="s2-label">Karpathy's Software 3.0 — Top 3 Shifts</div>
+      <div class="s2-title">Apps That Will Disappear.<br>Skills That Will Dominate.</div>
+    </div>
+
+    <div class="s2-shelf">
+      <div class="s2-ranked">
+
+        <div class="s2-item">
+          <div class="s2-rank">1</div>
+          <div class="s2-card">
+            <div class="s2-card-tag">App Layer</div>
+            <div class="s2-card-title">Some apps will simply cease to exist</div>
+            <div class="s2-card-desc">MenuGen could be an app — OCR, image API, auth, deployment. Or a user just hands a photo to a multimodal model and gets the output directly.</div>
+            <div class="s2-card-highlight">Ask: does this app still need to exist?</div>
+          </div>
+        </div>
+
+        <div class="s2-item">
+          <div class="s2-rank">2</div>
+          <div class="s2-card">
+            <div class="s2-card-tag">Execution Layer</div>
+            <div class="s2-card-title">Install .md skills, not .sh scripts</div>
+            <div class="s2-card-desc">Shell scripts break across machines. A clear Markdown instruction set, handed to an LLM agent, is more robust — and readable by humans too.</div>
+            <div class="s2-card-highlight">English becomes executable code.</div>
+          </div>
+        </div>
+
+        <div class="s2-item">
+          <div class="s2-rank">3</div>
+          <div class="s2-card">
+            <div class="s2-card-tag">Knowledge Layer</div>
+            <div class="s2-card-title">Unstructured knowledge becomes computable</div>
+            <div class="s2-card-desc">Classic code handles rows and JSON. LLMs handle articles, interviews, repos, and screenshots — compiling them into a structured, growing wiki.</div>
+            <div class="s2-card-highlight">From search to compile.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════ SLIDE 3 ════════════ -->
+  <div class="slide" id="s3">
+    <div class="top-bar">
+      <span class="top-logo">Cinematic Dark</span>
+      <span class="top-tag">What This Means · Agent-Native Economy</span>
+    </div>
+
+    <div class="s3-head">
+      <div class="s3-label">More Reasons to Rethink Software</div>
+      <div class="s3-title">Build for Agents,<br>Not Just for Humans</div>
+    </div>
+
+    <div class="s3-grid">
+
+      <div class="s3-card">
+        <div class="s3-icon">⚡</div>
+        <div class="s3-card-title">Sawtooth Intelligence</div>
+        <div class="s3-card-desc">Model capability isn't uniform. Verifiable tasks — code, math, security tests — improve dramatically because feedback is automatic. Open-ended judgment lags behind.</div>
+        <div class="s3-card-footer">Verifiable · High-value · Fast gains</div>
+      </div>
+
+      <div class="s3-card">
+        <div class="s3-icon">🔌</div>
+        <div class="s3-card-title">Sensors, Actuators, Logic</div>
+        <div class="s3-card-desc">Agent-native products expose three layers: Sensors (world state readable by agents), Actuators (safe executable actions), Logic (decisions split across humans, code, and models).</div>
+        <div class="s3-card-footer">CLI · API · MCP · Markdown</div>
+      </div>
+
+      <div class="s3-card">
+        <div class="s3-icon">📖</div>
+        <div class="s3-card-title">Knowledge That Compounds</div>
+        <div class="s3-card-desc">Drop raw material into a folder. LLM compiles summaries, concept nodes, backlinks, and index files. Each exploration makes the knowledge base stronger — unattended.</div>
+        <div class="s3-card-footer">raw/ → wiki/ → intelligence</div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- /deck -->
+
+<nav id="nav-dots">
+  <div class="dot active" data-i="0"></div>
+  <div class="dot" data-i="1"></div>
+  <div class="dot" data-i="2"></div>
+</nav>
+<div id="page-counter">1 / 3</div>
+
+<script>
+  const deck = document.getElementById('deck');
+  const dots = document.querySelectorAll('.dot');
+  const counter = document.getElementById('page-counter');
+  const slides = document.querySelectorAll('.slide');
+
+  function goTo(i) { deck.scrollTo({ left: i * window.innerWidth, behavior: 'smooth' }); }
+  dots.forEach(d => d.addEventListener('click', () => goTo(+d.dataset.i)));
+
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const i = [...slides].indexOf(e.target);
+        dots.forEach((d, j) => d.classList.toggle('active', j === i));
+        counter.textContent = `${i + 1} / ${slides.length}`;
+      }
+    });
+  }, { root: deck, threshold: 0.5 });
+
+  slides.forEach(s => obs.observe(s));
+
+  document.addEventListener('keydown', e => {
+    const cur = Math.round(deck.scrollLeft / window.innerWidth);
+    if (e.key === 'ArrowRight' && cur < slides.length - 1) goTo(cur + 1);
+    if (e.key === 'ArrowLeft'  && cur > 0)                 goTo(cur - 1);
+  });
+</script>
+</body>
+</html>

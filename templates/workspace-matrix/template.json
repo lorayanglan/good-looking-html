@@ -1,0 +1,58 @@
+{
+  "slug": "workspace-matrix",
+  "name": "Workspace Matrix",
+  "tagline": "Systematic workspace matrix with dark-to-light rhythm, functional color blocks, and feature-suite storytelling.",
+  "mood": [
+    "smart",
+    "systematic",
+    "playful-productive",
+    "capable",
+    "gamified-work",
+    "modern"
+  ],
+  "occasion": [
+    "AI workspace product",
+    "team collaboration deck",
+    "product suite showcase",
+    "knowledge management presentation",
+    "SaaS feature matrix"
+  ],
+  "tone": [
+    "modern",
+    "slightly-playful",
+    "professional",
+    "product-led",
+    "self-confident"
+  ],
+  "formality": "medium",
+  "density": "medium-high",
+  "scheme": "mixed",
+  "palette": {
+    "hero_blue": "#001040",
+    "active_blue": "#60B0F0",
+    "background": "#FFFFFF",
+    "surface": "#F0F0F0",
+    "text_primary": "#101010",
+    "cyan_block": "#30A0A0",
+    "warm_brown": "#B08060",
+    "yellow_dot": "#FFD060",
+    "description": "Dark midnight-blue hero contrasts with clean white workspace body; functional color blocks (cyan, sky-blue, warm brown, coral, yellow) each map to a specific tool or workflow category — they are information-coded, not decorative."
+  },
+  "typography": {
+    "display": "Inter",
+    "body": "Inter",
+    "cn_sans": "Noto Sans SC",
+    "style": "Rounded compact sans-serif. Bold black headlines, short punchy copy. Product UI text is dense but hierarchically clear. No serifs, no decorative type."
+  },
+  "slide_count": 3,
+  "navigation": "scroll-snap with keyboard arrow support",
+  "source": "public visual preset",
+  "best_for": "AI workspace products, team collaboration suites, productivity app matrices. When you need to show how many different things work together as a unified system. Strong for feature-rich product storytelling with a slightly playful edge.",
+  "avoid_for": "Single-feature tools, high-luxury minimal aesthetics, content needing dark immersion throughout. The hero-to-white transition is essential — don't keep the dark hero for the whole deck.",
+  "anti_patterns": [
+    "using color blocks as pure decoration — in Workspace Matrix's system each color represents a specific function",
+    "extending the midnight-blue hero for the full page — the day/night narrative rhythm requires the transition",
+    "making cards too round or glassy — Workspace Matrix's shape language resembles real software blocks, not consumer UI",
+    "overusing the agent/emoji icon motif without accompanying product substance"
+  ]
+}
