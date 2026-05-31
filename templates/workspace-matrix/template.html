@@ -3,15 +3,12 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>2026 Annual Review · Workspace Matrix Style</title>
+<title>Coding is Solved. What's Next? · Notion Style</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
 
 <style>
-/* ╔══════════════════════════════════════════════════════════════════╗
-   ║  ZONE A · TOKENS — NOTION STYLE                                  ║
-   ╚══════════════════════════════════════════════════════════════════╝ */
 :root {
   --midnight: #001040;
   --navy:     #06124A;
@@ -19,7 +16,7 @@
   --white:    #FFFFFF;
   --off:      #F7F7F5;
   --gray:     #E8E8E6;
-  --gray-mid: #D4D4D0;
+  --gray-mid: #D0D0CC;
   --black:    #101010;
   --muted:    #6B6B6B;
   --cyan:     #30A0A0;
@@ -27,20 +24,13 @@
   --warm:     #B08060;
   --coral:    #E07868;
   --yellow:   #FFD060;
-
   --f: 'Inter', system-ui, sans-serif;
-
-  --sz-hero:  clamp(48px, 6.8vw, 92px);
-  --sz-h1:    clamp(32px, 4vw, 56px);
-  --sz-lead:  clamp(14px, 1.3vw, 18px);
-  --sz-body:  clamp(12px, 1vw, 15px);
-  --sz-label: clamp(10px, 0.8vw, 12px);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { height: 100%; font-family: var(--f); overflow: hidden; }
+html, body { height: 100%; font-family: var(--f); overflow: hidden; background: var(--midnight); }
 
-/* ── Deck: horizontal scroll ── */
+/* ── Deck ── */
 #deck {
   display: flex;
   width: 100vw; height: 100vh;
@@ -57,269 +47,418 @@ html, body { height: 100%; font-family: var(--f); overflow: hidden; }
   flex-shrink: 0;
   scroll-snap-align: start;
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
+  display: flex; flex-direction: column;
   position: relative;
 }
 
 /* ── Nav dots ── */
 #nav-dots {
   position: fixed;
-  bottom: 20px; left: 50%;
+  bottom: 22px; left: 50%;
   transform: translateX(-50%);
   display: flex; gap: 8px;
   z-index: 200;
-  padding: 7px 14px;
-  border-radius: 100px;
-  backdrop-filter: blur(6px);
+  padding: 7px 14px; border-radius: 100px;
+  backdrop-filter: blur(8px);
 }
 .nav-dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  border: none; padding: 0;
-  cursor: pointer;
+  width: 6px; height: 6px; border-radius: 50%;
+  border: none; padding: 0; cursor: pointer;
   transition: background 0.3s, transform 0.3s;
 }
 .nav-dot.is-active { transform: scale(1.5); }
 
-/* ═══════════════════════════════════════
-   SLIDE 1 — Cover (midnight blue hero)
-═══════════════════════════════════════ */
+/* ════════════════════════════════════════════════
+   SLIDE 1 — Left/Right split cover
+   Left: eyebrow + big title + CTA + source
+   Right: floating "product card" (3-tier table)
+   Background: route paths + agent badges
+════════════════════════════════════════════════ */
 #slide1 { background: var(--midnight); }
 
-/* Top nav bar */
-.s1-topbar {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 14px 52px;
-  border-bottom: 1px solid rgba(96,176,240,0.10);
-  flex-shrink: 0; z-index: 2; position: relative;
-}
-.s1-brand { font-size: 15px; font-weight: 700; color: var(--white); letter-spacing: -0.01em; }
-.s1-nav-items { display: flex; gap: 28px; }
-.s1-nav-item  { font-size: 13px; font-weight: 400; color: rgba(255,255,255,0.40); }
-.s1-nav-cta {
-  font-size: 13px; font-weight: 700;
-  color: var(--midnight);
-  background: var(--route);
-  padding: 7px 18px; border-radius: 6px;
-  letter-spacing: -0.01em;
-}
-
-/* Route path decoration — background SVG + floating agent badges */
-.s1-routes {
+/* Route decoration layer */
+.s1-canvas {
   position: absolute; inset: 0;
   pointer-events: none; overflow: hidden;
 }
-.s1-agent {
+.s1-badge {
   position: absolute;
-  width: 34px; height: 34px;
-  border-radius: 50%;
-  background: var(--navy);
-  border: 1.5px solid rgba(96,176,240,0.40);
+  width: 36px; height: 36px; border-radius: 50%;
+  background: rgba(6,18,74,0.9);
+  border: 1.5px solid rgba(96,176,240,0.35);
   display: flex; align-items: center; justify-content: center;
-  font-size: 15px;
+  font-size: 16px;
 }
 
-/* Cover main body */
+/* Topnav — slim, no heavy chrome */
+.s1-nav {
+  display: flex; align-items: center; gap: 8px;
+  padding: 16px 52px;
+  flex-shrink: 0; position: relative; z-index: 2;
+}
+.s1-nav-dot  { width: 10px; height: 10px; border-radius: 50%; background: var(--route); opacity: 0.7; }
+.s1-nav-text { font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.35); letter-spacing: 0.01em; }
+
+/* Two-column body */
 .s1-body {
-  flex: 1;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  text-align: center;
-  padding: 0 10vw 40px;
+  flex: 1; min-height: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
   position: relative; z-index: 2;
 }
+
+/* Left column */
+.s1-left {
+  display: flex; flex-direction: column;
+  justify-content: center;
+  padding: 0 48px 52px 52px;
+}
 .s1-eyebrow {
-  font-size: var(--sz-label); font-weight: 600;
-  letter-spacing: 0.14em; text-transform: uppercase;
-  color: rgba(96,176,240,0.6);
-  margin-bottom: 20px;
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: rgba(96,176,240,0.55);
+  margin-bottom: 22px;
+  display: flex; align-items: center; gap: 8px;
+}
+.s1-eyebrow::before {
+  content: '';
+  display: block; width: 20px; height: 1.5px;
+  background: rgba(96,176,240,0.4);
 }
 .s1-title {
-  font-size: var(--sz-hero); font-weight: 800;
-  color: var(--white); line-height: 1.0;
-  letter-spacing: -0.03em;
-  margin-bottom: 18px;
+  font-size: clamp(40px, 5.5vw, 76px);
+  font-weight: 900;
+  color: var(--white);
+  line-height: 1.0; letter-spacing: -0.035em;
+  margin-bottom: 22px;
 }
 .s1-title em { font-style: normal; color: var(--route); }
 .s1-sub {
-  font-size: var(--sz-lead); font-weight: 400;
-  color: rgba(255,255,255,0.42); line-height: 1.65;
-  max-width: 480px; margin-bottom: 36px;
+  font-size: clamp(13px, 1.2vw, 16px); font-weight: 400;
+  color: rgba(255,255,255,0.38); line-height: 1.65;
+  max-width: 380px; margin-bottom: 32px;
 }
-.s1-btns { display: flex; gap: 12px; justify-content: center; margin-bottom: 52px; }
+.s1-btns { display: flex; gap: 10px; margin-bottom: 36px; }
 .s1-btn-primary {
-  font-size: 14px; font-weight: 700; letter-spacing: -0.01em;
+  font-size: 13px; font-weight: 700;
   color: var(--midnight); background: var(--route);
-  padding: 11px 26px; border-radius: 7px;
+  padding: 10px 22px; border-radius: 6px; letter-spacing: -0.01em;
 }
-.s1-btn-secondary {
-  font-size: 14px; font-weight: 500;
-  color: rgba(255,255,255,0.60);
-  background: transparent;
-  padding: 11px 26px; border-radius: 7px;
-  border: 1px solid rgba(255,255,255,0.16);
+.s1-btn-ghost {
+  font-size: 13px; font-weight: 500;
+  color: rgba(255,255,255,0.5);
+  padding: 10px 22px; border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.14);
 }
-.s1-logorow { display: flex; gap: 36px; align-items: center; opacity: 0.22; }
-.s1-logo    { font-size: 12px; font-weight: 600; color: var(--white); letter-spacing: 0.08em; text-transform: uppercase; }
+.s1-source {
+  font-size: 11px; font-weight: 400;
+  color: rgba(255,255,255,0.22);
+  line-height: 1.5; letter-spacing: 0.01em;
+}
 
-/* ═══════════════════════════════════════
-   SLIDE 2 — Content (white workspace + tile grid)
-═══════════════════════════════════════ */
-#slide2 { background: var(--white); }
+/* Right column — floating product card */
+.s1-right {
+  display: flex; align-items: center; justify-content: center;
+  padding: 40px 52px 52px 24px;
+}
+.s1-card {
+  width: 100%; max-width: 360px;
+  background: rgba(6,18,74,0.75);
+  border: 1px solid rgba(96,176,240,0.18);
+  border-radius: 14px;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+}
+.s1-card-bar {
+  padding: 11px 16px;
+  background: rgba(96,176,240,0.06);
+  border-bottom: 1px solid rgba(96,176,240,0.12);
+  font-size: 11px; font-weight: 600;
+  color: rgba(96,176,240,0.55);
+  letter-spacing: 0.08em; text-transform: uppercase;
+  display: flex; align-items: center; gap: 6px;
+}
+.s1-card-bar-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--route); opacity: 0.6; }
+.s1-tier-row {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 16px 18px;
+  border-bottom: 1px solid rgba(96,176,240,0.08);
+}
+.s1-tier-row:last-child { border-bottom: none; }
+.s1-tier-row.active { background: rgba(96,176,240,0.07); }
+.s1-tier-emoji { font-size: 18px; line-height: 1; flex-shrink: 0; margin-top: 1px; }
+.s1-tier-content { flex: 1; }
+.s1-tier-name {
+  font-size: 12px; font-weight: 700;
+  color: rgba(255,255,255,0.55);
+  margin-bottom: 3px; letter-spacing: -0.01em;
+}
+.s1-tier-row.active .s1-tier-name { color: var(--route); }
+.s1-tier-tag {
+  display: inline-block;
+  font-size: 9px; font-weight: 600;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  background: rgba(96,176,240,0.15); color: var(--route);
+  padding: 2px 6px; border-radius: 3px;
+  margin-bottom: 4px;
+}
+.s1-tier-desc {
+  font-size: 11px; font-weight: 400;
+  color: rgba(255,255,255,0.30); line-height: 1.5;
+}
+.s1-tier-row.active .s1-tier-desc { color: rgba(96,176,240,0.55); }
 
+/* ════════════════════════════════════════════════
+   SLIDE 2 — Asymmetric: 60% hero card + 40% stack
+   White Notion workspace feel
+════════════════════════════════════════════════ */
+#slide2 { background: var(--off); }
+
+/* Notion-style breadcrumb topbar */
 .s2-topbar {
   background: var(--white);
   border-bottom: 1px solid var(--gray);
-  padding: 11px 52px;
-  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 40px;
+  height: 44px;
+  display: flex; align-items: center; gap: 6px;
   flex-shrink: 0;
 }
-.s2-breadcrumb { font-size: 13px; font-weight: 400; color: var(--muted); }
-.s2-breadcrumb strong { color: var(--black); font-weight: 600; }
-.s2-ts { font-size: 12px; color: var(--muted); }
+.s2-bc-seg { font-size: 13px; font-weight: 400; color: var(--muted); }
+.s2-bc-sep { color: var(--gray-mid); font-size: 14px; }
+.s2-bc-active { font-size: 13px; font-weight: 600; color: var(--black); }
+.s2-bc-meta { margin-left: auto; font-size: 11px; color: var(--muted); }
 
-.s2-body {
-  flex: 1; min-height: 0;
-  display: flex; flex-direction: column;
-  padding: 36px 52px 32px;
+/* Page header */
+.s2-header {
+  padding: 28px 40px 20px;
+  flex-shrink: 0;
 }
-.s2-head { margin-bottom: 28px; }
 .s2-eyebrow {
-  font-size: var(--sz-label); font-weight: 600;
-  letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--muted); margin-bottom: 8px;
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 0.13em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 6px;
 }
 .s2-title {
-  font-size: var(--sz-h1); font-weight: 800;
-  color: var(--black); letter-spacing: -0.025em; line-height: 1.0;
+  font-size: clamp(26px, 3.2vw, 44px); font-weight: 800;
+  color: var(--black); letter-spacing: -0.03em; line-height: 1.0;
 }
 .s2-title em { font-style: normal; color: var(--blue-mid); }
 
-/* 2×2 product tile grid — C-position content */
-.s2-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
-  gap: 14px;
+/* Asymmetric content area */
+.s2-content {
   flex: 1; min-height: 0;
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 14px;
+  padding: 0 40px 32px;
 }
-.s2-tile {
-  border: 1px solid var(--gray);
-  border-radius: 10px;
-  overflow: hidden;
-  display: flex; flex-direction: column;
+
+/* Left: hero card */
+.s2-hero {
   background: var(--white);
+  border: 1px solid var(--gray);
+  border-radius: 12px;
+  display: flex; flex-direction: column;
+  overflow: hidden;
 }
-.s2-tile-header {
-  padding: 14px 20px 13px;
+.s2-hero-top {
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--gray);
   display: flex; align-items: center; gap: 10px;
   flex-shrink: 0;
-  border-bottom: 1px solid transparent;
 }
-.s2-tile-icon {
-  width: 28px; height: 28px; border-radius: 7px;
+.s2-hero-icon {
+  width: 30px; height: 30px; border-radius: 7px;
+  background: rgba(48,160,160,0.12);
   display: flex; align-items: center; justify-content: center;
-  font-size: 14px; flex-shrink: 0;
+  font-size: 15px; flex-shrink: 0;
 }
-.s2-tile-label  { font-size: 13px; font-weight: 700; color: var(--black); letter-spacing: -0.01em; }
-.s2-tile-tag {
+.s2-hero-label { font-size: 13px; font-weight: 700; color: var(--black); }
+.s2-hero-prop {
   margin-left: auto;
   font-size: 10px; font-weight: 600;
-  letter-spacing: 0.08em; text-transform: uppercase;
+  letter-spacing: 0.07em; text-transform: uppercase;
+  background: rgba(48,160,160,0.10); color: var(--cyan);
   padding: 3px 8px; border-radius: 4px;
-  white-space: nowrap;
 }
-.s2-tile-body {
-  flex: 1; padding: 0 20px 18px;
-  display: flex; flex-direction: column; justify-content: flex-end;
+.s2-hero-body {
+  flex: 1; padding: 20px 24px 20px;
+  display: flex; flex-direction: column;
 }
-.s2-tile-num {
-  font-size: clamp(34px, 3.8vw, 52px); font-weight: 800;
-  letter-spacing: -0.03em; line-height: 1;
-  margin-bottom: 5px;
+.s2-hero-num {
+  font-size: clamp(48px, 6vw, 80px); font-weight: 900;
+  color: var(--cyan); letter-spacing: -0.05em; line-height: 1;
+  margin-bottom: 6px;
 }
-.s2-tile-desc { font-size: 12px; font-weight: 400; color: var(--muted); line-height: 1.55; }
+.s2-hero-unit { font-size: 16px; font-weight: 500; color: var(--muted); }
+.s2-hero-desc {
+  font-size: 13px; font-weight: 400;
+  color: var(--muted); line-height: 1.6;
+  max-width: 340px; margin-bottom: 20px;
+}
+/* Mini chart: progress bars for PRs/day */
+.s2-mini-chart { margin-bottom: 20px; }
+.s2-mini-label {
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 10px;
+}
+.s2-bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 7px; }
+.s2-bar-name { font-size: 11px; font-weight: 500; color: var(--muted); width: 80px; flex-shrink: 0; }
+.s2-bar-track {
+  flex: 1; height: 6px; border-radius: 3px;
+  background: var(--gray);
+  overflow: hidden;
+}
+.s2-bar-fill { height: 100%; border-radius: 3px; }
+.s2-bar-val { font-size: 11px; font-weight: 600; width: 40px; text-align: right; flex-shrink: 0; }
+.s2-hero-quote {
+  padding: 12px 14px;
+  background: rgba(48,160,160,0.05);
+  border-left: 3px solid var(--cyan);
+  border-radius: 0 6px 6px 0;
+  font-size: 12px; font-style: italic; font-weight: 400;
+  color: rgba(48,160,160,0.8); line-height: 1.55;
+  margin-top: auto;
+}
 
-/* Tile color themes */
-.tile-cyan  .s2-tile-header { background: rgba(48,160,160,0.07);  border-bottom-color: rgba(48,160,160,0.14); }
-.tile-cyan  .s2-tile-icon   { background: rgba(48,160,160,0.14); }
-.tile-cyan  .s2-tile-tag    { background: rgba(48,160,160,0.10); color: var(--cyan); }
-.tile-cyan  .s2-tile-num    { color: var(--cyan); }
+/* Right: three stacked narrow cards */
+.s2-stack {
+  display: flex; flex-direction: column; gap: 10px;
+}
+.s2-stack-card {
+  background: var(--white);
+  border: 1px solid var(--gray);
+  border-radius: 10px;
+  flex: 1;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+.s2-stack-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0;
+  width: 3px; height: 100%;
+  border-radius: 10px 0 0 10px;
+}
+.s2-stack-card.c-blue::before  { background: var(--blue-mid); }
+.s2-stack-card.c-warm::before  { background: var(--warm); }
+.s2-stack-card.c-coral::before { background: var(--coral); }
 
-.tile-blue  .s2-tile-header { background: rgba(26,90,232,0.06);   border-bottom-color: rgba(26,90,232,0.12); }
-.tile-blue  .s2-tile-icon   { background: rgba(26,90,232,0.12); }
-.tile-blue  .s2-tile-tag    { background: rgba(26,90,232,0.08);  color: var(--blue-mid); }
-.tile-blue  .s2-tile-num    { color: var(--blue-mid); }
+.s2-stack-inner {
+  padding: 14px 16px 14px 20px;
+  flex: 1; display: flex; flex-direction: column;
+}
+.s2-stack-top { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.s2-stack-emoji { font-size: 14px; }
+.s2-stack-label { font-size: 12px; font-weight: 700; color: var(--black); letter-spacing: -0.01em; }
+.s2-stack-tag {
+  margin-left: auto; font-size: 9px; font-weight: 600;
+  letter-spacing: 0.07em; text-transform: uppercase;
+  padding: 2px 7px; border-radius: 3px;
+}
+.c-blue  .s2-stack-tag { background: rgba(26,90,232,0.08);  color: var(--blue-mid); }
+.c-warm  .s2-stack-tag { background: rgba(176,128,96,0.09); color: var(--warm); }
+.c-coral .s2-stack-tag { background: rgba(224,120,104,0.08);color: var(--coral); }
 
-.tile-warm  .s2-tile-header { background: rgba(176,128,96,0.07);  border-bottom-color: rgba(176,128,96,0.14); }
-.tile-warm  .s2-tile-icon   { background: rgba(176,128,96,0.14); }
-.tile-warm  .s2-tile-tag    { background: rgba(176,128,96,0.09); color: var(--warm); }
-.tile-warm  .s2-tile-num    { color: var(--warm); }
+.s2-stack-num {
+  font-size: clamp(22px, 2.4vw, 32px); font-weight: 800;
+  letter-spacing: -0.04em; line-height: 1; margin-bottom: 5px;
+}
+.c-blue  .s2-stack-num { color: var(--blue-mid); }
+.c-warm  .s2-stack-num { color: var(--warm); }
+.c-coral .s2-stack-num { color: var(--coral); }
 
-.tile-coral .s2-tile-header { background: rgba(224,120,104,0.07); border-bottom-color: rgba(224,120,104,0.13); }
-.tile-coral .s2-tile-icon   { background: rgba(224,120,104,0.13); }
-.tile-coral .s2-tile-tag    { background: rgba(224,120,104,0.08); color: var(--coral); }
-.tile-coral .s2-tile-num    { color: var(--coral); }
+.s2-stack-desc {
+  font-size: 11px; font-weight: 400;
+  color: var(--muted); line-height: 1.5;
+  flex: 1;
+}
+.s2-stack-quote {
+  font-size: 10px; font-style: italic;
+  color: rgba(0,0,0,0.25); line-height: 1.4;
+  margin-top: 6px; padding-top: 6px;
+  border-top: 1px solid var(--gray);
+}
 
-/* ═══════════════════════════════════════
-   SLIDE 3 — Closing (midnight blue again)
-═══════════════════════════════════════ */
+/* ════════════════════════════════════════════════
+   SLIDE 3 — Dark closing with 3×2 action cards
+   Title bar at top, cards fill the rest
+════════════════════════════════════════════════ */
 #slide3 { background: var(--midnight); }
 
 .s3-bg { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
 
-.s3-body {
-  flex: 1;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  text-align: center;
-  padding: 0 80px 20px;
-  position: relative; z-index: 1;
+.s3-header {
+  padding: 40px 52px 28px;
+  flex-shrink: 0; position: relative; z-index: 1;
 }
 .s3-eyebrow {
-  font-size: var(--sz-label); font-weight: 600;
-  letter-spacing: 0.14em; text-transform: uppercase;
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 0.16em; text-transform: uppercase;
   color: rgba(96,176,240,0.45);
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 .s3-title {
-  font-size: var(--sz-hero); font-weight: 800;
+  font-size: clamp(32px, 4.2vw, 58px); font-weight: 900;
   color: var(--white); letter-spacing: -0.03em; line-height: 1.0;
-  margin-bottom: 16px;
 }
 .s3-title em { font-style: normal; color: var(--route); }
 .s3-sub {
-  font-size: var(--sz-lead); font-weight: 400;
-  color: rgba(255,255,255,0.38); line-height: 1.70;
-  max-width: 480px; margin-bottom: 48px;
+  font-size: clamp(12px, 1.1vw, 15px); font-weight: 400;
+  color: rgba(255,255,255,0.32); margin-top: 10px;
 }
+
+/* 3×2 grid fills remaining space */
 .s3-grid {
+  flex: 1; min-height: 0;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-  width: 100%; max-width: 780px;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 1fr 1fr;
+  gap: 10px;
+  padding: 0 52px 36px;
+  position: relative; z-index: 1;
 }
-.s3-goal {
-  padding: 20px 16px;
-  border: 1px solid rgba(96,176,240,0.16);
+.s3-card {
+  border: 1px solid rgba(96,176,240,0.12);
   border-radius: 10px;
-  background: rgba(96,176,240,0.05);
-  text-align: center;
+  background: rgba(96,176,240,0.04);
+  display: flex; flex-direction: column;
+  padding: 18px 18px 16px;
+  position: relative; overflow: hidden;
 }
-.s3-goal-icon  { font-size: 20px; margin-bottom: 8px; display: block; }
-.s3-goal-num {
-  font-size: clamp(16px, 1.8vw, 24px); font-weight: 800;
-  color: var(--route); letter-spacing: -0.02em; line-height: 1;
-  margin-bottom: 5px;
+/* Left color bar (Notion property tag style) */
+.s3-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0;
+  width: 3px; height: 100%;
 }
-.s3-goal-label { font-size: 11px; font-weight: 400; color: rgba(255,255,255,0.32); letter-spacing: 0.02em; }
+.s3-card:nth-child(1)::before { background: var(--route); }
+.s3-card:nth-child(2)::before { background: var(--cyan); }
+.s3-card:nth-child(3)::before { background: var(--yellow); }
+.s3-card:nth-child(4)::before { background: var(--coral); }
+.s3-card:nth-child(5)::before { background: var(--warm); }
+.s3-card:nth-child(6)::before { background: rgba(96,176,240,0.4); }
+
+.s3-card-icon  { font-size: 20px; margin-bottom: 10px; display: block; }
+.s3-card-title {
+  font-size: 12px; font-weight: 700;
+  color: rgba(255,255,255,0.85);
+  margin-bottom: 6px; letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+.s3-card-body {
+  font-size: 11px; font-weight: 400;
+  color: rgba(255,255,255,0.28); line-height: 1.55;
+  flex: 1;
+}
 
 .s3-foot {
-  padding: 12px;
-  font-size: 11px; font-weight: 400;
-  color: rgba(255,255,255,0.18); letter-spacing: 0.08em;
-  text-align: center; flex-shrink: 0;
+  padding: 10px 52px 14px;
+  font-size: 11px; color: rgba(255,255,255,0.15);
+  letter-spacing: 0.06em;
+  flex-shrink: 0; position: relative; z-index: 1;
 }
 </style>
 </head>
@@ -327,122 +466,178 @@ html, body { height: 100%; font-family: var(--f); overflow: hidden; }
 
 <div id="deck">
 
-<!-- ══════════ SLIDE 1 — Cover ══════════ -->
+<!-- ══════════ SLIDE 1 — Split cover ══════════ -->
 <section class="slide" id="slide1">
 
-  <!-- Animated route paths + agent badges -->
-  <div class="s1-routes">
+  <!-- Route path canvas -->
+  <div class="s1-canvas">
     <svg width="100%" height="100%" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" fill="none">
-      <path d="M-80 680 Q 220 320 500 440 Q 780 560 1020 220 Q 1220 -20 1520 120"
-        stroke="#60B0F0" stroke-width="1.5" stroke-dasharray="6 10" opacity="0.22" fill="none"/>
-      <path d="M-80 180 Q 320 440 620 300 Q 920 160 1240 480 Q 1380 560 1520 460"
-        stroke="#60B0F0" stroke-width="1" stroke-dasharray="5 9" opacity="0.13" fill="none"/>
-      <circle cx="500" cy="440" r="4.5" fill="#60B0F0" opacity="0.35"/>
-      <circle cx="1020" cy="220" r="4"   fill="#60B0F0" opacity="0.35"/>
-      <circle cx="620"  cy="300" r="3.5" fill="#60B0F0" opacity="0.25"/>
-      <circle cx="1240" cy="480" r="3"   fill="#60B0F0" opacity="0.25"/>
+      <path d="M720 -20 Q 900 200 1100 180 Q 1300 160 1440 300"
+        stroke="#60B0F0" stroke-width="1.5" stroke-dasharray="6 10" opacity="0.18" fill="none"/>
+      <path d="M0 600 Q 200 500 400 560 Q 600 620 700 520"
+        stroke="#60B0F0" stroke-width="1" stroke-dasharray="5 8" opacity="0.12" fill="none"/>
+      <circle cx="1100" cy="180" r="4" fill="#60B0F0" opacity="0.28"/>
+      <circle cx="400"  cy="560" r="3" fill="#60B0F0" opacity="0.22"/>
     </svg>
-    <div class="s1-agent" style="top:28%; right:17%;">📝</div>
-    <div class="s1-agent" style="top:54%; right:27%;">🔍</div>
-    <div class="s1-agent" style="top:64%; left:16%;">📅</div>
-    <div class="s1-agent" style="top:19%; left:21%;">✅</div>
+    <div class="s1-badge" style="top:18%; right:8%;">🤖</div>
+    <div class="s1-badge" style="top:72%; right:5%;">⚙️</div>
+    <div class="s1-badge" style="top:60%; left:4%;">📋</div>
   </div>
 
-  <div class="s1-topbar">
-    <span class="s1-brand">Workspace Matrix · Style Reference</span>
-    <div class="s1-nav-items">
-      <span class="s1-nav-item">Product</span>
-      <span class="s1-nav-item">Teams</span>
-      <span class="s1-nav-item">Templates</span>
-    </div>
-    <span class="s1-nav-cta">Get Started</span>
+  <div class="s1-nav">
+    <div class="s1-nav-dot"></div>
+    <span class="s1-nav-text">Notion Style · AI Knowledge Base</span>
   </div>
 
   <div class="s1-body">
-    <div class="s1-eyebrow">2026 · Annual Retrospective</div>
-    <div class="s1-title">Meet the<br><em>Night Shift</em></div>
-    <div class="s1-sub">
-      Your workspace never sleeps. A year of building blocks,<br>quietly doing the work.
-    </div>
-    <div class="s1-btns">
-      <div class="s1-btn-primary">Explore the Year →</div>
-      <div class="s1-btn-secondary">Request a Review</div>
-    </div>
-    <div class="s1-logorow">
-      <span class="s1-logo">Design</span>
-      <span class="s1-logo">Writing</span>
-      <span class="s1-logo">Projects</span>
-      <span class="s1-logo">Research</span>
-    </div>
-  </div>
 
+    <!-- Left: Title + CTA -->
+    <div class="s1-left">
+      <div class="s1-eyebrow">Agentic Builder Workflow · 2026</div>
+      <div class="s1-title">
+        Coding<br>is Solved.<br><em>What's Next?</em>
+      </div>
+      <div class="s1-sub">
+        Boris Cherny on how AI coding evolved from autocomplete into a full agentic system — and what that means for how we work.
+      </div>
+      <div class="s1-btns">
+        <div class="s1-btn-primary">Read the Insights →</div>
+        <div class="s1-btn-ghost">View Source</div>
+      </div>
+      <div class="s1-source">
+        Source: Lenny's Podcast × Boris Cherny, Head of Claude Code · Anthropic<br>
+        Feb 19, 2026 · Summarized May 2026
+      </div>
+    </div>
+
+    <!-- Right: Floating product card — 3-tier table -->
+    <div class="s1-right">
+      <div class="s1-card">
+        <div class="s1-card-bar">
+          <div class="s1-card-bar-dot"></div>
+          Three levels of AI-assisted work
+        </div>
+        <div class="s1-tier-row">
+          <div class="s1-tier-emoji">💬</div>
+          <div class="s1-tier-content">
+            <div class="s1-tier-name">Chatbot</div>
+            <div class="s1-tier-desc">Text in, text out. Answers questions, summarizes, explains. No environment access.</div>
+          </div>
+        </div>
+        <div class="s1-tier-row">
+          <div class="s1-tier-emoji">💻</div>
+          <div class="s1-tier-content">
+            <div class="s1-tier-name">Coding Assistant</div>
+            <div class="s1-tier-desc">Autocomplete, rewrite, generate. Humans still steer the code; model assists.</div>
+          </div>
+        </div>
+        <div class="s1-tier-row active">
+          <div class="s1-tier-emoji">⚡</div>
+          <div class="s1-tier-content">
+            <div class="s1-tier-tag">← We are here</div>
+            <div class="s1-tier-name">Agent</div>
+            <div class="s1-tier-desc">Reads context, uses tools, executes actions, checks results, iterates. Acts autonomously in the environment.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </section>
 
-<!-- ══════════ SLIDE 2 — Content ══════════ -->
+<!-- ══════════ SLIDE 2 — Asymmetric workspace ══════════ -->
 <section class="slide" id="slide2">
 
   <div class="s2-topbar">
-    <span class="s2-breadcrumb">Home / <strong>2026 Annual Review</strong> / Output</span>
-    <span class="s2-ts">Last edited · Dec 31, 2026</span>
+    <span class="s2-bc-seg">AI Practices</span>
+    <span class="s2-bc-sep">/</span>
+    <span class="s2-bc-seg">Claude Code: Agentic Builder</span>
+    <span class="s2-bc-sep">/</span>
+    <span class="s2-bc-active">Key Insights</span>
+    <span class="s2-bc-meta">Summarized · May 2026</span>
   </div>
 
-  <div class="s2-body">
-    <div class="s2-head">
-      <div class="s2-eyebrow">What We Built · 2026</div>
-      <div class="s2-title">A Year of <em>Output</em></div>
+  <div class="s2-header">
+    <div class="s2-eyebrow">4 Core Insights from Boris Cherny</div>
+    <div class="s2-title">The New Rules of <em>Building</em></div>
+  </div>
+
+  <div class="s2-content">
+
+    <!-- Left: Hero card — 100% AI-written -->
+    <div class="s2-hero">
+      <div class="s2-hero-top">
+        <div class="s2-hero-icon">📊</div>
+        <div class="s2-hero-label">Boris's Current Practice</div>
+        <div class="s2-hero-prop">Since Nov 2025</div>
+      </div>
+      <div class="s2-hero-body">
+        <div>
+          <div class="s2-hero-num">100<span class="s2-hero-unit">%</span></div>
+          <div class="s2-hero-desc">
+            AI-written code. Boris ships 10–30 pull requests per day — without writing a single line manually. He still reads and reviews every PR. The human role shifts from authoring code to <strong>defining intent and judging output</strong>.
+          </div>
+        </div>
+
+        <div class="s2-mini-chart">
+          <div class="s2-mini-label">Daily PR throughput (relative scale)</div>
+          <div class="s2-bar-row">
+            <span class="s2-bar-name">Pre-Agent</span>
+            <div class="s2-bar-track"><div class="s2-bar-fill" style="width:18%; background:var(--gray-mid);"></div></div>
+            <span class="s2-bar-val" style="color:var(--muted)">2–3</span>
+          </div>
+          <div class="s2-bar-row">
+            <span class="s2-bar-name">With Claude</span>
+            <div class="s2-bar-track"><div class="s2-bar-fill" style="width:85%; background:var(--cyan);"></div></div>
+            <span class="s2-bar-val" style="color:var(--cyan)">10–30</span>
+          </div>
+        </div>
+
+        <div class="s2-hero-quote">
+          "Coding is moving from writing to defining intent and reviewing output. The bottleneck shifts upstream."
+        </div>
+      </div>
     </div>
 
-    <div class="s2-grid">
+    <!-- Right: 3 stacked cards -->
+    <div class="s2-stack">
 
-      <!-- Cyan: Design Research -->
-      <div class="s2-tile tile-cyan">
-        <div class="s2-tile-header">
-          <div class="s2-tile-icon">🎨</div>
-          <div class="s2-tile-label">Design Research</div>
-          <div class="s2-tile-tag">Styles</div>
-        </div>
-        <div class="s2-tile-body">
-          <div class="s2-tile-num">16</div>
-          <div class="s2-tile-desc">Aesthetic styles fully documented<br>and open sourced</div>
+      <div class="s2-stack-card c-blue">
+        <div class="s2-stack-inner">
+          <div class="s2-stack-top">
+            <span class="s2-stack-emoji">🎯</span>
+            <span class="s2-stack-label">The Next Bottleneck</span>
+            <span class="s2-stack-tag">Deciding</span>
+          </div>
+          <div class="s2-stack-num">What</div>
+          <div class="s2-stack-desc">When build speed accelerates, the bottleneck shifts to deciding <em>what</em> to build. Point agents at feedback streams, bug logs, and user signals to surface the next move.</div>
+          <div class="s2-stack-quote">"Scarcity moves from building to deciding."</div>
         </div>
       </div>
 
-      <!-- Blue: Reading -->
-      <div class="s2-tile tile-blue">
-        <div class="s2-tile-header">
-          <div class="s2-tile-icon">📚</div>
-          <div class="s2-tile-label">Reading</div>
-          <div class="s2-tile-tag">Books</div>
-        </div>
-        <div class="s2-tile-body">
-          <div class="s2-tile-num">23</div>
-          <div class="s2-tile-desc">Books read cover to cover<br>82% of annual target</div>
-        </div>
-      </div>
-
-      <!-- Warm: Daily Log -->
-      <div class="s2-tile tile-warm">
-        <div class="s2-tile-header">
-          <div class="s2-tile-icon">⚡</div>
-          <div class="s2-tile-label">Daily Log</div>
-          <div class="s2-tile-tag">Streak</div>
-        </div>
-        <div class="s2-tile-body">
-          <div class="s2-tile-num">365</div>
-          <div class="s2-tile-desc">Days logged without a break<br>Full year, unbroken</div>
+      <div class="s2-stack-card c-warm">
+        <div class="s2-stack-inner">
+          <div class="s2-stack-top">
+            <span class="s2-stack-emoji">🔭</span>
+            <span class="s2-stack-label">Product Design Principle</span>
+            <span class="s2-stack-tag">Forward</span>
+          </div>
+          <div class="s2-stack-num">6 mo</div>
+          <div class="s2-stack-desc">Design for the model 6 months ahead. Give fewer constraints, more tools. If today's model is 80% there — that's a product opportunity in half a year.</div>
+          <div class="s2-stack-quote">"Model latent demand becomes product latent demand."</div>
         </div>
       </div>
 
-      <!-- Coral: Build in Public -->
-      <div class="s2-tile tile-coral">
-        <div class="s2-tile-header">
-          <div class="s2-tile-icon">🚀</div>
-          <div class="s2-tile-label">Build in Public</div>
-          <div class="s2-tile-tag">Posts</div>
-        </div>
-        <div class="s2-tile-body">
-          <div class="s2-tile-num">48</div>
-          <div class="s2-tile-desc">Public posts published<br>across design + writing</div>
+      <div class="s2-stack-card c-coral">
+        <div class="s2-stack-inner">
+          <div class="s2-stack-top">
+            <span class="s2-stack-emoji">🛠️</span>
+            <span class="s2-stack-label">The Role Shift</span>
+            <span class="s2-stack-tag">Builder</span>
+          </div>
+          <div class="s2-stack-num">Builder</div>
+          <div class="s2-stack-desc">PM, engineer, designer, data scientist — roles are blurring. The converging archetype: someone who defines goals, judges outputs, understands users, and ships.</div>
+          <div class="s2-stack-quote">"Software Engineer as a title may be fading."</div>
         </div>
       </div>
 
@@ -451,52 +646,65 @@ html, body { height: 100%; font-family: var(--f); overflow: hidden; }
 
 </section>
 
-<!-- ══════════ SLIDE 3 — Closing ══════════ -->
+<!-- ══════════ SLIDE 3 — Dark 3×2 action grid ══════════ -->
 <section class="slide" id="slide3">
 
   <div class="s3-bg">
     <svg width="100%" height="100%" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" fill="none">
-      <path d="M-80 720 Q 220 420 520 520 Q 820 620 1040 320 Q 1240 120 1520 220"
-        stroke="#60B0F0" stroke-width="2" stroke-dasharray="8 12" opacity="0.14" fill="none"/>
-      <path d="M-80 160 Q 360 380 660 260 Q 960 130 1280 400 Q 1400 460 1520 420"
-        stroke="#60B0F0" stroke-width="1.2" stroke-dasharray="5 9" opacity="0.08" fill="none"/>
-      <circle cx="520"  cy="520" r="5"   fill="#60B0F0" opacity="0.20"/>
-      <circle cx="1040" cy="320" r="4.5" fill="#60B0F0" opacity="0.20"/>
-      <circle cx="660"  cy="260" r="3.5" fill="#60B0F0" opacity="0.15"/>
+      <path d="M0 750 Q 300 600 600 680 Q 900 760 1200 580 Q 1360 490 1440 520"
+        stroke="#60B0F0" stroke-width="1.5" stroke-dasharray="7 11" opacity="0.10" fill="none"/>
+      <circle cx="600" cy="680" r="4" fill="#60B0F0" opacity="0.15"/>
+      <circle cx="1200" cy="580" r="3" fill="#60B0F0" opacity="0.12"/>
     </svg>
   </div>
 
-  <div class="s3-body">
-    <div class="s3-eyebrow">Looking Ahead · 2027</div>
-    <div class="s3-title">Keep Work<br><em>Moving</em></div>
-    <div class="s3-sub">
-      2026 laid the foundation.<br>2027 is about momentum — building in public, shipping in rhythm.
-    </div>
-    <div class="s3-grid">
-      <div class="s3-goal">
-        <span class="s3-goal-icon">🌐</span>
-        <div class="s3-goal-num">16 →</div>
-        <div class="s3-goal-label">Open Source All Styles</div>
-      </div>
-      <div class="s3-goal">
-        <span class="s3-goal-icon">✍️</span>
-        <div class="s3-goal-num">×4 / mo</div>
-        <div class="s3-goal-label">Publish Monthly</div>
-      </div>
-      <div class="s3-goal">
-        <span class="s3-goal-icon">🔗</span>
-        <div class="s3-goal-num">GitHub</div>
-        <div class="s3-goal-label">Launch Template Repo</div>
-      </div>
-      <div class="s3-goal">
-        <span class="s3-goal-icon">🎯</span>
-        <div class="s3-goal-num">Steady</div>
-        <div class="s3-goal-label">Keep the Pace</div>
-      </div>
-    </div>
+  <div class="s3-header">
+    <div class="s3-eyebrow">Reusable Principles · From the Source</div>
+    <div class="s3-title">How to Work <em>Like an Agent</em></div>
+    <div class="s3-sub">Six principles from Boris Cherny you can start applying today.</div>
   </div>
 
-  <div class="s3-foot">2026 Annual Review · Workspace Matrix Style · Design Library by Yang the user</div>
+  <div class="s3-grid">
+
+    <div class="s3-card">
+      <span class="s3-card-icon">🗺️</span>
+      <div class="s3-card-title">Plan First, Execute Second</div>
+      <div class="s3-card-body">Use plan mode for complex tasks. Let the agent read context and propose steps. Align before execution — especially on high-stakes work.</div>
+    </div>
+
+    <div class="s3-card">
+      <span class="s3-card-icon">📡</span>
+      <div class="s3-card-title">Point Agents at Input Streams</div>
+      <div class="s3-card-body">Feedback, logs, knowledge base, chat history. Agents can surface what to do next. Don't just give agents tasks — let them find the tasks.</div>
+    </div>
+
+    <div class="s3-card">
+      <span class="s3-card-icon">⚡</span>
+      <div class="s3-card-title">Run Agents in Parallel</div>
+      <div class="s3-card-body">Treat agents like background threads. Start multiple, let them work, review outputs. Speed is the competitive advantage — compress clock time.</div>
+    </div>
+
+    <div class="s3-card">
+      <span class="s3-card-icon">🔒</span>
+      <div class="s3-card-title">Keep Human Checkpoints</div>
+      <div class="s3-card-body">Production code, external sends, irreversible actions — require human review. Agent velocity doesn't mean skipping accountability gates.</div>
+    </div>
+
+    <div class="s3-card">
+      <span class="s3-card-icon">🔋</span>
+      <div class="s3-card-title">Use Strong Models Early</div>
+      <div class="s3-card-body">Cheap models needing more correction may cost more in total. Prove value first with strong models and enough tokens — optimize cost after.</div>
+    </div>
+
+    <div class="s3-card">
+      <span class="s3-card-icon">🔭</span>
+      <div class="s3-card-title">Design for Future Models</div>
+      <div class="s3-card-body">If today's model is almost there, 6 months later it's a product. Build the scaffolding now. Latent capability is latent opportunity.</div>
+    </div>
+
+  </div>
+
+  <div class="s3-foot">Claude Code: Agentic Builder Workflow · Notion Style · AI-Brain by Yang Lan</div>
 
 </section>
 
@@ -536,7 +744,7 @@ html, body { height: 100%; font-family: var(--f); overflow: hidden; }
       dotsEl.style.background = 'rgba(0,16,64,0.07)';
       dots.forEach(function(d) {
         d.style.background = d.classList.contains('is-active')
-          ? '#001040' : 'rgba(0,16,64,0.18)';
+          ? '#101010' : 'rgba(16,16,16,0.18)';
       });
     }
   }

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Vibe Coding → Agentic Engineering · Bright Lab</title>
+  <title>Vibe Coding → Agentic Engineering · Google Labs</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -97,66 +97,48 @@
     }
 
     /* ══════════════════════════════════════════════
-       SLIDE 1 — Cover (Ink + Pink)
+       SLIDE 1 — Cover (Pink dominant canvas)
     ══════════════════════════════════════════════ */
-    #s1 { background: var(--ink); flex-direction: column; }
-
-    /* Pink header band */
-    .s1-band {
-      flex-shrink: 0;
+    #s1 {
       background: var(--pink);
-      padding: 0 72px;
-      height: 64px;
-      display: flex; align-items: center; justify-content: space-between;
-    }
-    .s1-band-title {
-      font-size: 15px; font-weight: 700;
-      color: var(--ink); letter-spacing: 0.01em;
-    }
-    .s1-band-right {
-      display: flex; gap: 10px; align-items: center;
+      position: relative;
+      overflow: hidden;
     }
 
-    /* Main body */
-    .s1-main {
-      flex: 1;
-      display: flex;
-      padding: 0 72px;
-      gap: 60px;
-      align-items: center;
-    }
-
-    /* Left: title + tags + source */
-    .s1-left {
-      flex: 1;
+    /* All text floats in z:2 above shapes */
+    .s1-content {
+      position: relative; z-index: 2;
+      padding: 0 76px;
       display: flex; flex-direction: column;
       justify-content: center;
-      gap: 0;
+      width: 52%;
+      height: 100%;
     }
 
     .s1-eyebrow {
-      font-size: 13px; font-weight: 600; letter-spacing: 0.06em;
+      font-size: 13px; font-weight: 700; letter-spacing: 0.07em;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.4);
-      margin-bottom: 24px;
+      color: rgba(0,27,32,0.45);
+      margin-bottom: 26px;
     }
 
     .s1-title {
-      font-size: clamp(42px, 4.8vw, 68px);
+      font-size: clamp(46px, 5.2vw, 72px);
       font-weight: 800;
-      line-height: 1.05;
-      letter-spacing: -0.025em;
-      color: #fff;
-      margin-bottom: 28px;
+      line-height: 1.04;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      margin-bottom: 26px;
     }
-    .s1-title .hi { color: var(--pink); }
+    .s1-title .hi-orange { color: var(--orange); }
+    .s1-title .hi-violet { color: var(--violet); }
 
     .s1-sub {
       font-size: 18px; font-weight: 400;
-      color: rgba(255,255,255,0.45);
+      color: rgba(0,27,32,0.55);
       line-height: 1.7;
-      max-width: 420px;
-      margin-bottom: 40px;
+      max-width: 400px;
+      margin-bottom: 38px;
     }
 
     .s1-pills {
@@ -165,58 +147,40 @@
 
     .s1-source {
       margin-top: 48px;
-      font-size: 13px; color: rgba(255,255,255,0.25);
+      font-size: 13px; color: rgba(0,27,32,0.35);
       letter-spacing: 0.03em;
     }
 
-    /* Right: pure blob art panel */
-    .s1-art {
-      flex: 1;
-      height: 100%;
-      position: relative;
-      background: #ffffff;
-      overflow: hidden;
+    /* ── Geometric shapes — absolutely on #s1 ── */
+
+    /* Large ink circle: anchored bottom-right, partially off screen */
+    .art-ink {
+      position: absolute; z-index: 1;
+      width: 64vh; height: 64vh;
+      background: var(--ink);
+      border-radius: 50%;
+      right: -14vh;
+      bottom: -16vh;
     }
 
-    .blob {
-      position: absolute;
-      mix-blend-mode: multiply;
+    /* Medium white circle: upper-right, floats above pink */
+    .art-white {
+      position: absolute; z-index: 1;
+      width: 24vh; height: 24vh;
+      background: #ffffff;
+      border-radius: 50%;
+      right: 26vh;
+      top: 9vh;
     }
-    .b1 {
-      width: 44%; height: 48%;
-      background: var(--pink);
-      border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
-      top: 4%; left: 14%;
-    }
-    .b2 {
-      width: 36%; height: 40%;
+
+    /* Tiny orange dot: accent, nestled between circles */
+    .art-dot {
+      position: absolute; z-index: 1;
+      width: 8vh; height: 8vh;
       background: var(--orange);
-      border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
-      top: -4%; left: 46%;
-    }
-    .b3 {
-      width: 40%; height: 44%;
-      background: var(--violet);
-      border-radius: 70% 30% 50% 50% / 30% 60% 40% 70%;
-      top: 36%; left: 22%;
-    }
-    .b4 {
-      width: 32%; height: 36%;
-      background: var(--green);
-      border-radius: 50% 50% 30% 70% / 50% 70% 30% 50%;
-      top: 56%; left: 5%;
-    }
-    .b5 {
-      width: 30%; height: 34%;
-      background: var(--sky);
-      border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
-      top: 50%; left: 50%;
-    }
-    .b6 {
-      width: 22%; height: 26%;
-      background: var(--yellow);
-      border-radius: 50% 50% 50% 70% / 50% 50% 70% 60%;
-      top: 12%; left: 62%;
+      border-radius: 50%;
+      right: 44vh;
+      top: 34vh;
     }
 
     /* ══════════════════════════════════════════════
@@ -424,48 +388,35 @@
   <!-- ══ SLIDE 1: Cover ══ -->
   <div class="slide" id="s1">
 
-    <div class="s1-band">
-      <div class="s1-band-title">A bright home for experimental ideas</div>
-      <div class="s1-band-right">
-        <span class="pill pill-solid" style="font-size:12px; padding:5px 14px;">bright-lab</span>
+    <!-- Geometric shapes (z:1) -->
+    <div class="art-ink"></div>
+    <div class="art-white"></div>
+    <div class="art-dot"></div>
+
+    <!-- Text content (z:2) -->
+    <div class="s1-content">
+      <div class="s1-eyebrow">Karpathy · Sequoia Ascent 2026</div>
+
+      <div class="s1-title">
+        From <span class="hi-orange">Vibe&nbsp;Coding</span><br>
+        to <span class="hi-violet">Agentic</span><br>
+        Engineering
       </div>
+
+      <div class="s1-sub">
+        AI coding has crossed a threshold — it's no longer just "make things faster." It's a new computing paradigm, and it demands a new kind of engineer.
+      </div>
+
+      <div class="s1-pills">
+        <span class="pill pill-solid">Software 3.0</span>
+        <span class="pill" style="background:var(--orange);color:#fff;">Jagged Intelligence</span>
+        <span class="pill" style="background:var(--violet);color:#fff;">Verifiability</span>
+        <span class="pill" style="background:var(--green);color:var(--ink);">Agent-Native</span>
+      </div>
+
+      <div class="s1-source">Source: Karpathy · Sequoia Ascent 2026 · April 29, 2026</div>
     </div>
 
-    <div class="s1-main">
-
-      <div class="s1-left">
-        <div class="s1-eyebrow">Karpathy · Sequoia Ascent 2026</div>
-
-        <div class="s1-title">
-          From <span class="hi">Vibe Coding</span><br>
-          to Agentic<br>
-          Engineering
-        </div>
-
-        <div class="s1-sub">
-          AI coding has crossed a threshold. It's no longer just "make things faster" — it's a new computing paradigm, and it demands a new kind of engineer.
-        </div>
-
-        <div class="s1-pills">
-          <span class="pill pill-outline-white">Software 3.0</span>
-          <span class="pill pill-outline-white">Jagged Intelligence</span>
-          <span class="pill pill-outline-white">Verifiability</span>
-          <span class="pill pill-pink">Agent-Native</span>
-        </div>
-
-        <div class="s1-source">Source: Karpathy · Sequoia Ascent 2026 · April 29, 2026</div>
-      </div>
-
-      <div class="s1-art">
-        <div class="blob b1"></div>
-        <div class="blob b2"></div>
-        <div class="blob b3"></div>
-        <div class="blob b4"></div>
-        <div class="blob b5"></div>
-        <div class="blob b6"></div>
-      </div>
-
-    </div>
   </div>
 
   <!-- ══ SLIDE 2: Two Paths ══ -->
@@ -623,7 +574,7 @@
     <div class="s3-foot">
       <div class="s3-foot-left">Source: Karpathy · Sequoia Ascent 2026 · From Vibe Coding to Agentic Engineering</div>
       <div class="s3-foot-right">
-        <span class="pill pill-outline" style="font-size:12px; padding:5px 14px;">Design Library · Yang the user</span>
+        <span class="pill pill-outline" style="font-size:12px; padding:5px 14px;">Design Library · Yang Lan</span>
       </div>
     </div>
 

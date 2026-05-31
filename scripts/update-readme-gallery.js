@@ -29,7 +29,7 @@ function galleryMarkdown() {
   return [
     "## Gallery",
     "",
-    `All ${catalog.template_count} visual presets. Three views per preset (cover, mid-deck, later) show how each visual system handles different layouts. Click any template name to open its folder on GitHub.`,
+    `All ${catalog.template_count} visual presets. The three approved template pages for each preset are shown below. Click any template name to open its folder on GitHub.`,
     "",
     sections.join("\n\n"),
     "",

@@ -14,11 +14,9 @@ async function captureTemplate(page, template) {
   await page.waitForTimeout(800);
 
   const slideCount = await page.$$eval(".slide", (slides) => slides.length).catch(() => 0);
-  const picks = slideCount > 2
-    ? [0, Math.floor((slideCount - 1) / 2), slideCount - 1]
-    : slideCount === 2
-      ? [0, 1, 1]
-      : [0, 0, 0];
+  const picks = slideCount > 0
+    ? [0, Math.min(1, slideCount - 1), Math.min(2, slideCount - 1)]
+    : [0, 0, 0];
   const labels = ["cover", "mid", "later"];
 
   for (let i = 0; i < labels.length; i += 1) {
@@ -41,7 +39,7 @@ async function captureTemplate(page, template) {
     await sharp(png).jpeg({ quality: 86, mozjpeg: true }).toFile(outPath);
   }
 
-  console.log(`${slug}: captured slides ${picks.map((index) => index + 1).join(", ")}`);
+  console.log(`${slug}: captured approved template pages ${picks.map((index) => index + 1).join(", ")}`);
 }
 
 async function main() {

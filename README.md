@@ -16,7 +16,7 @@ The project is built around reusable visual presets rather than one-off prompts.
 <!-- preview-gallery:start -->
 ## Gallery
 
-All 16 visual presets. Three views per preset (cover, mid-deck, later) show how each visual system handles different layouts. Click any template name to open its folder on GitHub.
+All 16 visual presets. The three approved template pages for each preset are shown below. Click any template name to open its folder on GitHub.
 
 ### [Bright Lab](templates/bright-lab/)
 
