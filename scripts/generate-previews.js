@@ -33,9 +33,13 @@ async function captureTemplate(page, template) {
           deck.scrollLeft = target.offsetLeft;
           deck.style.transform = `translateX(-${slideIndex * 100}vw)`;
         } else {
-          window.scrollTo({ top: target.offsetTop, left: target.offsetLeft, behavior: "instant" });
+          const scroller = document.scrollingElement || document.documentElement;
+          scroller.scrollTop = target.offsetTop;
+          scroller.scrollLeft = target.offsetLeft;
           document.documentElement.scrollTop = target.offsetTop;
+          document.documentElement.scrollLeft = target.offsetLeft;
           document.body.scrollTop = target.offsetTop;
+          document.body.scrollLeft = target.offsetLeft;
         }
       }, picks[i]);
       await page.waitForTimeout(800);
