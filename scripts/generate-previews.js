@@ -22,6 +22,10 @@ async function captureTemplate(page, template) {
   for (let i = 0; i < labels.length; i += 1) {
     if (slideCount) {
       await page.evaluate((slideIndex) => {
+        if (typeof window.goTo === "function") {
+          window.goTo(slideIndex);
+          return;
+        }
         const slides = Array.from(document.querySelectorAll(".slide"));
         const target = slides[slideIndex] || slides[0];
         const deck = document.querySelector("#deck") || target.parentElement;
