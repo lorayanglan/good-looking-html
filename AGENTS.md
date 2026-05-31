@@ -10,22 +10,22 @@ Pick the lightest mode that fits the request.
 
 | Mode | Use when | What to do |
 |---|---|---|
-| Fast | The user names a template or gives a clear artifact request | Pick one template, build, QA, deliver |
-| Curated | The artifact matters and the style is unclear | Ask 1-2 questions, offer 2-3 candidate templates, then build |
+| Fast | The user names a template or gives a clear visual direction | Pick one template, build, QA, deliver |
+| Curated | The user has not specified a template or visual direction | Ask 1-2 questions or offer 2-3 candidate templates, then build |
 | Showcase | External-facing deck/report, important presentation, or the user explicitly wants options | Build 2-3 real cover/title previews, open them, wait for the user's choice, then build |
 
 Do not force previews for routine work. Do not skip previews for Showcase work.
 
 ## 2. Template Selection
 
-If the user named a template slug, use it.
+If the user named a template slug or explicitly described the visual direction, use it.
 
-If they did not:
+If they did not, do not apply a standing default style. Instead:
 
 1. Read `index.json`.
 2. Read `style-router.md`.
 3. Match by mood, occasion, tone, density, scheme, and audience.
-4. Prefer a small choice set: 1 template for Fast, 2-3 candidates for Curated/Showcase.
+4. Offer a small choice set: 2 candidates for routine work, 3 candidates for Showcase work.
 
 Template selection is tone-first, not industry-first. The user's requested feeling wins.
 

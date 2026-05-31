@@ -6,7 +6,7 @@
 
 ## What it is
 
-A 6-slide horizontal deck in Bright Lab' candy-bright product-gallery aesthetic. Bubblegum pink intro, deep blue-black hero, colorful product cards, blob shapes, pill CTAs, friendly Sans typography, no shadows, no italics.
+A 6-slide horizontal deck in Bright Lab's candy-bright product-gallery aesthetic. Bubblegum pink intro, deep blue-black hero, colorful product cards, blob shapes, pill CTAs, friendly Sans typography, no shadows, no italics.
 
 ## When to pick it
 
@@ -14,11 +14,11 @@ A 6-slide horizontal deck in Bright Lab' candy-bright product-gallery aesthetic.
 - AI tool galleries, creative project showrooms
 - Course / workshop / experiment recaps
 - Anything that should feel **bright, exploratory, approachable** — not corporate, not somber, not futuristic
-- the user's default style for personal content
+- Personal content that needs an upbeat, exhibition-like visual system
 
 ## When NOT to pick it
 
-- High-luxury brand decks (use a future `editorial` template)
+- High-luxury brand decks (use an editorial preset instead)
 - Long-form essays / single-narrative content
 - Dark cinematic / sombre material
 - Anything formal, austere, or that needs a serif voice → use an editorial or literary preset instead

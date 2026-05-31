@@ -14,14 +14,14 @@ Use this router when the user has not named a template. Read `index.json` for ex
 | Cinematic or entertainment | `cinematic-dark` | media, content libraries, dramatic subscription/product showcases | knowledge tools, warm personal notes, or low-pressure learning surfaces |
 | Raw, humorous, life-like | `raw-copy` | lifestyle, family/parenting, anti-marketing personal projects with strong copy | B2B, technical, financial, or formal credibility work |
 
-## Default Picks
+## Candidate Routing
 
-- If the user asks for an HTML artifact with no style: pick `quiet-paper` for knowledge/workflow material, `bright-lab` for personal review/gallery material, and `enterprise-dark` for technical/AI infrastructure material.
+- If the user asks for an HTML artifact with no style: do not pick a standing default. Offer 2-3 candidates matched to the material and ask the user to choose.
 - If the output is a PPT-like deck and the topic is broad: offer three candidates with different moods instead of one narrow cluster.
-- If the content contains strong personal data or emotional reflection: prefer `bright-lab`, `literary-flow`, or `quiet-paper` before corporate templates.
-- If the content is external-facing business material: prefer `enterprise-dark`, `workspace-matrix`, `b2b-blue`, `warm-team`, or `bold-violet` depending on formality and warmth.
+- If the content contains strong personal data or emotional reflection: include `bright-lab`, `literary-flow`, or `quiet-paper` as candidates before corporate templates.
+- If the content is external-facing business material: include `enterprise-dark`, `workspace-matrix`, `b2b-blue`, `warm-team`, or `bold-violet` candidates depending on formality and warmth.
 
-## Candidate the userguage
+## Candidate Language
 
 When offering choices, describe the feeling, not the internals:
 

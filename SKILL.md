@@ -43,8 +43,8 @@ Pick the lightest mode that fits the request.
 
 | Mode | Use When | Behavior |
 |---|---|---|
-| Fast | The user names a template or the style is obvious | Choose one template, build, QA, deliver |
-| Curated | The artifact matters and the style is unclear | Ask 1-2 questions, offer 2-3 style candidates, then build |
+| Fast | The user names a template or explicitly describes the visual direction | Choose one template, build, QA, deliver |
+| Curated | The user has not specified a template or visual direction | Ask 1-2 questions or offer 2-3 style candidates, then build |
 | Showcase | External-facing deck/report or important presentation | Create 2-3 real title/cover previews, let the user choose, then build |
 
 ## Build Workflow
@@ -52,7 +52,7 @@ Pick the lightest mode that fits the request.
 1. Identify artifact type: page, report, review surface, dashboard, learning page, deck, or presentation.
 2. Identify content state: complete source material, rough outline, or only a topic.
 3. If needed, ask only the missing high-value question: audience, occasion, or mood.
-4. Select a template using `index.json` + `style-router.md`, unless the user named one.
+4. If the user has not named a template or visual direction, ask briefly or offer 2-3 candidates using `index.json` + `style-router.md`; do not apply a standing default style.
 5. Read the chosen template's `template.json`, `design-spec.md`, and `template.html` if present.
 6. Build a self-contained HTML file in the working directory or the user's requested output folder.
 7. Preserve the chosen template's tokens: colors, fonts, spacing rhythm, decorative vocabulary, navigation behavior, and component grammar.

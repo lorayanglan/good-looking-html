@@ -63,7 +63,7 @@ The live catalog is in `index.json`. Current visual presets include:
 - `cinematic-dark`
 - `raw-copy`
 
-When the user does not name a preset, Codex uses `style-router.md` to choose 1-3 candidates by mood, audience, and artifact type.
+When the user does not name a preset or visual direction, Codex uses `style-router.md` to offer 2-3 candidates by mood, audience, and artifact type instead of applying a standing default style.
 
 ## Template Structure
 
