@@ -28,14 +28,17 @@ async function captureTemplate(page, template) {
         }
         const slides = Array.from(document.querySelectorAll(".slide"));
         const target = slides[slideIndex] || slides[0];
-        const deck = document.querySelector("#deck") || target.parentElement;
+        const deck = document.querySelector("#deck");
         if (deck && typeof deck.scrollTo === "function") {
           deck.scrollLeft = target.offsetLeft;
+          deck.style.transform = `translateX(-${slideIndex * 100}vw)`;
         } else {
-          target.scrollIntoView({ block: "nearest", inline: "start" });
+          window.scrollTo({ top: target.offsetTop, left: target.offsetLeft, behavior: "instant" });
+          document.documentElement.scrollTop = target.offsetTop;
+          document.body.scrollTop = target.offsetTop;
         }
       }, picks[i]);
-      await page.waitForTimeout(350);
+      await page.waitForTimeout(800);
     }
 
     const png = await page.screenshot({ fullPage: false, animations: "disabled" });
