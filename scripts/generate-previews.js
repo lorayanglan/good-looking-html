@@ -31,7 +31,6 @@ async function captureTemplate(page, template) {
         const deck = document.querySelector("#deck");
         if (deck && typeof deck.scrollTo === "function") {
           deck.scrollLeft = target.offsetLeft;
-          deck.style.transform = `translateX(-${slideIndex * 100}vw)`;
         } else {
           const scroller = document.scrollingElement || document.documentElement;
           scroller.scrollTop = target.offsetTop;
