@@ -20,31 +20,12 @@ async function captureTemplate(page, template) {
   const labels = ["cover", "mid", "later"];
 
   for (let i = 0; i < labels.length; i += 1) {
-    if (slideCount) {
-      await page.evaluate((slideIndex) => {
-        if (typeof window.goTo === "function") {
-          window.goTo(slideIndex);
-          return;
-        }
-        const slides = Array.from(document.querySelectorAll(".slide"));
-        const target = slides[slideIndex] || slides[0];
-        const deck = document.querySelector("#deck");
-        if (deck && typeof deck.scrollTo === "function") {
-          deck.scrollLeft = target.offsetLeft;
-        } else {
-          const scroller = document.scrollingElement || document.documentElement;
-          scroller.scrollTop = target.offsetTop;
-          scroller.scrollLeft = target.offsetLeft;
-          document.documentElement.scrollTop = target.offsetTop;
-          document.documentElement.scrollLeft = target.offsetLeft;
-          document.body.scrollTop = target.offsetTop;
-          document.body.scrollLeft = target.offsetLeft;
-        }
-      }, picks[i]);
-      await page.waitForTimeout(800);
-    }
+    const slideIndex = picks[i];
+    const slide = page.locator(".slide").nth(slideIndex);
+    await slide.scrollIntoViewIfNeeded();
+    await page.waitForTimeout(500);
 
-    const png = await page.screenshot({ fullPage: false, animations: "disabled" });
+    const png = await slide.screenshot({ animations: "disabled" });
     const outPath = path.join(outDir, `${slug}-${labels[i]}.jpg`);
     await sharp(png).jpeg({ quality: 86, mozjpeg: true }).toFile(outPath);
   }
